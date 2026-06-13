@@ -1,17 +1,19 @@
 :root {
   --ink: #111827;
   --muted: #5b6472;
-  --paper: #f3f6f2;
+  --paper: #ebebeb;
   --panel: #ffffff;
-  --line: #d9ded7;
-  --green: #00a878;
-  --green-dark: #08745b;
-  --blue: #2364aa;
-  --yellow: #f5b82e;
-  --coral: #ee6c4d;
+  --line: #d0d0d0;
   --navy: #0b1f33;
+  --orange: #ff6700;
+  --blue-mid: #3a6ea5;
+  --blue-dark: #00519a;
+  --blue-light: #B9D9EB;
   --shadow: 0 20px 50px rgba(17, 24, 39, 0.12);
   --soft-shadow: 0 12px 28px rgba(17, 24, 39, 0.09);
+  --font-heading: "Press Start 2P", monospace;
+  --font-ui: "Silkscreen", monospace;
+  --font-body: "DM Sans", Arial, sans-serif;
 }
 
 * {
@@ -26,7 +28,7 @@ body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-ui);
   font-size: 16px;
   line-height: 1.6;
 }
@@ -60,7 +62,7 @@ a {
 
 .site-header {
   align-items: center;
-  background: rgba(243, 246, 242, 0.94);
+  background: rgba(235, 235, 235, 0.94);
   border-bottom: 1px solid rgba(17, 24, 39, 0.08);
   display: flex;
   gap: 24px;
@@ -77,9 +79,9 @@ a {
   align-items: center;
   color: var(--ink);
   display: inline-flex;
-  font-family: "Space Grotesk", Arial, sans-serif;
-  font-size: 20px;
-  font-weight: 700;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 400;
   gap: 10px;
   text-decoration: none;
 }
@@ -92,17 +94,18 @@ a {
 .footer a:focus,
 .inline-link:hover,
 .inline-link:focus {
-  color: var(--green-dark);
+  color: var(--blue-dark);
   text-decoration: none;
 }
 
 .brand-mark {
   align-items: center;
-  background: linear-gradient(135deg, var(--yellow), #ffe58f);
+  background: var(--orange);
   border: 2px solid var(--ink);
   border-radius: 8px;
+  color: #ffffff;
   display: inline-flex;
-  font-size: 14px;
+  font-size: 10px;
   height: 36px;
   justify-content: center;
   width: 42px;
@@ -140,9 +143,9 @@ a {
 
 .hero-media {
   background:
-    linear-gradient(90deg, rgba(0, 168, 120, 0.2) 0 1px, transparent 1px 100%),
+    linear-gradient(90deg, rgba(255, 103, 0, 0.2) 0 1px, transparent 1px 100%),
     linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 100%),
-    linear-gradient(135deg, #07121f 0%, #0b2f4f 45%, #0a5f57 100%);
+    linear-gradient(135deg, #07121f 0%, #0b2f4f 45%, #00519a 100%);
   background-size:
     84px 84px,
     84px 84px,
@@ -159,14 +162,14 @@ a {
 .hero-media::before {
   background:
     linear-gradient(90deg, transparent 0 20%, rgba(255, 255, 255, 0.18) 20% 21%, transparent 21% 100%),
-    linear-gradient(90deg, transparent 0 38%, rgba(0, 168, 120, 0.48) 38% 39%, transparent 39% 100%),
-    linear-gradient(90deg, transparent 0 65%, rgba(245, 184, 46, 0.3) 65% 66%, transparent 66% 100%),
+    linear-gradient(90deg, transparent 0 38%, rgba(255, 103, 0, 0.48) 38% 39%, transparent 39% 100%),
+    linear-gradient(90deg, transparent 0 65%, rgba(58, 110, 165, 0.3) 65% 66%, transparent 66% 100%),
     linear-gradient(0deg, transparent 0 26%, rgba(255, 255, 255, 0.14) 26% 27%, transparent 27% 100%),
-    linear-gradient(0deg, transparent 0 54%, rgba(35, 100, 170, 0.32) 54% 55%, transparent 55% 100%),
+    linear-gradient(0deg, transparent 0 54%, rgba(58, 110, 165, 0.32) 54% 55%, transparent 55% 100%),
     radial-gradient(circle at 20% 26%, rgba(255, 255, 255, 0.35) 0 4px, transparent 5px),
-    radial-gradient(circle at 38% 54%, rgba(0, 168, 120, 0.56) 0 5px, transparent 6px),
-    radial-gradient(circle at 65% 54%, rgba(245, 184, 46, 0.48) 0 4px, transparent 5px),
-    radial-gradient(circle at 65% 76%, rgba(238, 108, 77, 0.42) 0 4px, transparent 5px);
+    radial-gradient(circle at 38% 54%, rgba(255, 103, 0, 0.56) 0 5px, transparent 6px),
+    radial-gradient(circle at 65% 54%, rgba(58, 110, 165, 0.48) 0 4px, transparent 5px),
+    radial-gradient(circle at 65% 76%, rgba(0, 81, 154, 0.42) 0 4px, transparent 5px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   height: min(52vw, 540px);
@@ -181,8 +184,8 @@ a {
 .hero-media::after {
   background:
     linear-gradient(90deg, transparent 0 18%, rgba(255, 255, 255, 0.18) 18% 19%, transparent 19% 100%),
-    linear-gradient(0deg, transparent 0 62%, rgba(0, 168, 120, 0.34) 62% 64%, transparent 64% 100%),
-    radial-gradient(circle at 18% 62%, rgba(0, 168, 120, 0.7) 0 5px, transparent 6px),
+    linear-gradient(0deg, transparent 0 62%, rgba(255, 103, 0, 0.34) 62% 64%, transparent 64% 100%),
+    radial-gradient(circle at 18% 62%, rgba(255, 103, 0, 0.7) 0 5px, transparent 6px),
     radial-gradient(circle at 78% 62%, rgba(255, 255, 255, 0.5) 0 4px, transparent 5px);
   bottom: 12%;
   height: 180px;
@@ -202,11 +205,11 @@ a {
 
 .circuit-animation span {
   background:
-    linear-gradient(90deg, transparent 0 12%, rgba(0, 168, 120, 0.56) 12% 13%, transparent 13% 32%, rgba(255, 255, 255, 0.18) 32% 33%, transparent 33% 100%),
-    linear-gradient(0deg, transparent 0 42%, rgba(35, 100, 170, 0.45) 42% 44%, transparent 44% 100%),
-    radial-gradient(circle at 12% 42%, rgba(0, 168, 120, 0.72) 0 4px, transparent 5px),
+    linear-gradient(90deg, transparent 0 12%, rgba(255, 103, 0, 0.56) 12% 13%, transparent 13% 32%, rgba(255, 255, 255, 0.18) 32% 33%, transparent 33% 100%),
+    linear-gradient(0deg, transparent 0 42%, rgba(58, 110, 165, 0.45) 42% 44%, transparent 44% 100%),
+    radial-gradient(circle at 12% 42%, rgba(255, 103, 0, 0.72) 0 4px, transparent 5px),
     radial-gradient(circle at 33% 42%, rgba(255, 255, 255, 0.45) 0 3px, transparent 4px),
-    radial-gradient(circle at 72% 42%, rgba(245, 184, 46, 0.55) 0 4px, transparent 5px);
+    radial-gradient(circle at 72% 42%, rgba(58, 110, 165, 0.55) 0 4px, transparent 5px);
   height: 180px;
   opacity: 0.26;
   position: absolute;
@@ -232,7 +235,7 @@ a {
 .hero-overlay {
   background:
     linear-gradient(90deg, rgba(7, 18, 31, 0.96) 0%, rgba(7, 18, 31, 0.76) 48%, rgba(7, 18, 31, 0.24) 100%),
-    linear-gradient(0deg, rgba(243, 246, 242, 1) 0%, rgba(243, 246, 242, 0) 22%);
+    linear-gradient(0deg, rgba(235, 235, 235, 1) 0%, rgba(235, 235, 235, 0) 22%);
 }
 
 .hero-content {
@@ -246,40 +249,42 @@ a {
 
 .eyebrow,
 .section-kicker {
-  color: var(--green);
+  color: var(--blue-mid);
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0;
   text-transform: uppercase;
+  font-family: var(--font-body);
 }
 
 .hero h1,
 .section h2,
 .contact h2 {
-  font-family: "Space Grotesk", Arial, sans-serif;
-  font-weight: 700;
-  line-height: 1;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.4;
   margin: 0;
 }
 
 .hero h1 {
-  font-size: clamp(60px, 8.8vw, 112px);
+  font-size: clamp(36px, 5.5vw, 72px);
   margin-top: 10px;
 }
 
 .date-line {
-  color: var(--yellow);
-  font-family: "Space Grotesk", Arial, sans-serif;
-  font-size: clamp(28px, 4vw, 48px);
-  font-weight: 700;
-  line-height: 1.1;
+  color: var(--blue-dark);
+  font-family: var(--font-heading);
+  font-size: clamp(18px, 2.6vw, 32px);
+  font-weight: 400;
+  line-height: 1.5;
   margin: 14px 0 0;
 }
 
 .hero-copy {
-  font-size: clamp(20px, 2.4vw, 29px);
-  font-weight: 700;
-  line-height: 1.25;
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.8vw, 20px);
+  font-weight: 400;
+  line-height: 1.7;
   margin: 24px 0 0;
   max-width: 760px;
 }
@@ -320,16 +325,17 @@ a {
   min-height: 48px;
   padding: 12px 18px;
   text-decoration: none;
+  font-family: var(--font-body);
 }
 
 .button-primary {
-  background: var(--green);
+  background: var(--orange);
   color: #ffffff;
 }
 
 .button-primary:hover,
 .button-primary:focus {
-  background: var(--green-dark);
+  background: var(--blue-dark);
   color: #ffffff;
 }
 
@@ -339,10 +345,10 @@ a {
   color: var(--ink);
 }
 
+/* TODO: uh fix these buttons lol */
 .button-secondary:hover,
 .button-secondary:focus {
-  border-color: var(--green);
-  color: var(--green-dark);
+  color: var(--blue-dark);
 }
 
 .button-quiet {
@@ -373,12 +379,13 @@ a {
   position: relative;
   transform: translateY(-34px);
   z-index: 2;
+  font-family: var(--font-body);
 }
 
 .quick-facts article {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92)),
-    linear-gradient(135deg, rgba(0, 168, 120, 0.12), rgba(35, 100, 170, 0.12));
+    linear-gradient(135deg, rgba(255, 103, 0, 0.1), rgba(0, 81, 154, 0.1));
   box-shadow: var(--shadow);
   min-height: 118px;
   padding: 24px;
@@ -402,9 +409,10 @@ a {
 
 .quick-facts strong {
   display: block;
-  font-family: "Space Grotesk", Arial, sans-serif;
-  font-size: 25px;
-  line-height: 1.15;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
   margin-top: 10px;
 }
 
@@ -424,7 +432,7 @@ a {
 
 .section h2,
 .contact h2 {
-  font-size: clamp(36px, 5vw, 64px);
+  font-size: clamp(22px, 3.2vw, 42px);
 }
 
 .section-copy p,
@@ -434,10 +442,12 @@ a {
 .contact p,
 .faq p {
   color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.8;
 }
 
 .section-copy p {
-  font-size: 19px;
   margin: 0 0 18px;
 }
 
@@ -478,8 +488,9 @@ a {
 }
 
 .training-progress strong {
-  font-family: "Space Grotesk", Arial, sans-serif;
-  font-size: 26px;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 400;
 }
 
 .training-progress small {
@@ -495,7 +506,7 @@ a {
 }
 
 .progress-track span {
-  background: linear-gradient(90deg, var(--green), var(--yellow));
+  background: linear-gradient(90deg, var(--orange), var(--blue-mid));
   display: block;
   height: 100%;
 }
@@ -525,9 +536,10 @@ a {
 }
 
 .checklist-card h3 {
-  font-family: "Space Grotesk", Arial, sans-serif;
-  font-size: 24px;
-  line-height: 1.15;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
   margin: 0;
 }
 
@@ -547,7 +559,7 @@ a {
 }
 
 .check-box {
-  border: 2px solid var(--green);
+  border: 2px solid var(--orange);
   border-radius: 5px;
   display: inline-block;
   height: 22px;
@@ -560,7 +572,7 @@ a {
 }
 
 .checklist-card a {
-  color: var(--green-dark);
+  color: var(--blue-dark);
   font-size: 14px;
   font-weight: 800;
 }
@@ -574,7 +586,6 @@ a {
 }
 
 .section-heading p {
-  font-size: 18px;
   margin: 0;
 }
 
@@ -588,7 +599,7 @@ a {
 .feature-card {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.94)),
-    linear-gradient(135deg, rgba(0, 168, 120, 0.13), rgba(245, 184, 46, 0.11));
+    linear-gradient(135deg, rgba(255, 103, 0, 0.1), rgba(0, 81, 154, 0.1));
   border: 1px solid var(--line);
   border-radius: 8px;
   display: grid;
@@ -606,32 +617,33 @@ a {
     linear-gradient(0deg, transparent 0 30%, currentColor 30% 32%, transparent 32% 100%),
     linear-gradient(0deg, transparent 0 62%, currentColor 62% 64%, transparent 64% 100%),
     radial-gradient(circle at 14% 30%, currentColor 0 5px, transparent 6px),
-    radial-gradient(circle at 42% 62%, var(--yellow) 0 6px, transparent 7px),
-    radial-gradient(circle at 70% 30%, var(--blue) 0 5px, transparent 6px),
-    radial-gradient(circle at 86% 62%, var(--coral) 0 5px, transparent 6px);
+    radial-gradient(circle at 42% 62%, var(--blue-mid) 0 6px, transparent 7px),
+    radial-gradient(circle at 70% 30%, var(--blue-mid) 0 5px, transparent 6px),
+    radial-gradient(circle at 86% 62%, var(--orange) 0 5px, transparent 6px);
   border: 1px solid rgba(17, 24, 39, 0.1);
   border-radius: 8px;
-  color: var(--green);
+  color: var(--orange);
   height: 132px;
   opacity: 0.88;
   width: 170px;
 }
 
 .circuit-icon-2 {
-  color: var(--blue);
+  color: var(--blue-mid);
 }
 
 .circuit-icon-3 {
-  color: var(--coral);
+  color: var(--orange);
 }
 
 .feature-card h3,
 .timeline-item h3,
 .sponsor-tier h3,
 .faq summary {
-  font-family: "Space Grotesk", Arial, sans-serif;
-  font-size: 25px;
-  line-height: 1.1;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
   margin: 0;
 }
 
@@ -644,7 +656,7 @@ a {
 
 .timeline-item {
   background:
-    linear-gradient(90deg, rgba(0, 168, 120, 0.07), transparent 34%),
+    linear-gradient(90deg, rgba(255, 103, 0, 0.07), transparent 34%),
     var(--panel);
   display: grid;
   gap: 24px;
@@ -657,7 +669,7 @@ a {
 }
 
 .timeline-item span {
-  color: var(--blue);
+  color: var(--blue-mid);
   font-weight: 800;
 }
 
@@ -686,12 +698,12 @@ a {
 
 .map-circuit {
   background:
-    linear-gradient(90deg, transparent 0 18%, rgba(0, 168, 120, 0.45) 18% 19%, transparent 19% 46%, rgba(35, 100, 170, 0.35) 46% 47%, transparent 47% 100%),
-    linear-gradient(0deg, transparent 0 26%, rgba(17, 24, 39, 0.16) 26% 27%, transparent 27% 58%, rgba(0, 168, 120, 0.28) 58% 59%, transparent 59% 100%),
-    radial-gradient(circle at 18% 26%, rgba(0, 168, 120, 0.7) 0 7px, transparent 8px),
-    radial-gradient(circle at 47% 58%, rgba(245, 184, 46, 0.7) 0 6px, transparent 7px),
-    radial-gradient(circle at 78% 26%, rgba(238, 108, 77, 0.62) 0 6px, transparent 7px),
-    linear-gradient(135deg, rgba(0, 168, 120, 0.1), rgba(35, 100, 170, 0.1));
+    linear-gradient(90deg, transparent 0 18%, rgba(255, 103, 0, 0.45) 18% 19%, transparent 19% 46%, rgba(58, 110, 165, 0.35) 46% 47%, transparent 47% 100%),
+    linear-gradient(0deg, transparent 0 26%, rgba(17, 24, 39, 0.16) 26% 27%, transparent 27% 58%, rgba(255, 103, 0, 0.28) 58% 59%, transparent 59% 100%),
+    radial-gradient(circle at 18% 26%, rgba(255, 103, 0, 0.7) 0 7px, transparent 8px),
+    radial-gradient(circle at 47% 58%, rgba(58, 110, 165, 0.7) 0 6px, transparent 7px),
+    radial-gradient(circle at 78% 26%, rgba(0, 81, 154, 0.62) 0 6px, transparent 7px),
+    linear-gradient(135deg, rgba(255, 103, 0, 0.1), rgba(58, 110, 165, 0.1));
   border: 1px solid var(--line);
   border-radius: 8px;
   min-height: 260px;
@@ -720,10 +732,10 @@ a {
 .sponsor-slots span {
   align-items: center;
   background:
-    linear-gradient(90deg, transparent 0 24%, rgba(0, 168, 120, 0.18) 24% 25%, transparent 25% 100%),
-    linear-gradient(0deg, transparent 0 58%, rgba(35, 100, 170, 0.16) 58% 60%, transparent 60% 100%),
-    radial-gradient(circle at 24% 58%, rgba(245, 184, 46, 0.55) 0 4px, transparent 5px),
-    linear-gradient(135deg, rgba(0, 168, 120, 0.08), rgba(35, 100, 170, 0.08));
+    linear-gradient(90deg, transparent 0 24%, rgba(255, 103, 0, 0.18) 24% 25%, transparent 25% 100%),
+    linear-gradient(0deg, transparent 0 58%, rgba(58, 110, 165, 0.16) 58% 60%, transparent 60% 100%),
+    radial-gradient(circle at 24% 58%, rgba(58, 110, 165, 0.55) 0 4px, transparent 5px),
+    linear-gradient(135deg, rgba(255, 103, 0, 0.08), rgba(58, 110, 165, 0.08));
   border: 1px dashed rgba(17, 24, 39, 0.28);
   border-radius: 8px;
   color: var(--muted);
@@ -736,29 +748,35 @@ a {
 }
 
 .inline-link {
-  color: var(--green-dark);
+  color: var(--blue-dark);
   display: inline-block;
   font-weight: 800;
   margin-top: 24px;
 }
 
+.faq.section {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
 .faq-list {
   display: grid;
-  gap: 12px;
-  margin-top: 34px;
+  gap: 4px;
+  margin-top: 18px;
 }
 
 .faq details {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 22px 24px;
+  border-radius: 6px;
+  padding: 10px 14px;
 }
 
 .faq summary {
   cursor: pointer;
+  font-size: 12px;
   list-style: none;
-  padding-right: 30px;
+  padding-right: 24px;
   position: relative;
 }
 
@@ -767,12 +785,12 @@ a {
 }
 
 .faq summary::after {
-  color: var(--green);
+  color: var(--orange);
   content: "+";
-  font-size: 30px;
+  font-size: 18px;
   position: absolute;
   right: 0;
-  top: -4px;
+  top: -2px;
 }
 
 .faq details[open] summary::after {
@@ -780,14 +798,15 @@ a {
 }
 
 .faq p {
-  margin: 16px 0 0;
+  font-size: 12px;
+  margin: 8px 0 0;
 }
 
 .contact-panel {
   background:
-    linear-gradient(90deg, rgba(0, 168, 120, 0.18) 0 1px, transparent 1px 100%),
+    linear-gradient(90deg, rgba(255, 103, 0, 0.18) 0 1px, transparent 1px 100%),
     linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 100%),
-    linear-gradient(135deg, #081726 0%, #0b2744 52%, #0a6259 100%);
+    linear-gradient(135deg, #081726 0%, #0b2744 52%, #00519a 100%);
   background-size: 64px 64px, 64px 64px, auto;
   border-radius: 8px;
   color: #ffffff;
@@ -953,7 +972,7 @@ a {
   .hero-overlay {
     background:
       linear-gradient(90deg, rgba(7, 18, 31, 0.97) 0%, rgba(7, 18, 31, 0.84) 68%, rgba(7, 18, 31, 0.52) 100%),
-      linear-gradient(0deg, rgba(243, 246, 242, 1) 0%, rgba(243, 246, 242, 0) 24%);
+      linear-gradient(0deg, rgba(235, 235, 235, 1) 0%, rgba(235, 235, 235, 0) 24%);
   }
 
   .hero-media::before {

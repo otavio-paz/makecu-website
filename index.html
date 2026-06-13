@@ -10,9 +10,9 @@ layout: default
   <nav class="site-nav" aria-label="Main navigation">
     <a href="#top">Home</a>
     <a href="#schedule">Schedule</a>
-    <a href="#hardware">Hardware</a>
-    <a href="#map">Map</a>
-    <a href="#registration">Hacker Portal</a>
+    <!-- <a href="#hardware">Hardware</a> -->
+    <!-- <a href="#map">Map</a> -->
+    <!-- <a href="#registration">Hacker Portal</a> -->
     <a href="#contact">Contact Us</a>
     <a href="#sponsors">Sponsors</a>
     <a href="#faq">FAQ</a>
@@ -33,17 +33,12 @@ layout: default
       <h1>{{ site.event.name }} 2026</h1>
       <p class="date-line">{{ site.event.date }}</p>
       <p class="hero-copy">{{ site.event.description }}</p>
-      <div class="event-meta" aria-label="Event details">
-        <span>{{ site.event.location }}</span>
-        <span>24-hour hardware hackathon</span>
-        <span>Registration placeholder</span>
-      </div>
       <div class="hero-actions" id="registration">
-        <a class="button button-primary" href="{{ site.event.discord_url }}">Join the Discord placeholder</a>
-        <a class="button button-secondary" href="https://www.columbiarobotics.club/">See last year's projects</a>
-        <a class="button button-quiet" href="{{ site.event.mentor_interest_url }}">Mentor / judge placeholder</a>
+        <a class="button button-primary" href="https://discord.gg/EPuGY7PFNn">Join the Discord</a>
+        <a class="button button-secondary" href="https://forms.gle/v4jbvYtr7cf161fb9">Fill out the interest form</a>
+        <a class="button button-quiet" href="https://makecu25.devpost.com/project-gallery">See last year's projects</a>
       </div>
-      <p class="hero-note">Applications, sponsor list, schedule, and venue room details will be updated as they are confirmed.</p>
+      <!-- <p class="hero-note">Applications, sponsor list, schedule, and venue room details will be updated as they are confirmed.</p> -->
     </div>
   </section>
 
@@ -62,13 +57,14 @@ layout: default
       <div>
         <h2>Build something physical in one focused weekend.</h2>
       </div>
-      <div class="section-copy">
+      <!-- <div class="section-copy">
         {{ site.event.about.description | markdownify }}
-      </div>
+      </div> -->
     </div>
   </section>
 
-  <section class="section training" id="hardware">
+  <!-- i like this section, but let's flesh it out a bit better before publishing -->
+  <!-- <section class="section training" id="hardware">
     <div class="section-kicker">Makerspace Training</div>
     <div class="section-heading">
       <h2>Checklist before hacking</h2>
@@ -110,9 +106,10 @@ layout: default
         </article>
       {% endfor %}
     </div>
-  </section>
+  </section> -->
 
-  <section class="section program" id="program">
+  <!-- i like this section, but let's flesh it out a bit better before publishing -->
+  <!-- <section class="section program" id="program">
     <div class="section-kicker">Program</div>
     <div class="section-heading">
       <h2>What hackers can expect</h2>
@@ -129,12 +126,12 @@ layout: default
         </article>
       {% endfor %}
     </div>
-  </section>
+  </section> -->
 
   <section class="section schedule" id="schedule">
     <div class="section-kicker">Schedule</div>
     <div class="section-heading">
-      <h2>Draft weekend flow</h2>
+      <h2>Tentative weekend flow</h2>
       <p>Exact times and locations should be replaced once venue reservations and MLH logistics are finalized.</p>
     </div>
     <div class="timeline">
@@ -150,7 +147,7 @@ layout: default
     </div>
   </section>
 
-  <section class="section map" id="map">
+  <!-- <section class="section map" id="map">
     <div class="section-kicker">Map</div>
     <div class="map-panel">
       <div>
@@ -159,15 +156,15 @@ layout: default
       </div>
       <div class="map-circuit" aria-hidden="true"></div>
     </div>
-  </section>
+  </section> -->
 
   <section class="section sponsors" id="sponsors">
     <div class="section-kicker">Sponsors</div>
     <div class="section-heading">
       <h2>Sponsors to be announced</h2>
-      <p>Use these blocks as temporary placeholders. Replace each block with confirmed sponsor logos, links, and tiers when agreements are final.</p>
+      <!-- <p>Use these blocks as temporary placeholders. Replace each block with confirmed sponsor logos, links, and tiers when agreements are final.</p> -->
     </div>
-    <div class="sponsor-grid" aria-label="Sponsor placeholders">
+    <!-- <div class="sponsor-grid" aria-label="Sponsor placeholders">
       {% for tier in site.event.sponsors %}
         <article class="sponsor-tier">
           <h3>{{ tier.tier }}</h3>
@@ -178,15 +175,14 @@ layout: default
           </div>
         </article>
       {% endfor %}
-    </div>
-    <a class="inline-link" href="{{ site.event.sponsor_interest_url }}">Interested in supporting MakeCU? Placeholder sponsor form</a>
+    </div> -->
+    <!-- <a class="inline-link" href="{{ site.event.sponsor_interest_url }}">Interested in supporting MakeCU? Placeholder sponsor form</a> -->
   </section>
 
   <section class="section faq" id="faq">
     <div class="section-kicker">FAQ</div>
     <div class="section-heading">
       <h2>Frequently asked questions</h2>
-      <p>Based on MLH's suggested hackathon FAQ topics and MakeCU's previous event information.</p>
     </div>
     <div class="faq-list">
       {% for item in site.event.faq %}
@@ -203,12 +199,11 @@ layout: default
       <div>
         <div class="section-kicker">Contact</div>
         <h2>Organized by Columbia University Robotics Club.</h2>
-        <p>Replace this with the confirmed organizing email, Discord invite, social links, and day-of support channel before registration opens.</p>
       </div>
       <div class="contact-actions">
-        <a class="button button-primary" href="mailto:{{ site.event.email }}">{{ site.event.email }}</a>
-        <a class="button button-secondary" href="{{ site.event.discord_url }}">Discord placeholder</a>
-        <a class="inline-link" href="https://mlh.io/code-of-conduct">MLH Code of Conduct</a>
+        <a class="button button-primary" href="https://discord.gg/EPuGY7PFNn">Join Our Discord</a>
+        <a class="button button-secondary" href="mailto:curc@columbia.edu">Email Us</a>
+        <a class="button button-quiet" href="https://mlh.io/code-of-conduct">MLH Code of Conduct</a>
       </div>
     </div>
   </section>
