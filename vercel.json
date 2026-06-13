@@ -1,5 +1,5 @@
 {
-  "installCommand": "gem install bundler && bundle install",
+  "installCommand": "gem install bundler && rm -f Gemfile.lock && bundle install",
   "buildCommand": "bundle exec jekyll build",
   "outputDirectory": "_site"
 }
