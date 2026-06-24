@@ -8,17 +8,23 @@
     {{ content }}
 
     <footer class="footer">
-      <div>
-        <strong>{{ site.event.name }} 2026</strong>
-        <span>{{ site.event.date }} at {{ site.event.location }}</span>
+      <div class="footer-brand">
+        <a class="mlh-footer-logo" href="https://mlh.io/" target="_blank" rel="noopener noreferrer" aria-label="Major League Hacking">
+          <img src="{{ site.event.mlh_logo_white }}" alt="Major League Hacking">
+        </a>
+        <div>
+          <strong>{{ site.event.name }} 2026</strong>
+          <span>{{ site.event.date }} at {{ site.event.location }}</span>
+        </div>
       </div>
       <div class="footer-links">
-        <a href="https://mlh.io/code-of-conduct">Code of Conduct</a>
+        <a href="{{ site.event.code_of_conduct_url }}">Code of Conduct</a>
         <a href="mailto:{{ site.event.email }}">Sponsor Contact</a>
         <a href="mailto:{{ site.event.email }}">Contact</a>
       </div>
     </footer>
 
+    <script src="{{ '/js/makecu.js' | relative_url }}"></script>
     {% include analytics/google_analytics.html ga_id=site.tracking.google_analytics %}
   </body>
 </html>
