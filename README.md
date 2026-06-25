@@ -2,8 +2,6 @@
 
 Static Jekyll landing page for MakeCU, Columbia University Robotics Club's 24-hour hardware hackathon on November 7-8, 2026.
 
-The site intentionally keeps unconfirmed items as placeholders: registration, sponsors, exact venue rooms, hardware inventory, prizes, judges, schedule, Discord, and contact email.
-
 ## Local Development
 
 ```bash
