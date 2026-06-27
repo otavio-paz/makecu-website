@@ -2,22 +2,7 @@
 layout: default
 ---
 
-<header class="site-header">
-  <a class="brand" href="#top" aria-label="{{ site.event.name }} home">
-    <span class="brand-mark" aria-hidden="true">MC</span>
-    <span>{{ site.event.name }}</span>
-  </a>
-  <nav class="site-nav" aria-label="Main navigation">
-    <a href="#about">About</a>
-    <a href="#schedule">Schedule</a>
-    <a href="#checklist">Checklist</a>
-    <a href="#tracks">Tracks</a>
-    <a href="#judges">Judges</a>
-    <a href="#sponsors">Sponsors</a>
-    <a href="#team">Team</a>
-    <a href="#faq">FAQ</a>
-  </nav>
-</header>
+{% include site_header.html %}
 
 <main id="top">
   <section class="hero snap-section" aria-label="{{ site.event.name }} landing page">
@@ -151,11 +136,6 @@ layout: default
         </div>
       </div>
     </div>
-    <div class="mascot-slot" aria-label="Robot mascot placeholder">
-      <p class="terminal-prompt">$ ./load_mascot.sh</p>
-      <img class="robot-image" src="{{ '/images/robot-placeholder.png' | relative_url }}" alt="Robot mascot placeholder">
-      <span>Robot mascot placeholder</span>
-    </div>
   </section>
 
   <section class="quick-facts" aria-label="MakeCU quick facts">
@@ -185,6 +165,20 @@ layout: default
           </div>
         {% endif %}
       </div>
+      <div class="about-page-links" aria-label="MakeCU resource pages">
+        <article>
+          <span class="terminal-prompt">$ ./prepare_hackers.sh</span>
+          <h4>Checklist</h4>
+          <p>Training links, makerspace prep, and equipment quizzes before the event.</p>
+          <a class="button button-primary" href="{{ '/checklist/' | relative_url }}">Open Checklist</a>
+        </article>
+        <article>
+          <span class="terminal-prompt">$ ./meet_team.sh</span>
+          <h4>Team</h4>
+          <p>Meet the organizers building MakeCU 2026 across logistics, business, web, experience, and outreach.</p>
+          <a class="button button-secondary" href="{{ '/team/' | relative_url }}">Meet the Team</a>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -203,68 +197,6 @@ layout: default
           </div>
         </article>
       {% endfor %}
-    </div>
-  </section>
-
-  <section class="section checklist snap-section" id="checklist">
-    <div class="terminal-heading">
-      <span>$</span>
-      <h2><span class="terminal-command">cat</span> CHECKLIST.md</h2>
-    </div>
-    <div class="checklist-shell">
-      <div class="checklist-intro">
-        <h3>Before you hack</h3>
-        <p>{{ site.event.training.intro }}</p>
-        <div class="checklist-links">
-          {% for link in site.event.training.links %}
-            <a href="{{ link.href }}" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="checklist-meter" aria-label="Checklist progress">
-        <strong>{{ site.event.training.progress }}</strong>
-        <span>{{ site.event.training.total }} required items</span>
-        <div class="meter-track">
-          <i style="width: {{ site.event.training.progress }}"></i>
-        </div>
-      </div>
-      <div class="checklist-grid">
-        {% for group in site.event.training.groups %}
-          <article class="checklist-card">
-            <div class="checklist-card-header">
-              <h3>{{ group.title }}</h3>
-              <span>{{ group.completed }}</span>
-            </div>
-            {% assign group_index = forloop.index %}
-            <ul>
-              {% for item in group.items %}
-                <li>
-                  <label class="check-control" for="check-{{ group_index }}-{{ forloop.index }}">
-                    <input id="check-{{ group_index }}-{{ forloop.index }}" type="checkbox" data-checklist-item>
-                    <span class="check-node" aria-hidden="true"></span>
-                    <span class="screen-reader-text">Mark {{ item.title }} complete</span>
-                  </label>
-                  <a class="check-copy" href="{{ item.href }}" target="_blank" rel="noopener noreferrer">
-                    <strong>{{ item.title }}</strong>
-                    <em>
-                      {% if item.kind == "Video" %}
-                        <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                          <path d="M4 5 H16 V19 H4 Z M16 9 L21 6 V18 L16 15 Z"></path>
-                        </svg>
-                      {% elsif item.kind == "Quiz" %}
-                        <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                          <path d="M6 3 H18 V21 H6 Z M9 7 H15 M9 11 H15 M9 15 H12"></path>
-                        </svg>
-                      {% endif %}
-                      <span>{{ item.kind }}</span>
-                    </em>
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </article>
-        {% endfor %}
-      </div>
     </div>
   </section>
 
@@ -355,39 +287,6 @@ layout: default
             {% endfor %}
           </div>
         </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="section team snap-section" id="team">
-    <div class="terminal-heading">
-      <span>$</span>
-      <h2><span class="terminal-command">whoami</span> TEAM</h2>
-    </div>
-    <div class="team-grid">
-      {% for member in site.event.team %}
-        <button class="team-card" type="button" data-dialog-target="team-{{ forloop.index }}">
-          {% if member.photo and member.photo != "" %}
-            <img class="team-avatar" src="{{ member.photo | relative_url }}" alt="{{ member.name }}">
-          {% else %}
-            <span class="team-avatar" aria-hidden="true">{{ forloop.index }}</span>
-          {% endif %}
-          <h3>{{ member.name }}</h3>
-          <p>{{ member.role }}</p>
-        </button>
-        <dialog class="team-dialog" id="team-{{ forloop.index }}">
-          <div class="dialog-panel">
-            <button class="dialog-close" type="button" data-dialog-close aria-label="Close team member information">Close</button>
-            {% if member.photo and member.photo != "" %}
-              <img class="team-avatar dialog-photo" src="{{ member.photo | relative_url }}" alt="{{ member.name }}">
-            {% else %}
-              <span class="team-avatar dialog-photo" aria-hidden="true">{{ forloop.index }}</span>
-            {% endif %}
-            <h3>{{ member.name }}</h3>
-            <p class="dialog-role">{{ member.role }}</p>
-            <p>{{ member.bio }}</p>
-          </div>
-        </dialog>
       {% endfor %}
     </div>
   </section>

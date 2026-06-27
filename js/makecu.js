@@ -150,7 +150,7 @@
     });
   });
 
-  document.querySelectorAll(".judge-dialog").forEach(function (dialog) {
+  document.querySelectorAll(".judge-dialog, .team-dialog").forEach(function (dialog) {
     dialog.addEventListener("click", function (event) {
       if (event.target === dialog) {
         dialog.close();
