@@ -1,0 +1,34 @@
+<section class="section team snap-section" id="team">
+  <div class="terminal-heading">
+    <span>$</span>
+    <h2><span class="terminal-command">whoami</span> TEAM</h2>
+  </div>
+  <div class="team-grid">
+    {% for member in site.event.team %}
+      <button class="team-card" type="button" data-dialog-target="team-{{ forloop.index }}">
+        {% if member.photo and member.photo != "" %}
+          <img class="team-avatar" src="{{ member.photo | relative_url }}" alt="{{ member.name }}">
+        {% else %}
+          <span class="team-avatar" aria-hidden="true">{{ forloop.index }}</span>
+        {% endif %}
+        <h3>{{ member.name }}</h3>
+        <p>{{ member.role }}</p>
+      </button>
+      <dialog class="team-dialog" id="team-{{ forloop.index }}">
+        <div class="dialog-panel">
+          <button class="dialog-close" type="button" data-dialog-close aria-label="Close team member information">Close</button>
+          {% if member.photo and member.photo != "" %}
+            <img class="team-avatar dialog-photo" src="{{ member.photo | relative_url }}" alt="{{ member.name }}">
+          {% else %}
+            <span class="team-avatar dialog-photo" aria-hidden="true">{{ forloop.index }}</span>
+          {% endif %}
+          <h3>{{ member.name }}</h3>
+          <p class="dialog-role">{{ member.role }}</p>
+          {% if member.bio %}
+            <p>{{ member.bio }}</p>
+          {% endif %}
+        </div>
+      </dialog>
+    {% endfor %}
+  </div>
+</section>

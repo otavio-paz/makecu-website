@@ -1,0 +1,65 @@
+<section class="section checklist snap-section" id="checklist">
+  <div class="terminal-heading">
+    <span>$</span>
+    <h2><span class="terminal-command">cat</span> CHECKLIST.md</h2>
+  </div>
+  <div class="checklist-shell">
+    <div class="checklist-intro">
+      <h3>Before you hack</h3>
+      <p>{{ site.event.training.intro }}</p>
+      <div class="checklist-links">
+        {% for link in site.event.training.links %}
+          <a href="{{ link.href }}" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="checklist-meter" aria-label="Checklist progress">
+      <strong>{{ site.event.training.progress }}</strong>
+      <span>{{ site.event.training.total }} required items</span>
+      <div class="meter-track">
+        <i style="width: {{ site.event.training.progress }}"></i>
+      </div>
+    </div>
+    <div class="checklist-grid">
+      {% for group in site.event.training.groups %}
+        <article class="checklist-card">
+          <div class="checklist-card-header">
+            <h3>{{ group.title }}</h3>
+            <span>{{ group.completed }}</span>
+          </div>
+          {% assign group_index = forloop.index %}
+          <ul>
+            {% for item in group.items %}
+              <li>
+                <label class="check-control" for="check-{{ group_index }}-{{ forloop.index }}">
+                  <input id="check-{{ group_index }}-{{ forloop.index }}" type="checkbox" data-checklist-item>
+                  <span class="check-node" aria-hidden="true"></span>
+                  <span class="screen-reader-text">Mark {{ item.title }} complete</span>
+                </label>
+                <a class="check-copy" href="{{ item.href }}" target="_blank" rel="noopener noreferrer">
+                  <strong>{{ item.title }}</strong>
+                  <em>
+                    {% if item.kind == "Guide" %}
+                      <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M5 4 H14 C16.2 4 18 5.8 18 8 V20 H8 C6.3 20 5 18.7 5 17 Z M8 8 H15 M8 12 H15 M8 16 H12"></path>
+                      </svg>
+                    {% elsif item.kind == "Video" %}
+                      <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M4 5 H16 V19 H4 Z M16 9 L21 6 V18 L16 15 Z"></path>
+                      </svg>
+                    {% elsif item.kind == "Quiz" %}
+                      <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M6 3 H18 V21 H6 Z M9 7 H15 M9 11 H15 M9 15 H12"></path>
+                      </svg>
+                    {% endif %}
+                    <span>{{ item.kind }}</span>
+                  </em>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
