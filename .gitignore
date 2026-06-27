@@ -5,6 +5,7 @@ _site
 .bundle/
 vendor/
 node_modules/
+.next/
 .DS_Store
 images/makecu-hero.png
 Gemfile.lock
