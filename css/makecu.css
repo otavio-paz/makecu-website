@@ -1246,6 +1246,40 @@ a {
   font-family: var(--font-ui);
 }
 
+.linkedin-link {
+  align-items: center;
+  border: 1px solid rgba(235, 235, 235, 0.38);
+  color: var(--paper);
+  display: inline-flex;
+  font-family: var(--font-ui);
+  gap: 9px;
+  justify-content: center;
+  margin-top: 18px;
+  min-height: 44px;
+  padding: 8px 12px;
+  text-decoration: none;
+}
+
+.linkedin-link img {
+  display: block;
+  height: 24px;
+  image-rendering: pixelated;
+  width: 24px;
+}
+
+.linkedin-link:hover,
+.linkedin-link:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 16px rgba(255, 103, 0, 0.24);
+  color: var(--paper);
+  outline: 0;
+}
+
+.linkedin-link-empty {
+  color: var(--silver);
+  opacity: 0.74;
+}
+
 .sponsor-grid {
   display: grid;
   gap: 18px;

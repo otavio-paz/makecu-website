@@ -27,6 +27,17 @@
           {% if member.bio %}
             <p>{{ member.bio }}</p>
           {% endif %}
+          {% if member.linkedin_url and member.linkedin_url != "" %}
+            <a class="linkedin-link" href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ member.name }} on LinkedIn">
+              <img src="{{ '/images/icons/linkedin_pixel_logo_icon.webp' | relative_url }}" alt="">
+              <span>LinkedIn</span>
+            </a>
+          {% else %}
+            <span class="linkedin-link linkedin-link-empty" aria-label="LinkedIn link placeholder">
+              <img src="{{ '/images/icons/linkedin_pixel_logo_icon.webp' | relative_url }}" alt="">
+              <span>LinkedIn soon</span>
+            </span>
+          {% endif %}
         </div>
       </dialog>
     {% endfor %}
