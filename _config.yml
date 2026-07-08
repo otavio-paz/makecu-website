@@ -182,6 +182,7 @@ event:
   team:
     - name: "Alice Lin"
       role: "Lead Organizer"
+      photo: "/images/team/Alice-Lin.jpeg"
       linkedin_url: "https://www.linkedin.com/in/alicelin535/"
     - name: "Sarrah Kitchell"
       role: "Assistant Organizer"
@@ -208,6 +209,8 @@ event:
       linkedin_url: "https://www.linkedin.com/in/otavio-paz/"
     - name: "Arnia Goode"
       role: "Hacker Experience"
+      photo: "/images/team/Arnia-Goode.jpeg"
+      bio: "Arnia is a junior studying Mechanical Engineering at Columbia Engineering with a strong interest in innovation and collaborative problem solving. As Director of Club Events, she represents MakeCU by planning technical workshops for both before and during MakeCU to ensure that hackers have a positive experience."
       linkedin_url: "https://www.linkedin.com/in/arniagoode/"
     - name: "Hudson Aibel"
       role: "Hacker Experience"
@@ -215,6 +218,7 @@ event:
       linkedin_url: "https://www.linkedin.com/in/hudson-aibel/"
     - name: "Tsenaye Lewis"
       role: "Outreach"
+      photo: "/images/team/Tsenaye-Lewis.jpeg"
       linkedin_url: "https://www.linkedin.com/in/tsenaye-patricia-lewis-796a333b1/"
 
   faq:
