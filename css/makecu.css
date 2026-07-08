@@ -703,8 +703,10 @@ a {
   box-shadow:
     8px 8px 0 rgba(0, 81, 154, 0.48),
     0 0 0 1px rgba(235, 235, 235, 0.22);
+  height: auto;
   object-fit: cover;
   opacity: 0.68;
+  max-width: 100%;
 }
 
 .past-event-photo-placeholder {
