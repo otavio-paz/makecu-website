@@ -229,6 +229,8 @@ layout: default
       <span>$</span>
       <h2><span class="terminal-command">open</span> JUDGES</h2>
     </div>
+    <p class="section-tbd">TBD</p>
+    {% comment %}
     <div class="judge-grid">
       {% for judge in site.event.judges %}
         <button class="judge-card" type="button" data-dialog-target="judge-{{ forloop.index }}">
@@ -255,6 +257,7 @@ layout: default
         </dialog>
       {% endfor %}
     </div>
+    {% endcomment %}
   </section>
 
   <section class="section sponsors snap-section" id="sponsors">
@@ -262,6 +265,8 @@ layout: default
       <span>$</span>
       <h2><span class="terminal-command">tar</span> SPONSORS</h2>
     </div>
+    <p class="section-tbd">TBD</p>
+    {% comment %}
     <div class="sponsor-grid" aria-label="Sponsor placeholders">
       {% for tier in site.event.sponsors %}
         <article class="sponsor-tier">
@@ -289,6 +294,7 @@ layout: default
         </article>
       {% endfor %}
     </div>
+    {% endcomment %}
   </section>
 
   <section class="section faq snap-section" id="faq">

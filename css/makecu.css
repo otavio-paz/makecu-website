@@ -786,6 +786,15 @@ a {
   margin: 14px 0 0;
 }
 
+.section-tbd {
+  color: var(--paper);
+  font-family: var(--font-heading);
+  font-size: clamp(24px, 4vw, 44px);
+  line-height: 1.2;
+  margin: 28px 0 0;
+  text-align: center;
+}
+
 .timeline {
   display: grid;
   overflow: hidden;
