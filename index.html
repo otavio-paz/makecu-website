@@ -116,7 +116,7 @@ layout: default
     <div class="hero-content">
       <p class="terminal-prompt">$ ./boot_makecu.sh</p>
       <h1 class="glitch-title" aria-label="{{ site.event.name }} 2026">
-        <span class="glitch-main" data-text="MakeCU 2026"><span class="title-word"><span class="title-make">Make</span><span class="title-swap"><span class="title-cu">CU</span><span class="title-icon title-icon-health" aria-hidden="true"><img src="{{ '/images/icons/first_aid.png' | relative_url }}" alt=""></span><span class="title-icon title-icon-leaf" aria-hidden="true"><img src="{{ '/images/icons/leaf.svg' | relative_url }}" alt=""></span><span class="title-icon title-icon-bulb" aria-hidden="true"><img src="{{ '/images/icons/lightbulb.svg' | relative_url }}" alt=""></span></span></span> <span class="title-year">2026</span></span>
+        <span class="glitch-main glitch-base"><span class="title-word"><span class="title-make">Make</span><span class="title-swap"><span class="title-cu">CU</span><span class="title-icon title-icon-health" aria-hidden="true"><img src="{{ '/images/icons/first_aid.png' | relative_url }}" alt=""></span><span class="title-icon title-icon-leaf" aria-hidden="true"><img src="{{ '/images/icons/leaf.svg' | relative_url }}" alt=""></span><span class="title-icon title-icon-bulb" aria-hidden="true"><img src="{{ '/images/icons/lightbulb.svg' | relative_url }}" alt=""></span></span></span> <span class="title-year">2026</span></span>
       </h1>
       <p class="date-line">{{ site.event.date }}</p>
       <p class="location-line">{{ site.event.location }}</p>
@@ -206,22 +206,48 @@ layout: default
       <span>$</span>
       <h2><span class="terminal-command">ls</span> TRACKS</h2>
     </div>
-    <div class="track-grid">
-      {% for track in site.event.tracks %}
-        <article class="track-card">
-          <h3>
-            {% if forloop.index == 1 %}
-              <span class="track-icon track-icon-health track-icon-large" aria-hidden="true"><img src="{{ '/images/icons/first_aid.png' | relative_url }}" alt=""></span>
-            {% elsif forloop.index == 2 %}
-              <span class="track-icon track-icon-large" aria-hidden="true"><img src="{{ '/images/icons/leaf.svg' | relative_url }}" alt=""></span>
-            {% else %}
-              <span class="track-icon track-icon-large" aria-hidden="true"><img src="{{ '/images/icons/lightbulb.svg' | relative_url }}" alt=""></span>
+    <figure class="track-mascots-banner">
+      <img src="{{ '/images/mascots/mascots.png' | relative_url }}" alt="Healthcare and environmental robot mascots">
+    </figure>
+    <div class="tracks-showcase" data-track-mascots>
+      <div class="track-grid">
+        {% for track in site.event.tracks %}
+          {% if forloop.index == 1 %}
+            {% assign track_mascot = '/images/mascots/health_robot_waving.png' %}
+            {% assign track_mascot_alt = 'Healthcare robot mascot waving' %}
+            {% assign track_mascot_key = 'health' %}
+          {% elsif forloop.index == 2 %}
+            {% assign track_mascot = '/images/mascots/nature_robot_waving.png' %}
+            {% assign track_mascot_alt = 'Nature robot mascot waving' %}
+            {% assign track_mascot_key = 'nature' %}
+          {% else %}
+            {% assign track_mascot = '' %}
+            {% assign track_mascot_alt = '' %}
+            {% assign track_mascot_key = '' %}
+          {% endif %}
+          <article class="track-card" {% if track_mascot != '' %}role="button" tabindex="0" aria-expanded="false" data-mascot-src="{{ track_mascot | relative_url }}" data-mascot-alt="{{ track_mascot_alt }}" data-mascot-key="{{ track_mascot_key }}"{% endif %}>
+            <h3>
+              {% if forloop.index == 1 %}
+                <span class="track-icon track-icon-health track-icon-large" aria-hidden="true"><img src="{{ '/images/icons/first_aid.png' | relative_url }}" alt=""></span>
+              {% elsif forloop.index == 2 %}
+                <span class="track-icon track-icon-large" aria-hidden="true"><img src="{{ '/images/icons/leaf.svg' | relative_url }}" alt=""></span>
+              {% else %}
+                <span class="track-icon track-icon-large" aria-hidden="true"><img src="{{ '/images/icons/lightbulb.svg' | relative_url }}" alt=""></span>
+              {% endif %}
+              <span>{{ track.title }}</span>
+            </h3>
+            {% if track_mascot != '' %}
+              <div class="track-mobile-mascot track-mobile-mascot-{{ track_mascot_key }}" aria-hidden="true">
+                <img src="{{ track_mascot | relative_url }}" alt="">
+              </div>
             {% endif %}
-            <span>{{ track.title }}</span>
-          </h3>
-          <p>{{ track.description }}</p>
-        </article>
-      {% endfor %}
+            <p>{{ track.description }}</p>
+          </article>
+        {% endfor %}
+      </div>
+      <aside class="track-mascot-preview" aria-hidden="true">
+        <img src="" alt="">
+      </aside>
     </div>
   </section>
 

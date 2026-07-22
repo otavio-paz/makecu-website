@@ -158,13 +158,124 @@
     });
   });
 
+  var trackShowcase = document.querySelector("[data-track-mascots]");
+
+  if (trackShowcase) {
+    var trackCards = Array.prototype.slice.call(trackShowcase.querySelectorAll(".track-card"));
+    var mascotPreview = trackShowcase.querySelector(".track-mascot-preview");
+    var mascotPreviewImage = mascotPreview ? mascotPreview.querySelector("img") : null;
+    var desktopTrackMedia = window.matchMedia("(min-width: 721px)");
+    var mascotSwapTimeout;
+
+    var clearTrackSelection = function () {
+      trackCards.forEach(function (card) {
+        card.classList.remove("is-active");
+
+        if (card.hasAttribute("aria-expanded")) {
+          card.setAttribute("aria-expanded", "false");
+        }
+      });
+    };
+
+    var updateMascotPreview = function (src, alt, key) {
+      if (!mascotPreview || !mascotPreviewImage) {
+        return;
+      }
+
+      mascotPreview.classList.remove("is-health", "is-nature");
+      mascotPreviewImage.setAttribute("src", src);
+      mascotPreviewImage.setAttribute("alt", alt);
+
+      if (key) {
+        mascotPreview.classList.add("is-" + key);
+      }
+
+      void mascotPreview.offsetWidth;
+      mascotPreview.classList.add("is-visible");
+    };
+
+    var showTrackMascot = function (card) {
+      var src = card.getAttribute("data-mascot-src");
+      var alt = card.getAttribute("data-mascot-alt") || "";
+      var key = card.getAttribute("data-mascot-key");
+
+      if (!src) {
+        return;
+      }
+
+      clearTrackSelection();
+      void card.offsetWidth;
+      card.classList.add("is-active");
+      card.setAttribute("aria-expanded", "true");
+
+      if (!mascotPreview || !mascotPreviewImage) {
+        return;
+      }
+
+      window.clearTimeout(mascotSwapTimeout);
+
+      if (!desktopTrackMedia.matches) {
+        updateMascotPreview(src, alt, key);
+        return;
+      }
+
+      if (mascotPreviewImage.getAttribute("src") === src) {
+        mascotPreview.classList.add("is-visible");
+        return;
+      }
+
+      mascotPreview.classList.remove("is-visible");
+
+      if (!mascotPreviewImage.getAttribute("src")) {
+        updateMascotPreview(src, alt, key);
+        return;
+      }
+
+      mascotSwapTimeout = window.setTimeout(function () {
+        updateMascotPreview(src, alt, key);
+      }, 240);
+    };
+
+    trackCards.forEach(function (card) {
+      card.addEventListener("mouseenter", function () {
+        showTrackMascot(card);
+      });
+
+      card.addEventListener("focus", function () {
+        showTrackMascot(card);
+      });
+
+      card.addEventListener("click", function () {
+        showTrackMascot(card);
+      });
+
+      card.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          showTrackMascot(card);
+        }
+      });
+    });
+  }
+
   var glitchTitle = document.querySelector(".glitch-title");
 
   if (glitchTitle) {
+    var glitchBase = glitchTitle.querySelector(".glitch-base");
     var glitchIcons = ["health", "leaf", "bulb"];
     var glitchIndex = 0;
-    var glitchDuration = 1400;
+    var glitchDuration = 1350;
     var glitchTimeout;
+
+    if (glitchBase && !glitchTitle.querySelector(".glitch-slice")) {
+      ["top", "bottom"].forEach(function (sliceName) {
+        var glitchSlice = glitchBase.cloneNode(true);
+        glitchSlice.classList.remove("glitch-base");
+        glitchSlice.classList.add("glitch-slice", "glitch-slice-" + sliceName);
+        glitchSlice.setAttribute("aria-hidden", "true");
+        glitchTitle.appendChild(glitchSlice);
+      });
+    }
 
     var triggerTitleGlitch = function () {
       window.clearTimeout(glitchTimeout);

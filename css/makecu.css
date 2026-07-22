@@ -331,16 +331,19 @@ a {
 }
 
 .glitch-title {
+  --glitch-shift: clamp(5px, 1.2vw, 12px);
   color: var(--paper);
+  display: inline-grid;
   font-family: var(--font-heading);
   font-size: clamp(48px, 7vw, 86px);
   font-weight: 400;
-  isolation: isolate;
+  justify-items: center;
   line-height: 1.14;
   margin: 14px 0 0;
   max-width: 100%;
   position: relative;
   text-shadow: 5px 5px 0 rgba(0, 81, 154, 0.58);
+  width: fit-content;
 }
 
 .glitch-main {
@@ -348,9 +351,40 @@ a {
   column-gap: 0.4em;
   display: flex;
   flex-wrap: wrap;
+  grid-area: 1 / 1;
   justify-content: center;
-  position: relative;
+  max-width: 100%;
   row-gap: 0.08em;
+}
+
+.glitch-base {
+  position: relative;
+  z-index: 1;
+}
+
+.glitch-slice {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  z-index: 2;
+}
+
+.glitch-slice-top {
+  color: var(--orange);
+  text-shadow: 4px 0 0 #64e7ff;
+}
+
+.glitch-slice-bottom {
+  color: #64e7ff;
+  text-shadow: -4px 0 0 var(--orange);
+}
+
+.glitch-slice-top img {
+  filter: saturate(1.7) hue-rotate(-18deg);
+}
+
+.glitch-slice-bottom img {
+  filter: saturate(1.6) hue-rotate(155deg);
 }
 
 .title-word {
@@ -360,17 +394,25 @@ a {
 
 .title-swap {
   align-items: center;
-  display: inline-flex;
+  display: inline-grid;
+  justify-items: center;
   min-width: 2.15ch;
-  position: relative;
+  width: 2.15ch;
   white-space: nowrap;
+}
+
+.title-cu,
+.title-icon {
+  grid-area: 1 / 1;
 }
 
 .title-icon {
   align-items: center;
-  display: none;
+  display: inline-flex;
   height: 1.08em;
   justify-content: center;
+  opacity: 0;
+  visibility: hidden;
   width: 2.15ch;
 }
 
@@ -386,56 +428,41 @@ a {
 }
 
 .title-icon-health img {
-  height: 1.48em;
-  width: 1.48em;
+  height: 1.42em;
+  width: 1.42em;
 }
 
 .title-icon-leaf img,
 .title-icon-bulb img {
-  height: 2.01em;
-  width: 2.01em;
+  height: 1.58em;
+  width: 1.58em;
 }
 
-.glitch-title.is-glitching {
-  animation: titleGlitch 1400ms steps(2, end);
+.glitch-title.is-glitching .glitch-base {
+  animation: glitchBaseFlash 1350ms steps(1, end);
 }
 
-.glitch-title.is-glitching .glitch-main::before,
-.glitch-title.is-glitching .glitch-main::after {
-  color: var(--paper);
-  content: attr(data-text);
-  left: 0;
-  opacity: 0.82;
-  overflow: hidden;
-  position: absolute;
-  right: 0;
-  text-align: center;
-  top: 0;
-  z-index: 1;
+.glitch-title.is-glitching .glitch-slice {
+  visibility: visible;
 }
 
-.glitch-title.is-glitching .glitch-main::before {
-  animation: glitchSliceOne 1400ms steps(2, end);
-  text-shadow: -5px 0 0 var(--orange);
+.glitch-title.is-glitching .glitch-slice-top {
+  animation: glitchSliceTop 1350ms steps(1, end);
 }
 
-.glitch-title.is-glitching .glitch-main::after {
-  animation: glitchSliceTwo 1400ms steps(2, end);
-  text-shadow: 5px 0 0 var(--blue);
+.glitch-title.is-glitching .glitch-slice-bottom {
+  animation: glitchSliceBottom 1350ms steps(1, end);
 }
 
 .glitch-title.is-glitching .title-cu {
-  display: none;
-}
-
-.glitch-title[data-glitch-icon].is-glitching .title-swap {
-  z-index: 2;
+  animation: glitchCuSwap 1350ms steps(1, end);
 }
 
 .glitch-title[data-glitch-icon="health"].is-glitching .title-icon-health,
 .glitch-title[data-glitch-icon="leaf"].is-glitching .title-icon-leaf,
 .glitch-title[data-glitch-icon="bulb"].is-glitching .title-icon-bulb {
-  display: inline-flex;
+  animation: glitchIconSwap 1350ms steps(1, end);
+  visibility: visible;
 }
 
 .date-line,
@@ -518,10 +545,10 @@ a {
 .button-icon {
   display: block;
   flex: 0 0 auto;
-  height: 18px;
+  height: 50px;
   image-rendering: pixelated;
   object-fit: contain;
-  width: 18px;
+  width: 50px;
 }
 
 .countdown-card {
@@ -1086,6 +1113,19 @@ a {
   max-width: 760px;
 }
 
+.tracks-showcase {
+  align-items: center;
+  display: grid;
+  gap: 36px;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+  margin: 0 auto;
+  max-width: 1120px;
+}
+
+.tracks-showcase .track-grid {
+  max-width: none;
+}
+
 .track-card {
   background: var(--paper);
   border: 4px solid var(--blue-dark);
@@ -1096,6 +1136,19 @@ a {
   overflow: hidden;
   padding: 30px 18px 16px;
   text-align: left;
+  transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.track-card[data-mascot-src] {
+  cursor: pointer;
+}
+
+.track-card:hover,
+.track-card:focus,
+.track-card.is-active {
+  box-shadow: 10px 10px 0 rgba(0, 81, 154, 0.5), 0 0 24px rgba(235, 235, 235, 0.28);
+  outline: 0;
+  transform: translate(-2px, -2px);
 }
 
 .track-card::before {
@@ -1163,6 +1216,59 @@ a {
   font-size: clamp(11px, 1vw, 13px);
   line-height: 1.8;
   margin-top: 8px;
+}
+
+.track-mascot-preview {
+  align-items: center;
+  display: flex;
+  height: 598px;
+  justify-content: center;
+  min-height: 598px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(18px) scale(0.985);
+  transition: opacity 260ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.track-mascot-preview.is-visible {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.track-mascot-preview img {
+  display: block;
+  filter: drop-shadow(10px 12px 0 rgba(0, 81, 154, 0.38));
+  max-height: 460px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.track-mascot-preview.is-visible img {
+  animation: trackMascotFadeIn 420ms ease-out both;
+}
+
+.track-mascot-preview.is-health img {
+  max-height: 598px;
+  max-width: 115%;
+  width: 115%;
+}
+
+.track-mobile-mascot {
+  display: none;
+}
+
+.track-mascots-banner {
+  margin: clamp(16px, 3vw, 36px) auto 0;
+  max-width: 1120px;
+  width: 100%;
+}
+
+.track-mascots-banner img {
+  display: block;
+  height: auto;
+  image-rendering: pixelated;
+  max-width: 50%;
+  width: 50%;
 }
 
 .circuit-chip,
@@ -1580,6 +1686,23 @@ a {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .tracks-showcase {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  }
+
+  .track-mascot-preview {
+    height: 494px;
+    min-height: 494px;
+  }
+
+  .track-mascot-preview img {
+    max-height: 380px;
+  }
+
+  .track-mascot-preview.is-health img {
+    max-height: 494px;
+  }
+
   .judge-card {
     min-height: 300px;
   }
@@ -1635,6 +1758,7 @@ a {
   .quick-facts,
   .about-page-links,
   .checklist-grid,
+  .tracks-showcase,
   .track-grid,
   .judge-grid,
   .team-grid,
@@ -1649,6 +1773,65 @@ a {
 
   .quick-facts {
     transform: none;
+  }
+
+  .track-mascot-preview {
+    display: none;
+  }
+
+  .track-card {
+    transform: none;
+  }
+
+  .track-card:hover,
+  .track-card:focus,
+  .track-card.is-active {
+    transform: none;
+  }
+
+  .track-mobile-mascot {
+    clip-path: inset(0 0 100% 0);
+    display: grid;
+    justify-items: center;
+    margin: 0;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-20px);
+    transition:
+      clip-path 360ms cubic-bezier(0.22, 1, 0.36, 1),
+      margin 360ms ease,
+      max-height 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 240ms ease 60ms,
+      transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .track-card.is-active .track-mobile-mascot {
+    clip-path: inset(0 0 0 0);
+    margin: 12px 0 0;
+    max-height: 310px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .track-card.is-active .track-mobile-mascot img {
+    animation: trackMascotSlideIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .track-mobile-mascot img {
+    display: block;
+    max-height: 300px;
+    max-width: min(260px, 88%);
+    object-fit: contain;
+  }
+
+  .track-card.is-active .track-mobile-mascot-health {
+    max-height: 400px;
+  }
+
+  .track-mobile-mascot-health img {
+    max-height: 390px;
+    max-width: min(338px, 96%);
   }
 
   .section {
@@ -1710,6 +1893,26 @@ a {
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
   }
+
+  .glitch-title.is-glitching .glitch-base,
+  .glitch-title.is-glitching .glitch-slice,
+  .glitch-title.is-glitching .title-cu,
+  .glitch-title.is-glitching .title-icon {
+    animation-duration: 1350ms !important;
+  }
+
+  .track-mascot-preview {
+    transition-duration: 260ms, 320ms !important;
+  }
+
+  .track-mobile-mascot {
+    transition-duration: 360ms, 360ms, 420ms, 240ms, 360ms !important;
+  }
+
+  .track-mascot-preview.is-visible img,
+  .track-card.is-active .track-mobile-mascot img {
+    animation-duration: 420ms !important;
+  }
 }
 
 @keyframes circuitDrift {
@@ -1743,75 +1946,190 @@ a {
   }
 }
 
-@keyframes titleGlitch {
+@keyframes glitchBaseFlash {
   0%,
+  7%,
+  24%,
+  68%,
+  85%,
   100% {
+    color: var(--paper);
+    text-shadow: 5px 5px 0 rgba(0, 81, 154, 0.58);
     transform: translate(0, 0);
   }
 
+  8%,
   12% {
-    transform: translate(-6px, 3px);
+    color: var(--orange);
+    text-shadow: 4px 0 0 #64e7ff;
+    transform: translate(2px, -1px);
   }
 
-  26% {
-    transform: translate(5px, -2px);
+  16%,
+  20% {
+    color: #64e7ff;
+    text-shadow: -4px 0 0 var(--orange);
+    transform: translate(-2px, 1px);
   }
 
-  42% {
-    transform: translate(-3px, -4px);
+  69%,
+  76% {
+    color: #64e7ff;
+    text-shadow: 5px 0 0 var(--orange);
+    transform: translate(2px, 0);
   }
 
-  60% {
-    transform: translate(4px, 2px);
-  }
-
-  78% {
+  80%,
+  84% {
+    color: var(--orange);
+    text-shadow: -5px 0 0 #64e7ff;
     transform: translate(-2px, 0);
   }
 }
 
-@keyframes glitchSliceOne {
+@keyframes glitchSliceTop {
   0%,
+  7%,
+  24%,
+  68%,
+  85%,
   100% {
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(0 0 50% 0);
+    opacity: 0;
     transform: translate(0, 0);
   }
 
-  20% {
-    clip-path: inset(0 0 68% 0);
-    transform: translate(-9px, 0);
+  8%,
+  14% {
+    clip-path: inset(0 0 50% 0);
+    opacity: 0.96;
+    transform: translateX(calc(-1 * var(--glitch-shift)));
   }
 
-  44% {
-    clip-path: inset(42% 0 36% 0);
-    transform: translate(7px, 0);
+  15%,
+  23% {
+    clip-path: inset(0 0 50% 0);
+    opacity: 0.82;
+    transform: translateX(var(--glitch-shift));
   }
 
-  70% {
-    clip-path: inset(72% 0 0 0);
-    transform: translate(-5px, 0);
+  69%,
+  76% {
+    clip-path: inset(0 0 50% 0);
+    opacity: 0.9;
+    transform: translateX(var(--glitch-shift));
+  }
+
+  77%,
+  84% {
+    clip-path: inset(0 0 50% 0);
+    opacity: 0.78;
+    transform: translateX(calc(-1 * var(--glitch-shift)));
   }
 }
 
-@keyframes glitchSliceTwo {
+@keyframes glitchSliceBottom {
   0%,
+  7%,
+  24%,
+  68%,
+  85%,
   100% {
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(50% 0 0 0);
+    opacity: 0;
     transform: translate(0, 0);
   }
 
-  18% {
-    clip-path: inset(74% 0 0 0);
-    transform: translate(9px, 0);
+  8%,
+  14% {
+    clip-path: inset(50% 0 0 0);
+    opacity: 0.9;
+    transform: translateX(var(--glitch-shift));
   }
 
-  46% {
-    clip-path: inset(18% 0 64% 0);
-    transform: translate(-7px, 0);
+  15%,
+  23% {
+    clip-path: inset(50% 0 0 0);
+    opacity: 0.86;
+    transform: translateX(calc(-1 * var(--glitch-shift)));
   }
 
-  74% {
-    clip-path: inset(52% 0 26% 0);
-    transform: translate(5px, 0);
+  69%,
+  76% {
+    clip-path: inset(50% 0 0 0);
+    opacity: 0.82;
+    transform: translateX(calc(-1 * var(--glitch-shift)));
+  }
+
+  77%,
+  84% {
+    clip-path: inset(50% 0 0 0);
+    opacity: 0.94;
+    transform: translateX(var(--glitch-shift));
+  }
+}
+
+@keyframes glitchCuSwap {
+  0%,
+  23%,
+  82%,
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  24%,
+  81% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes glitchIconSwap {
+  0%,
+  23%,
+  82%,
+  100% {
+    opacity: 0;
+    transform: scale(0.82) translateY(2px);
+    visibility: hidden;
+  }
+
+  24%,
+  68% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    visibility: visible;
+  }
+
+  69%,
+  81% {
+    opacity: 1;
+    transform: scale(1.06) translateY(-1px);
+    visibility: visible;
+  }
+}
+
+@keyframes trackMascotFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(14px) scale(0.97);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes trackMascotSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
