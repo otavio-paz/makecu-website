@@ -353,20 +353,9 @@ a {
   row-gap: 0.08em;
 }
 
-.glitch-main > * {
-  position: relative;
-  z-index: 1;
-}
-
 .title-word {
   align-items: center;
   display: inline-flex;
-}
-
-.title-make,
-.title-year {
-  display: inline-block;
-  position: relative;
 }
 
 .title-swap {
@@ -422,7 +411,7 @@ a {
   right: 0;
   text-align: center;
   top: 0;
-  z-index: 0;
+  z-index: 1;
 }
 
 .glitch-title.is-glitching .glitch-main::before {
@@ -435,38 +424,12 @@ a {
   text-shadow: 5px 0 0 var(--blue);
 }
 
-.glitch-title[data-glitch-icon].is-glitching .glitch-main::before,
-.glitch-title[data-glitch-icon].is-glitching .glitch-main::after {
-  content: none;
-}
-
-.glitch-title[data-glitch-icon].is-glitching .title-make::before,
-.glitch-title[data-glitch-icon].is-glitching .title-make::after,
-.glitch-title[data-glitch-icon].is-glitching .title-year::before,
-.glitch-title[data-glitch-icon].is-glitching .title-year::after {
-  color: var(--paper);
-  content: attr(data-text);
-  inset: 0;
-  opacity: 0.78;
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-}
-
-.glitch-title[data-glitch-icon].is-glitching .title-make::before,
-.glitch-title[data-glitch-icon].is-glitching .title-year::before {
-  animation: glitchSliceOne 1400ms steps(2, end);
-  text-shadow: -5px 0 0 var(--orange);
-}
-
-.glitch-title[data-glitch-icon].is-glitching .title-make::after,
-.glitch-title[data-glitch-icon].is-glitching .title-year::after {
-  animation: glitchSliceTwo 1400ms steps(2, end);
-  text-shadow: 5px 0 0 var(--blue);
-}
-
 .glitch-title.is-glitching .title-cu {
   display: none;
+}
+
+.glitch-title[data-glitch-icon].is-glitching .title-swap {
+  z-index: 2;
 }
 
 .glitch-title[data-glitch-icon="health"].is-glitching .title-icon-health,
@@ -549,6 +512,16 @@ a {
 
 .button-instagram {
   background: #e4405f;
+  gap: 10px;
+}
+
+.button-icon {
+  display: block;
+  flex: 0 0 auto;
+  height: 18px;
+  image-rendering: pixelated;
+  object-fit: contain;
+  width: 18px;
 }
 
 .countdown-card {
