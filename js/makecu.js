@@ -163,14 +163,18 @@
   if (glitchTitle) {
     var glitchIcons = ["health", "leaf", "bulb"];
     var glitchIndex = 0;
-    var glitchDuration = 1800;
+    var glitchDuration = 1400;
+    var glitchTimeout;
 
     var triggerTitleGlitch = function () {
+      window.clearTimeout(glitchTimeout);
+      glitchTitle.classList.remove("is-glitching");
       glitchTitle.setAttribute("data-glitch-icon", glitchIcons[glitchIndex % glitchIcons.length]);
+      void glitchTitle.offsetWidth;
       glitchTitle.classList.add("is-glitching");
       glitchIndex += 1;
 
-      window.setTimeout(function () {
+      glitchTimeout = window.setTimeout(function () {
         glitchTitle.classList.remove("is-glitching");
         glitchTitle.removeAttribute("data-glitch-icon");
       }, glitchDuration);

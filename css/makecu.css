@@ -335,6 +335,7 @@ a {
   font-family: var(--font-heading);
   font-size: clamp(48px, 7vw, 86px);
   font-weight: 400;
+  isolation: isolate;
   line-height: 1.14;
   margin: 14px 0 0;
   max-width: 100%;
@@ -348,7 +349,13 @@ a {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  position: relative;
   row-gap: 0.08em;
+}
+
+.glitch-main > * {
+  position: relative;
+  z-index: 1;
 }
 
 .title-word {
@@ -359,7 +366,7 @@ a {
 .title-swap {
   align-items: center;
   display: inline-flex;
-  min-width: 2ch;
+  min-width: 2.15ch;
   position: relative;
   white-space: nowrap;
 }
@@ -367,21 +374,25 @@ a {
 .title-icon {
   align-items: center;
   display: none;
-  height: 1em;
+  height: 1.08em;
   justify-content: center;
-  width: 2ch;
+  width: 2.15ch;
 }
 
-.title-icon svg,
 .title-icon img {
   display: block;
-  height: 1em;
+  height: 1.28em;
   overflow: visible;
-  width: 1em;
+  width: 1.28em;
 }
 
 .title-icon img {
   object-fit: contain;
+}
+
+.title-icon-health img {
+  height: 1.48em;
+  width: 1.48em;
 }
 
 .title-icon-leaf img,
@@ -390,21 +401,8 @@ a {
   width: 2.01em;
 }
 
-.title-icon path {
-  fill: var(--paper);
-  stroke: var(--paper);
-  stroke-linecap: square;
-  stroke-linejoin: miter;
-  stroke-width: 5;
-}
-
-.title-icon-health path {
-  fill: var(--orange);
-  stroke: var(--orange);
-}
-
 .glitch-title.is-glitching {
-  animation: titleGlitch 1800ms steps(2, end);
+  animation: titleGlitch 1400ms steps(2, end);
 }
 
 .glitch-title.is-glitching .glitch-main::before,
@@ -418,16 +416,22 @@ a {
   right: 0;
   text-align: center;
   top: 0;
+  z-index: 0;
 }
 
 .glitch-title.is-glitching .glitch-main::before {
-  animation: glitchSliceOne 1800ms steps(2, end);
+  animation: glitchSliceOne 1400ms steps(2, end);
   text-shadow: -5px 0 0 var(--orange);
 }
 
 .glitch-title.is-glitching .glitch-main::after {
-  animation: glitchSliceTwo 1800ms steps(2, end);
+  animation: glitchSliceTwo 1400ms steps(2, end);
   text-shadow: 5px 0 0 var(--blue);
+}
+
+.glitch-title[data-glitch-icon].is-glitching .glitch-main::before,
+.glitch-title[data-glitch-icon].is-glitching .glitch-main::after {
+  content: none;
 }
 
 .glitch-title.is-glitching .title-cu {
@@ -510,6 +514,10 @@ a {
 
 .button-quiet {
   background: rgba(0, 81, 154, 0.38);
+}
+
+.button-instagram {
+  background: #e4405f;
 }
 
 .countdown-card {
@@ -1131,17 +1139,18 @@ a {
   width: 51px;
 }
 
+.track-icon-health {
+  height: 58px;
+  margin: -10px -8px -10px -4px;
+  width: 58px;
+}
+
 .track-icon svg,
 .track-icon img {
   display: block;
   height: 100%;
   object-fit: contain;
   width: 100%;
-}
-
-.track-icon-health svg path {
-  fill: var(--orange);
-  stroke: var(--orange);
 }
 
 .track-card p {
@@ -1595,7 +1604,27 @@ a {
   }
 
   .glitch-title {
-    font-size: clamp(44px, 15vw, 72px);
+    font-size: clamp(32px, 10.5vw, 48px);
+  }
+
+  .location-line {
+    font-size: clamp(15px, 4.4vw, 22px);
+    max-width: 100%;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 520px;
+    width: 100%;
+  }
+
+  .hero-actions .button {
+    font-size: 14px;
+    min-width: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
   }
 
   .countdown-grid,
