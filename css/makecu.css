@@ -363,6 +363,12 @@ a {
   display: inline-flex;
 }
 
+.title-make,
+.title-year {
+  display: inline-block;
+  position: relative;
+}
+
 .title-swap {
   align-items: center;
   display: inline-flex;
@@ -432,6 +438,31 @@ a {
 .glitch-title[data-glitch-icon].is-glitching .glitch-main::before,
 .glitch-title[data-glitch-icon].is-glitching .glitch-main::after {
   content: none;
+}
+
+.glitch-title[data-glitch-icon].is-glitching .title-make::before,
+.glitch-title[data-glitch-icon].is-glitching .title-make::after,
+.glitch-title[data-glitch-icon].is-glitching .title-year::before,
+.glitch-title[data-glitch-icon].is-glitching .title-year::after {
+  color: var(--paper);
+  content: attr(data-text);
+  inset: 0;
+  opacity: 0.78;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+}
+
+.glitch-title[data-glitch-icon].is-glitching .title-make::before,
+.glitch-title[data-glitch-icon].is-glitching .title-year::before {
+  animation: glitchSliceOne 1400ms steps(2, end);
+  text-shadow: -5px 0 0 var(--orange);
+}
+
+.glitch-title[data-glitch-icon].is-glitching .title-make::after,
+.glitch-title[data-glitch-icon].is-glitching .title-year::after {
+  animation: glitchSliceTwo 1400ms steps(2, end);
+  text-shadow: 5px 0 0 var(--blue);
 }
 
 .glitch-title.is-glitching .title-cu {
