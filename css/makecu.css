@@ -1257,20 +1257,6 @@ a {
   display: none;
 }
 
-.track-mascots-banner {
-  margin: clamp(16px, 3vw, 36px) auto 0;
-  max-width: 1120px;
-  width: 100%;
-}
-
-.track-mascots-banner img {
-  display: block;
-  height: auto;
-  image-rendering: pixelated;
-  max-width: 50%;
-  width: 50%;
-}
-
 .circuit-chip,
 .photo-frame,
 .team-avatar {
