@@ -3,63 +3,86 @@
     <span>$</span>
     <h2><span class="terminal-command">cat</span> CHECKLIST.md</h2>
   </div>
-  <div class="checklist-shell">
-    <div class="checklist-intro">
-      <h3>Before you hack</h3>
-      <p>{{ site.event.training.intro }}</p>
-      <div class="checklist-links">
-        {% for link in site.event.training.links %}
-          <a href="{{ link.href }}" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>
+  <div class="checklist-layout">
+    <img class="checklist-page-mascot checklist-page-mascot-health" src="{{ '/images/mascots/health_robot_normal.png' | relative_url }}" alt="Healthcare robot mascot">
+    <div class="checklist-shell">
+      <div class="checklist-intro">
+        <h3>Before you hack</h3>
+        <p>{{ site.event.training.intro }}</p>
+        <div class="checklist-links">
+          {% for link in site.event.training.links %}
+            <a href="{{ link.href }}" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="checklist-meter" aria-label="Checklist progress">
+        <strong data-checklist-percent data-text="{{ site.event.training.progress }}" aria-label="{{ site.event.training.progress }}">{{ site.event.training.progress }}</strong>
+        <span data-checklist-summary>0/{{ site.event.training.required }} mandatory · 0/{{ site.event.training.optional }} optional</span>
+        <div class="meter-track">
+          <i class="meter-fill meter-fill-required" data-checklist-bar-required style="width: 0%"></i>
+          <i class="meter-fill meter-fill-optional" data-checklist-bar-optional style="width: 0%"></i>
+        </div>
+        <div class="meter-legend" aria-label="Progress bar color key">
+          <span><i class="meter-swatch meter-swatch-required" aria-hidden="true"></i>Mandatory</span>
+          <span><i class="meter-swatch meter-swatch-optional" aria-hidden="true"></i>Optional</span>
+        </div>
+      </div>
+      <div class="checklist-grid">
+        {% for group in site.event.training.groups %}
+          <article class="checklist-card">
+            <div class="checklist-card-header">
+              <h3>
+                {{ group.title }}
+                <small>{% if group.required %}Mandatory{% else %}Optional{% endif %}</small>
+              </h3>
+              <span>{{ group.completed }}</span>
+            </div>
+            {% assign group_index = forloop.index %}
+            <ul>
+              {% for item in group.items %}
+                <li>
+                  <label class="check-control" for="check-{{ group_index }}-{{ forloop.index }}">
+                    <input id="check-{{ group_index }}-{{ forloop.index }}" type="checkbox" data-checklist-item {% if group.required %}data-checklist-required{% else %}data-checklist-optional{% endif %}>
+                    <span class="check-node" aria-hidden="true"></span>
+                    <span class="screen-reader-text">Mark {{ item.title }} complete</span>
+                  </label>
+                  <a class="check-copy" href="{{ item.href }}" target="_blank" rel="noopener noreferrer" title="{{ item.title }}">
+                    <em>
+                      {% if item.kind == "Guide" %}
+                        <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                          <path d="M5 4 H14 C16.2 4 18 5.8 18 8 V20 H8 C6.3 20 5 18.7 5 17 Z M8 8 H15 M8 12 H15 M8 16 H12"></path>
+                        </svg>
+                      {% elsif item.kind == "Video" %}
+                        <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                          <path d="M4 5 H16 V19 H4 Z M16 9 L21 6 V18 L16 15 Z"></path>
+                        </svg>
+                      {% elsif item.kind == "Quiz" %}
+                        <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                          <path d="M6 3 H18 V21 H6 Z M9 7 H15 M9 11 H15 M9 15 H12"></path>
+                        </svg>
+                      {% endif %}
+                      <span>{{ item.kind }}</span>
+                    </em>
+                    <span class="check-divider" aria-hidden="true">|</span>
+                    <strong>{{ item.title }}</strong>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </article>
         {% endfor %}
       </div>
     </div>
-    <div class="checklist-meter" aria-label="Checklist progress">
-      <strong>{{ site.event.training.progress }}</strong>
-      <span>{{ site.event.training.total }} required items</span>
-      <div class="meter-track">
-        <i style="width: {{ site.event.training.progress }}"></i>
-      </div>
-    </div>
-    <div class="checklist-grid">
-      {% for group in site.event.training.groups %}
-        <article class="checklist-card">
-          <div class="checklist-card-header">
-            <h3>{{ group.title }}</h3>
-            <span>{{ group.completed }}</span>
-          </div>
-          {% assign group_index = forloop.index %}
-          <ul>
-            {% for item in group.items %}
-              <li>
-                <label class="check-control" for="check-{{ group_index }}-{{ forloop.index }}">
-                  <input id="check-{{ group_index }}-{{ forloop.index }}" type="checkbox" data-checklist-item>
-                  <span class="check-node" aria-hidden="true"></span>
-                  <span class="screen-reader-text">Mark {{ item.title }} complete</span>
-                </label>
-                <a class="check-copy" href="{{ item.href }}" target="_blank" rel="noopener noreferrer">
-                  <strong>{{ item.title }}</strong>
-                  <em>
-                    {% if item.kind == "Guide" %}
-                      <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M5 4 H14 C16.2 4 18 5.8 18 8 V20 H8 C6.3 20 5 18.7 5 17 Z M8 8 H15 M8 12 H15 M8 16 H12"></path>
-                      </svg>
-                    {% elsif item.kind == "Video" %}
-                      <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M4 5 H16 V19 H4 Z M16 9 L21 6 V18 L16 15 Z"></path>
-                      </svg>
-                    {% elsif item.kind == "Quiz" %}
-                      <svg class="check-kind-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M6 3 H18 V21 H6 Z M9 7 H15 M9 11 H15 M9 15 H12"></path>
-                      </svg>
-                    {% endif %}
-                    <span>{{ item.kind }}</span>
-                  </em>
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        </article>
-      {% endfor %}
-    </div>
+    <img class="checklist-page-mascot checklist-page-mascot-nature" src="{{ '/images/mascots/nature_robot_waving.png' | relative_url }}" alt="Waving environmental robot mascot">
   </div>
+
+  <dialog class="checklist-complete-dialog" data-checklist-complete-dialog aria-labelledby="checklist-complete-title">
+    <div class="dialog-panel checklist-complete-panel">
+      <button class="dialog-close" type="button" data-dialog-close aria-label="Close checklist completion message">Close</button>
+      <span class="checklist-ready-mark" data-checklist-dialog-mark aria-hidden="true">READY</span>
+      <p class="terminal-prompt" data-checklist-dialog-prompt>$ ./ready_to_hack.sh</p>
+      <h3 id="checklist-complete-title" data-checklist-dialog-title>You're ready for the hackathon.</h3>
+      <p data-checklist-dialog-message>All mandatory checklist items are complete. Please complete prerequisite trainings for any and all other machines you may wish to utilize.</p>
+    </div>
+  </dialog>
 </section>

@@ -1,5 +1,6 @@
 :root {
   --orange: #ff6700;
+  --orange-light: #ffb067;
   --paper: #ebebeb;
   --silver: #c0c0c0;
   --blue: #3a6ea5;
@@ -721,11 +722,14 @@ a {
 .past-event-preview {
   display: grid;
   gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
   margin-top: 26px;
+  min-width: 0;
 }
 
 .past-event-preview .terminal-prompt {
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .past-event-photo,
@@ -734,6 +738,7 @@ a {
   display: block;
   margin: 0 auto;
   max-width: 680px;
+  min-width: 0;
   width: 100%;
 }
 
@@ -762,7 +767,7 @@ a {
 .about-page-links {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   margin-top: 28px;
   text-align: left;
 }
@@ -793,6 +798,24 @@ a {
 
 .about-page-links .button {
   justify-self: start;
+}
+
+.about-page-links article.about-checklist-highlight {
+  background: rgba(255, 103, 0, 0.16);
+  border: 2px solid var(--orange);
+  box-shadow: 8px 8px 0 rgba(255, 103, 0, 0.22), 0 0 24px rgba(255, 103, 0, 0.2);
+}
+
+.about-page-links article.about-checklist-highlight::before {
+  display: none;
+}
+
+.checklist-required-label {
+  color: var(--orange);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  line-height: 1.7;
+  text-transform: uppercase;
 }
 
 .section-panel h3,
@@ -856,6 +879,17 @@ a {
   font-size: 17px;
 }
 
+.checklist {
+  max-width: 1500px;
+}
+
+.checklist-layout {
+  align-items: center;
+  display: grid;
+  gap: clamp(24px, 3vw, 44px);
+  grid-template-columns: 1fr;
+}
+
 .checklist-shell {
   display: grid;
   gap: 22px;
@@ -863,6 +897,8 @@ a {
   max-width: 1040px;
   overflow: hidden;
   padding: 28px;
+  position: relative;
+  z-index: 1;
 }
 
 .checklist-intro {
@@ -892,6 +928,23 @@ a {
   max-width: 760px;
 }
 
+.checklist-intro strong {
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.checklist-page-mascot {
+  display: block;
+  filter: drop-shadow(8px 10px 0 rgba(0, 81, 154, 0.38));
+  justify-self: center;
+  max-height: 320px;
+  max-width: min(280px, 72vw);
+  object-fit: contain;
+  position: relative;
+  width: auto;
+  z-index: 0;
+}
+
 .checklist-links {
   display: flex;
   flex-wrap: wrap;
@@ -916,29 +969,102 @@ a {
 }
 
 .checklist-meter strong {
+  animation: checklistPercentLoopGlitch 5s steps(1, end) infinite;
   color: var(--orange);
+  display: inline-block;
   font-family: var(--font-heading);
   font-size: clamp(24px, 4vw, 44px);
   font-weight: 400;
+  justify-self: center;
   line-height: 1.2;
+  position: relative;
+  width: max-content;
 }
 
-.checklist-meter span {
+.checklist-meter strong::before,
+.checklist-meter strong::after {
+  content: attr(data-text);
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.checklist-meter strong::before {
+  animation: checklistPercentTopLoopGlitch 5s steps(1, end) infinite;
+  clip-path: inset(0 0 50% 0);
+  color: #64e7ff;
+  text-shadow: 4px 0 0 var(--orange);
+}
+
+.checklist-meter strong::after {
+  animation: checklistPercentBottomLoopGlitch 5s steps(1, end) infinite;
+  clip-path: inset(50% 0 0 0);
+  color: var(--orange-light);
+  text-shadow: -4px 0 0 #64e7ff;
+}
+
+.checklist-meter > span {
   color: var(--silver);
   font-family: var(--font-ui);
 }
 
 .meter-track {
+  animation: checklistProgressTrackGlitch 5s steps(1, end) infinite;
   background: rgba(235, 235, 235, 0.16);
+  display: flex;
   height: 12px;
   overflow: hidden;
+  position: relative;
 }
 
-.meter-track i {
+.meter-fill {
   background: var(--orange);
-  box-shadow: 0 0 16px rgba(255, 103, 0, 0.74);
   display: block;
+  flex: 0 0 auto;
   height: 100%;
+  transition: width 220ms ease;
+}
+
+.meter-fill-required {
+  animation: checklistRequiredFillGlitch 5s steps(1, end) infinite;
+  box-shadow: 0 0 16px rgba(255, 103, 0, 0.74);
+}
+
+.meter-fill-optional {
+  animation: checklistOptionalFillGlitch 5s steps(1, end) infinite;
+  background: var(--orange-light);
+  box-shadow: 0 0 14px rgba(255, 176, 103, 0.62);
+}
+
+.meter-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  justify-content: center;
+}
+
+.meter-legend span {
+  align-items: center;
+  color: var(--silver);
+  display: inline-flex;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  gap: 7px;
+}
+
+.meter-swatch {
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+}
+
+.meter-swatch-required {
+  background: var(--orange);
+}
+
+.meter-swatch-optional {
+  background: var(--orange-light);
 }
 
 .checklist-grid {
@@ -966,21 +1092,31 @@ a {
   white-space: nowrap;
 }
 
+.checklist-card-header h3 small {
+  color: var(--orange-light);
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
 .checklist-card ul {
   display: grid;
-  gap: 12px;
+  gap: 8px;
   list-style: none;
-  margin: 22px 0 0;
+  margin: 16px 0 0;
   padding: 0;
 }
 
 .checklist-card li {
-  align-items: stretch;
+  align-items: center;
   background: rgba(235, 235, 235, 0.08);
   border: 1px solid rgba(235, 235, 235, 0.18);
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
-  min-height: 64px;
+  grid-template-columns: 32px minmax(0, 1fr);
+  min-height: 45px;
   transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
 
@@ -1001,7 +1137,7 @@ a {
   cursor: pointer;
   display: flex;
   justify-content: center;
-  min-height: 64px;
+  min-height: 45px;
 }
 
 .check-control input {
@@ -1037,9 +1173,9 @@ a {
 
 .check-node::before {
   height: 2px;
-  left: -13px;
+  left: -8px;
   top: 5px;
-  width: 11px;
+  width: 6px;
 }
 
 .check-node::after {
@@ -1050,14 +1186,16 @@ a {
 }
 
 .checklist-card a.check-copy {
+  align-items: center;
   color: var(--paper);
-  display: grid;
-  gap: 4px;
-  justify-content: start;
-  min-height: 64px;
-  padding: 12px 12px 12px 0;
+  display: flex;
+  gap: 8px;
+  min-height: 45px;
+  min-width: 0;
+  padding: 6px 10px 6px 0;
   text-decoration: none;
   text-align: left;
+  white-space: nowrap;
 }
 
 .checklist-card a.check-copy:focus,
@@ -1076,28 +1214,39 @@ a {
 
 .checklist-card strong {
   font-family: var(--font-ui);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .checklist-card em {
   align-items: center;
   color: var(--silver);
   display: inline-flex;
-  gap: 7px;
+  flex: 0 0 auto;
+  gap: 5px;
   font-style: normal;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .check-kind-icon {
   display: inline-block;
   fill: none;
-  height: 18px;
+  height: 15px;
   stroke: var(--paper);
   stroke-linecap: square;
   stroke-linejoin: miter;
   stroke-width: 2.4;
-  width: 18px;
+  width: 15px;
+}
+
+.check-divider {
+  color: rgba(235, 235, 235, 0.42);
+  flex: 0 0 auto;
+  font-family: var(--font-ui);
+  font-size: 12px;
 }
 
 .track-grid,
@@ -1310,7 +1459,8 @@ a {
 }
 
 .judge-dialog,
-.team-dialog {
+.team-dialog,
+.checklist-complete-dialog {
   background: transparent;
   border: 0;
   max-width: 560px;
@@ -1319,7 +1469,8 @@ a {
 }
 
 .judge-dialog::backdrop,
-.team-dialog::backdrop {
+.team-dialog::backdrop,
+.checklist-complete-dialog::backdrop {
   background: rgba(0, 81, 154, 0.78);
 }
 
@@ -1355,6 +1506,26 @@ a {
   font-weight: 400;
   line-height: 1.5;
   margin: 22px 0 0;
+}
+
+.checklist-complete-panel {
+  padding-top: 72px;
+}
+
+.checklist-complete-panel .terminal-prompt {
+  margin: 14px 0 0;
+}
+
+.checklist-complete-panel .button {
+  margin-top: 22px;
+}
+
+.checklist-ready-mark {
+  color: var(--orange);
+  display: block;
+  font-family: var(--font-heading);
+  font-size: clamp(34px, 8vw, 64px);
+  line-height: 1;
 }
 
 .dialog-role {
@@ -1637,17 +1808,85 @@ a {
   text-decoration: none;
 }
 
-@media (min-width: 900px) {
-  html {
-    scroll-snap-type: y proximity;
+@media (min-width: 1041px) {
+  .checklist-layout {
+    grid-template-columns: minmax(150px, 230px) minmax(0, 900px) minmax(90px, 150px);
   }
 
-  .snap-section {
-    scroll-snap-align: start;
+  .checklist-page-mascot {
+    max-height: 440px;
+    max-width: 100%;
+  }
+
+  .checklist-page-mascot-health {
+    max-width: none;
+    width: 440px;
+  }
+
+  .checklist-page-mascot-nature {
+    max-height: 484px;
+    max-width: none;
+    width: 242px;
+  }
+}
+
+@media (min-width: 1041px) and (max-width: 1199px) {
+  .checklist {
+    overflow-x: clip;
+  }
+
+  .checklist-layout {
+    gap: 24px;
+    grid-template-columns: 100px minmax(0, 1fr) 100px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .checklist-layout {
+    display: block;
+    position: relative;
+  }
+
+  .checklist-shell {
+    max-width: 1350px;
+    width: 100%;
+  }
+
+  .checklist-page-mascot {
+    position: absolute;
+    top: 58%;
+    transform: translateY(-50%);
+  }
+
+  .checklist-page-mascot-health {
+    left: clamp(-220px, -12vw, -145px);
+  }
+
+  .checklist-page-mascot-nature {
+    right: clamp(-70px, -4vw, -24px);
+  }
+}
+
+@media (min-width: 1800px) {
+  .checklist-page-mascot {
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .checklist-page-mascot-health {
+    left: -320px;
+  }
+
+  .checklist-page-mascot-nature {
+    right: -195px;
   }
 }
 
 @media (max-width: 1040px) {
+  .checklist {
+    overflow-x: clip;
+  }
+
   .site-header {
     align-items: center;
     flex-direction: column;
@@ -1845,6 +2084,22 @@ a {
   .footer-links {
     justify-content: flex-start;
   }
+  .checklist-card a.check-copy {
+    flex-wrap: wrap;
+    row-gap: 2px;
+    white-space: normal;
+  }
+
+  .checklist-card {
+    padding: 20px 12px;
+  }
+
+  .checklist-card a.check-copy strong {
+    flex-basis: 100%;
+    font-size: 12px;
+    overflow: visible;
+    text-overflow: clip;
+  }
 }
 
 @media (max-width: 460px) {
@@ -1885,6 +2140,15 @@ a {
   .glitch-title.is-glitching .title-cu,
   .glitch-title.is-glitching .title-icon {
     animation-duration: 1350ms !important;
+  }
+
+  .meter-track,
+  .meter-fill,
+  .checklist-meter strong,
+  .checklist-meter strong::before,
+  .checklist-meter strong::after {
+    animation-duration: 5s !important;
+    animation-iteration-count: infinite !important;
   }
 
   .track-mascot-preview {
@@ -1929,6 +2193,387 @@ a {
 
   to {
     translate: -190vw 0;
+  }
+}
+
+@keyframes checklistPercentLoopGlitch {
+  0%,
+  83%,
+  91%,
+  100% {
+    color: var(--orange);
+    opacity: 1;
+    text-shadow: none;
+    transform: translate(0, 0);
+  }
+
+  84% {
+    color: #64e7ff;
+    text-shadow: 6px 0 0 var(--orange);
+    transform: translateX(-6px);
+  }
+
+  86% {
+    color: var(--paper);
+    opacity: 0.45;
+    text-shadow: -5px 0 0 #64e7ff;
+    transform: translateX(5px);
+  }
+
+  88% {
+    color: var(--orange-light);
+    text-shadow: 4px 0 0 var(--paper);
+    transform: translateX(-3px);
+  }
+
+  90% {
+    color: var(--orange);
+    text-shadow: -3px 0 0 #64e7ff;
+    transform: translateX(2px);
+  }
+}
+
+@keyframes checklistPercentTopLoopGlitch {
+  0%,
+  83%,
+  91%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  84%,
+  85% {
+    opacity: 0.95;
+    transform: translateX(12px);
+  }
+
+  86%,
+  87% {
+    opacity: 0.78;
+    transform: translateX(-9px);
+  }
+
+  88%,
+  90% {
+    opacity: 0.88;
+    transform: translateX(7px);
+  }
+}
+
+@keyframes checklistPercentBottomLoopGlitch {
+  0%,
+  83%,
+  91%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  84%,
+  85% {
+    opacity: 0.9;
+    transform: translateX(-11px);
+  }
+
+  86%,
+  87% {
+    opacity: 0.82;
+    transform: translateX(10px);
+  }
+
+  88%,
+  90% {
+    opacity: 0.94;
+    transform: translateX(-7px);
+  }
+}
+
+@keyframes checklistProgressTrackGlitch {
+  0%,
+  83%,
+  91%,
+  100% {
+    box-shadow: none;
+    transform: translateX(0);
+  }
+
+  84% {
+    box-shadow: 4px 0 0 #64e7ff;
+    transform: translateX(-3px);
+  }
+
+  86% {
+    box-shadow: -5px 0 0 var(--orange);
+    transform: translateX(4px);
+  }
+
+  88% {
+    box-shadow: 3px 0 0 var(--paper), -3px 0 0 #64e7ff;
+    transform: translateX(-2px);
+  }
+
+  90% {
+    box-shadow: -3px 0 0 var(--orange-light);
+    transform: translateX(2px);
+  }
+}
+
+@keyframes checklistRequiredFillGlitch {
+  0%,
+  83%,
+  91%,
+  100% {
+    background: var(--orange);
+  }
+
+  84%,
+  85% {
+    background: #64e7ff;
+  }
+
+  86%,
+  87% {
+    background: var(--paper);
+  }
+
+  88%,
+  90% {
+    background: var(--orange);
+  }
+}
+
+@keyframes checklistOptionalFillGlitch {
+  0%,
+  83%,
+  91%,
+  100% {
+    background: var(--orange-light);
+  }
+
+  84%,
+  85% {
+    background: var(--paper);
+  }
+
+  86%,
+  87% {
+    background: #64e7ff;
+  }
+
+  88%,
+  90% {
+    background: var(--orange-light);
+  }
+}
+
+@keyframes checklistMeterGlitch {
+  0%,
+  7%,
+  24%,
+  62%,
+  78%,
+  100% {
+    border-color: rgba(235, 235, 235, 0.28);
+    box-shadow: none;
+    transform: translate(0, 0);
+  }
+
+  8%,
+  13% {
+    border-color: #64e7ff;
+    box-shadow: -5px 0 0 rgba(255, 103, 0, 0.7);
+    transform: translateX(3px);
+  }
+
+  14%,
+  23% {
+    border-color: var(--orange);
+    box-shadow: 5px 0 0 rgba(100, 231, 255, 0.7);
+    transform: translateX(-3px);
+  }
+
+  63%,
+  69% {
+    border-color: var(--paper);
+    box-shadow: 4px 0 0 var(--orange), -4px 0 0 #64e7ff;
+    transform: translateX(2px);
+  }
+
+  70%,
+  77% {
+    border-color: #64e7ff;
+    box-shadow: -4px 0 0 var(--orange);
+    transform: translateX(-2px);
+  }
+}
+
+@keyframes checklistPercentGlitch {
+  0%,
+  7%,
+  24%,
+  62%,
+  78%,
+  100% {
+    color: var(--orange);
+    opacity: 1;
+    text-shadow: none;
+    transform: translate(0, 0);
+  }
+
+  8%,
+  13% {
+    color: #64e7ff;
+    text-shadow: 7px 0 0 var(--orange);
+    transform: translateX(-7px);
+  }
+
+  14%,
+  18% {
+    color: var(--paper);
+    opacity: 0.4;
+    text-shadow: -6px 0 0 #64e7ff;
+    transform: translateX(6px);
+  }
+
+  19%,
+  23% {
+    color: var(--orange);
+    text-shadow: 5px 0 0 var(--paper);
+    transform: translateX(-3px);
+  }
+
+  63%,
+  69% {
+    color: var(--paper);
+    text-shadow: -7px 0 0 var(--orange), 7px 0 0 #64e7ff;
+    transform: translateX(5px);
+  }
+
+  70%,
+  77% {
+    color: #64e7ff;
+    opacity: 0.58;
+    text-shadow: 6px 0 0 var(--orange);
+    transform: translateX(-5px);
+  }
+}
+
+@keyframes checklistPercentSliceTop {
+  0%,
+  7%,
+  24%,
+  62%,
+  78%,
+  100% {
+    clip-path: inset(0 0 52% 0);
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  8%,
+  13% {
+    clip-path: inset(0 0 52% 0);
+    opacity: 0.95;
+    transform: translateX(13px);
+  }
+
+  14%,
+  23% {
+    clip-path: inset(0 0 52% 0);
+    opacity: 0.75;
+    transform: translateX(-10px);
+  }
+
+  63%,
+  69% {
+    clip-path: inset(0 0 52% 0);
+    opacity: 0.9;
+    transform: translateX(-12px);
+  }
+
+  70%,
+  77% {
+    clip-path: inset(0 0 52% 0);
+    opacity: 0.82;
+    transform: translateX(9px);
+  }
+}
+
+@keyframes checklistPercentSliceBottom {
+  0%,
+  7%,
+  24%,
+  62%,
+  78%,
+  100% {
+    clip-path: inset(52% 0 0 0);
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  8%,
+  13% {
+    clip-path: inset(52% 0 0 0);
+    opacity: 0.88;
+    transform: translateX(-11px);
+  }
+
+  14%,
+  23% {
+    clip-path: inset(52% 0 0 0);
+    opacity: 0.92;
+    transform: translateX(12px);
+  }
+
+  63%,
+  69% {
+    clip-path: inset(52% 0 0 0);
+    opacity: 0.78;
+    transform: translateX(11px);
+  }
+
+  70%,
+  77% {
+    clip-path: inset(52% 0 0 0);
+    opacity: 0.94;
+    transform: translateX(-9px);
+  }
+}
+
+@keyframes checklistBarGlitch {
+  0%,
+  7%,
+  24%,
+  62%,
+  78%,
+  100% {
+    background: var(--orange);
+    transform: translateX(0);
+  }
+
+  8%,
+  13% {
+    background: #64e7ff;
+    transform: translateX(-8px);
+  }
+
+  14%,
+  23% {
+    background: var(--paper);
+    transform: translateX(7px);
+  }
+
+  63%,
+  69% {
+    background: linear-gradient(90deg, var(--orange) 0 46%, #64e7ff 46% 70%, var(--paper) 70%);
+    transform: translateX(-5px);
+  }
+
+  70%,
+  77% {
+    background: #64e7ff;
+    transform: translateX(5px);
   }
 }
 

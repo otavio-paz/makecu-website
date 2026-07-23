@@ -149,10 +149,6 @@ layout: default
   </section>
 
   <section class="section about snap-section" id="about">
-    <div class="terminal-heading">
-      <span>$</span>
-      <h2><span class="terminal-command">cat</span> ABOUT.txt</h2>
-    </div>
     <div class="section-panel centered-panel">
       <h3>Build something physical in one focused weekend.</h3>
       <p>{{ site.event.description }}</p>
@@ -167,11 +163,12 @@ layout: default
         {% endif %}
       </div>
       <div class="about-page-links" aria-label="MakeCU resource pages">
-        <article>
+        <article class="about-checklist-highlight">
           <span class="terminal-prompt">$ ./prepare_hackers.sh</span>
+          <span class="checklist-required-label">Required before the hackathon</span>
           <h4>Checklist</h4>
-          <p>Training links, makerspace prep, and equipment quizzes before the event.</p>
-          <a class="button button-primary" href="{{ '/checklist/' | relative_url }}">Open Checklist</a>
+          <p>Complete the required makerspace training and equipment checklist before arriving at MakeCU.</p>
+          <a class="button button-primary" href="{{ '/checklist/' | relative_url }}">Complete Checklist</a>
         </article>
         <article>
           <span class="terminal-prompt">$ ./meet_team.sh</span>

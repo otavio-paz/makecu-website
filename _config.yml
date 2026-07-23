@@ -71,16 +71,20 @@ event:
         description: "Present projects to peers, mentors, and judges. Tracks, prizes, judging criteria, and sponsor challenges are to be announced."
 
   training:
-    total: 8
+    total: 10
+    required: 3
+    optional: 7
     progress: "0%"
-    intro: "Complete these checklist items before the hackathon to prepare for makerspace access, hardware checkout, and event logistics."
+    intro: >
+      Complete these checklist items before the hackathon to prepare for makerspace access, hardware checkout, and event logistics.
+      <strong>Barnard and Columbia students</strong> may also use the <strong>Barnard Design Center</strong>.
+      Any required Design Center training must be completed independently and will <strong>not be provided by MakeCU organizers or during the event</strong>.
     links:
       - text: "Columbia Makerspace info"
         href: "https://make.columbia.edu/"
-      - text: "Barnard Design Center info"
-        href: "https://design.barnard.edu/"
     groups:
       - title: "General Makerspace Training"
+        required: true
         completed: "0/3"
         items:
           - title: "Makerspace: Getting Started"
@@ -93,8 +97,12 @@ event:
             kind: "Quiz"
             href: "https://docs.google.com/forms/d/e/1FAIpQLSc28aD1_gNjXor563feSuiFjrYbdPg-5m0B92wnVeU5Jc4i3A/viewform"
       - title: "Specialized Equipment Training"
-        completed: "0/5"
+        required: false
+        completed: "0/7"
         items:
+          - title: "General Soldering Guide"
+            kind: "Guide"
+            href: "https://docs.google.com/document/d/1wpz6LtLWkQYjlJKR-MqJ3JS9Li3brUP6jI6Lj745nXA/edit?tab=t.0#heading=h.km05nv2y9gl"
           - title: "3D printer training videos"
             kind: "Video"
             href: "https://www.youtube.com/playlist?list=PLLw34y3rqBBP2Bo_bHXwXfnb55NJsoY4U"
@@ -107,6 +115,9 @@ event:
           - title: "Laser cutter quiz"
             kind: "Quiz"
             href: "https://forms.gle/USAUSy4kVYeBsDoJA"
+          - title: "Embroidery machine video"
+            kind: "Video"
+            href: "https://www.youtube.com/watch?v=TBTq8h8j3fQ"
           - title: "Embroidery machine quiz"
             kind: "Quiz"
             href: "https://forms.gle/vWUz3frgi7Ze4zVSA"
