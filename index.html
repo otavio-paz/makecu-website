@@ -210,16 +210,19 @@ layout: default
             {% assign track_mascot = '/images/mascots/health_robot_waving.png' %}
             {% assign track_mascot_alt = 'Healthcare robot mascot waving' %}
             {% assign track_mascot_key = 'health' %}
+            {% assign track_mascot_name = '' %}
           {% elsif forloop.index == 2 %}
             {% assign track_mascot = '/images/mascots/nature_robot_waving.png' %}
             {% assign track_mascot_alt = 'Nature robot mascot waving' %}
             {% assign track_mascot_key = 'nature' %}
+            {% assign track_mascot_name = 'Eden' %}
           {% else %}
-            {% assign track_mascot = '' %}
-            {% assign track_mascot_alt = '' %}
-            {% assign track_mascot_key = '' %}
+            {% assign track_mascot = '/images/mascots/creativity_robot_waving.png' %}
+            {% assign track_mascot_alt = 'Creativity robot mascot waving' %}
+            {% assign track_mascot_key = 'creativity' %}
+            {% assign track_mascot_name = '' %}
           {% endif %}
-          <article class="track-card" {% if track_mascot != '' %}role="button" tabindex="0" aria-expanded="false" data-mascot-src="{{ track_mascot | relative_url }}" data-mascot-alt="{{ track_mascot_alt }}" data-mascot-key="{{ track_mascot_key }}"{% endif %}>
+          <article class="track-card" {% if track_mascot != '' %}role="button" tabindex="0" aria-expanded="false" data-mascot-src="{{ track_mascot | relative_url }}" data-mascot-alt="{{ track_mascot_alt }}" data-mascot-key="{{ track_mascot_key }}" data-mascot-name="{{ track_mascot_name }}"{% endif %}>
             <h3>
               {% if forloop.index == 1 %}
                 <span class="track-icon track-icon-health track-icon-large" aria-hidden="true"><img src="{{ '/images/icons/first_aid.png' | relative_url }}" alt=""></span>
@@ -233,6 +236,9 @@ layout: default
             {% if track_mascot != '' %}
               <div class="track-mobile-mascot track-mobile-mascot-{{ track_mascot_key }}" aria-hidden="true">
                 <img src="{{ track_mascot | relative_url }}" alt="">
+                {% if track_mascot_name != '' %}
+                  <span class="track-mascot-name">{{ track_mascot_name }}</span>
+                {% endif %}
               </div>
             {% endif %}
             <p>{{ track.description }}</p>
@@ -241,6 +247,7 @@ layout: default
       </div>
       <aside class="track-mascot-preview" aria-hidden="true">
         <img src="" alt="">
+        <span class="track-mascot-name" data-mascot-name hidden></span>
       </aside>
     </div>
   </section>

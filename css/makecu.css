@@ -1370,6 +1370,7 @@ a {
 .track-mascot-preview {
   align-items: center;
   display: flex;
+  flex-direction: column;
   height: 598px;
   justify-content: center;
   min-height: 598px;
@@ -1400,6 +1401,32 @@ a {
   max-height: 598px;
   max-width: 115%;
   width: 115%;
+}
+
+.track-mascot-preview.is-creativity img {
+  max-height: 486px;
+  max-width: 135%;
+  width: 135%;
+}
+
+.track-mascot-name {
+  color: var(--paper);
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  line-height: 1.4;
+  margin-top: 14px;
+  text-align: center;
+}
+
+.track-mascot-preview.has-name .track-mascot-name::before,
+.track-card.is-active .track-mobile-mascot .track-mascot-name::before {
+  color: var(--orange);
+  content: "> ";
+}
+
+.track-mascot-name[hidden] {
+  display: none;
 }
 
 .track-mobile-mascot {
@@ -2050,13 +2077,33 @@ a {
     object-fit: contain;
   }
 
+  .track-mobile-mascot .track-mascot-name {
+    color: var(--blue-dark);
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+  .track-card.is-active .track-mobile-mascot-nature {
+    max-height: 350px;
+  }
+
   .track-card.is-active .track-mobile-mascot-health {
+    max-height: 400px;
+  }
+
+  .track-card.is-active .track-mobile-mascot-creativity {
     max-height: 400px;
   }
 
   .track-mobile-mascot-health img {
     max-height: 390px;
     max-width: min(338px, 96%);
+  }
+
+  .track-mobile-mascot-creativity img {
+    max-height: 390px;
+    max-width: 390px;
+    width: 110%;
   }
 
   .section {

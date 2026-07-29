@@ -302,6 +302,7 @@
     var trackCards = Array.prototype.slice.call(trackShowcase.querySelectorAll(".track-card"));
     var mascotPreview = trackShowcase.querySelector(".track-mascot-preview");
     var mascotPreviewImage = mascotPreview ? mascotPreview.querySelector("img") : null;
+    var mascotPreviewName = mascotPreview ? mascotPreview.querySelector("[data-mascot-name]") : null;
     var desktopTrackMedia = window.matchMedia("(min-width: 721px)");
     var mascotSwapTimeout;
 
@@ -315,17 +316,26 @@
       });
     };
 
-    var updateMascotPreview = function (src, alt, key) {
+    var updateMascotPreview = function (src, alt, key, name) {
       if (!mascotPreview || !mascotPreviewImage) {
         return;
       }
 
-      mascotPreview.classList.remove("is-health", "is-nature");
+      mascotPreview.classList.remove("is-health", "is-nature", "is-creativity", "has-name");
       mascotPreviewImage.setAttribute("src", src);
       mascotPreviewImage.setAttribute("alt", alt);
 
       if (key) {
         mascotPreview.classList.add("is-" + key);
+      }
+
+      if (mascotPreviewName) {
+        mascotPreviewName.textContent = name;
+        mascotPreviewName.hidden = !name;
+
+        if (name) {
+          mascotPreview.classList.add("has-name");
+        }
       }
 
       void mascotPreview.offsetWidth;
@@ -336,6 +346,7 @@
       var src = card.getAttribute("data-mascot-src");
       var alt = card.getAttribute("data-mascot-alt") || "";
       var key = card.getAttribute("data-mascot-key");
+      var name = card.getAttribute("data-mascot-name") || "";
 
       if (!src) {
         return;
@@ -353,7 +364,7 @@
       window.clearTimeout(mascotSwapTimeout);
 
       if (!desktopTrackMedia.matches) {
-        updateMascotPreview(src, alt, key);
+        updateMascotPreview(src, alt, key, name);
         return;
       }
 
@@ -365,12 +376,12 @@
       mascotPreview.classList.remove("is-visible");
 
       if (!mascotPreviewImage.getAttribute("src")) {
-        updateMascotPreview(src, alt, key);
+        updateMascotPreview(src, alt, key, name);
         return;
       }
 
       mascotSwapTimeout = window.setTimeout(function () {
-        updateMascotPreview(src, alt, key);
+        updateMascotPreview(src, alt, key, name);
       }, 240);
     };
 
