@@ -407,6 +407,119 @@
     });
   }
 
+  var sponsorCards = Array.prototype.slice.call(document.querySelectorAll("[data-sponsor-details]"));
+
+  if (sponsorCards.length) {
+    var desktopSponsorMedia = window.matchMedia("(min-width: 721px)");
+
+    var closeSponsorCard = function (card) {
+      var trigger = card.querySelector(".sponsor-logo-trigger");
+      var details = card.querySelector(".sponsor-details");
+
+      card.classList.remove("is-active", "is-pinned");
+
+      if (trigger) {
+        trigger.setAttribute("aria-expanded", "false");
+      }
+
+      if (details) {
+        details.setAttribute("aria-hidden", "true");
+      }
+    };
+
+    var openSponsorCard = function (card) {
+      var trigger = card.querySelector(".sponsor-logo-trigger");
+      var details = card.querySelector(".sponsor-details");
+
+      sponsorCards.forEach(function (otherCard) {
+        if (otherCard !== card) {
+          closeSponsorCard(otherCard);
+        }
+      });
+
+      if (details) {
+        details.style.setProperty("--sponsor-details-height", details.scrollHeight + "px");
+      }
+
+      card.classList.add("is-active");
+
+      if (trigger) {
+        trigger.setAttribute("aria-expanded", "true");
+      }
+
+      if (details) {
+        details.setAttribute("aria-hidden", "false");
+      }
+    };
+
+    sponsorCards.forEach(function (card) {
+      var trigger = card.querySelector(".sponsor-logo-trigger");
+
+      card.addEventListener("mouseleave", function () {
+        if (desktopSponsorMedia.matches) {
+          closeSponsorCard(card);
+        }
+      });
+
+      card.addEventListener("focusin", function () {
+        openSponsorCard(card);
+      });
+
+      card.addEventListener("focusout", function () {
+        window.setTimeout(function () {
+          if (!card.contains(document.activeElement) && !card.classList.contains("is-pinned")) {
+            closeSponsorCard(card);
+          }
+        }, 0);
+      });
+
+      if (trigger) {
+        trigger.addEventListener("mouseenter", function () {
+          if (desktopSponsorMedia.matches) {
+            openSponsorCard(card);
+          }
+        });
+
+        trigger.addEventListener("click", function () {
+          if (desktopSponsorMedia.matches) {
+            openSponsorCard(card);
+            return;
+          }
+
+          if (card.classList.contains("is-pinned")) {
+            closeSponsorCard(card);
+            return;
+          }
+
+          openSponsorCard(card);
+          card.classList.add("is-pinned");
+        });
+      }
+    });
+
+    desktopSponsorMedia.addEventListener("change", function () {
+      sponsorCards.forEach(closeSponsorCard);
+    });
+
+    window.addEventListener("resize", function () {
+      sponsorCards.forEach(function (card) {
+        var details = card.querySelector(".sponsor-details");
+
+        if (details && card.classList.contains("is-active")) {
+          details.style.setProperty("--sponsor-details-height", details.scrollHeight + "px");
+        }
+      });
+    });
+
+    document.addEventListener("click", function (event) {
+      sponsorCards.forEach(function (card) {
+        if (!card.contains(event.target)) {
+          closeSponsorCard(card);
+        }
+      });
+    });
+  }
+
   var glitchTitle = document.querySelector(".glitch-title");
 
   if (glitchTitle) {

@@ -164,32 +164,32 @@ event:
   sponsors:
     - tier: "Platinum"
       sponsors:
-        - name: "Sponsor Placeholder"
+        - name: "TBD"
           logo: ""
           url: ""
-        - name: "Sponsor Placeholder"
+        - name: "TBD"
           logo: ""
           url: ""
     - tier: "Gold"
       sponsors:
-        - name: "Sponsor Placeholder"
+        - name: "TBD"
           logo: ""
           url: ""
-        - name: "Sponsor Placeholder"
+        - name: "TBD"
           logo: ""
           url: ""
-        - name: "Sponsor Placeholder"
+        - name: "TBD"
           logo: ""
           url: ""
-    - tier: "Community"
+    - tier: "Bronze"
       sponsors:
-        - name: "Campus Partner Placeholder"
-          logo: ""
-          url: ""
-        - name: "Food Partner Placeholder"
-          logo: ""
-          url: ""
+        - name: "Tutor Intelligence"
+          logo: "/images/logos/Tutor-Intelligence-Logo.png"
+          url: "https://tutorintelligence.com/"
+          description: |
+            **About Tutor Intelligence:** We believe general-purpose, generally-intelligent robots will be built *in our lifetimes.* Robots will work in our factories, move our goods, walk on our streets and eventually be in our homes. To build that future, research and deployment must work in lockstep: real-world operation must make the technology better and better technology must make deployment easier. We're looking for the thinkers, builders, and researchers who want to be part of that loop.
 
+            As an AI robotics company that deploys its inventions directly into the facilities that need them, on state-of-the-art hardware, every line of code written at Tutor has a direct impact on the global, physical economy.
   team:
     - name: "Alice Lin"
       role: "Lead Organizer"
