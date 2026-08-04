@@ -148,18 +148,11 @@ event:
       description: "Create robots that inspire, educate, entertain, or enable new forms of expression."
 
   judges:
-    - name: "Judge Placeholder 1"
-      role: "Hardware founder, researcher, or mentor"
-      photo: ""
-      bio: "Short judge bio will go here once the organizing team confirms the panel."
-    - name: "Judge Placeholder 2"
-      role: "Robotics engineer or Columbia faculty member"
-      photo: ""
-      bio: "Add judging focus, affiliation, and what they are excited to see."
-    - name: "Judge Placeholder 3"
-      role: "Sponsor representative or technical mentor"
-      photo: ""
-      bio: "Use this popup for a compact bio, links, and judging interests."
+    - name: "David Watkins"
+      role: "Research Lead at Tutor Intelligence"
+      photo: "/images/judges/David-Watkins.jpg"
+      bio: >-
+        David Watkins is a Research Lead at Tutor Intelligence, where he works on foundation model research and training for robot manipulation, and an advisor to Tola Capital on robotics and AI investments. Previously, he was a Research Lead at the RAI Institute (formerly Boston Dynamics AI Institute), joining as one of its first employees and building its foundation models research team and its largest robot data collection effort. He created Theia, a vision foundation model published at CoRL 2024, and won first place in the MineRL BASALT competition at NeurIPS 2021. He earned his B.S., M.S., and Ph.D. at Columbia University in the Columbia Robotics Lab under Prof. Peter Allen, where his paper on mobile manipulation was an IROS 2022 Best Paper Finalist.
 
   sponsors:
     - tier: "Platinum"

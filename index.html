@@ -309,9 +309,7 @@ layout: default
       <span>$</span>
       <h2><span class="terminal-command">open</span> JUDGES</h2>
     </div>
-    <p class="section-tbd">TBD</p>
-    {% comment %}
-    <div class="judge-grid">
+    <div class="judge-grid{% if site.event.judges.size == 1 %} judge-grid-single{% endif %}">
       {% for judge in site.event.judges %}
         <button class="judge-card" type="button" data-dialog-target="judge-{{ forloop.index }}">
           {% if judge.photo and judge.photo != "" %}
@@ -332,12 +330,11 @@ layout: default
             {% endif %}
             <h3>{{ judge.name }}</h3>
             <p class="dialog-role">{{ judge.role }}</p>
-            <p>{{ judge.bio }}</p>
+            <p class="judge-bio">{{ judge.bio }}</p>
           </div>
         </dialog>
       {% endfor %}
     </div>
-    {% endcomment %}
   </section>
 
   <section class="section faq snap-section" id="faq">

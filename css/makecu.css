@@ -743,10 +743,8 @@ a {
 }
 
 .past-event-photo {
-  background: var(--blue-dark);
-  box-shadow:
-    8px 8px 0 rgba(0, 81, 154, 0.48),
-    0 0 0 1px rgba(235, 235, 235, 0.22);
+  background: transparent;
+  box-shadow: none;
   height: auto;
   object-fit: cover;
   opacity: 0.68;
@@ -1437,11 +1435,17 @@ a {
 .photo-frame,
 .team-avatar {
   background: rgba(235, 235, 235, 0.12);
-  border: 1px solid rgba(235, 235, 235, 0.28);
   display: block;
 }
 
+.photo-frame,
+.team-avatar {
+  border: 2px solid var(--paper);
+  box-sizing: border-box;
+}
+
 .circuit-chip {
+  border: 1px solid rgba(235, 235, 235, 0.28);
   height: 126px;
   margin: 0 auto;
   width: 100%;
@@ -1449,6 +1453,11 @@ a {
 
 .judge-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.judge-grid.judge-grid-single {
+  grid-template-columns: minmax(0, 320px);
+  justify-content: center;
 }
 
 .judge-card {
@@ -1533,6 +1542,10 @@ a {
   font-weight: 400;
   line-height: 1.5;
   margin: 22px 0 0;
+}
+
+.judge-bio {
+  text-align: left;
 }
 
 .checklist-complete-panel {
@@ -1834,7 +1847,7 @@ a {
 .team-avatar {
   align-items: center;
   background: transparent;
-  border: 3px solid var(--paper);
+  border: 2px solid var(--paper);
   color: var(--paper);
   display: inline-flex;
   font-family: var(--font-heading);
