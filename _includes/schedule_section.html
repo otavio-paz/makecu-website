@@ -1,0 +1,17 @@
+<section class="section schedule snap-section" id="schedule">
+  <div class="terminal-heading">
+    <span>$</span>
+    <h2><span class="terminal-command">cat</span> SCHEDULE.txt</h2>
+  </div>
+  <div class="timeline">
+    {% for item in site.event.schedule %}
+      <article class="timeline-item">
+        <span>{{ item.time }}</span>
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>

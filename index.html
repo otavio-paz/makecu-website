@@ -171,82 +171,18 @@ layout: default
           <a class="button button-primary" href="{{ '/checklist/' | relative_url }}">Complete Checklist</a>
         </article>
         <article>
+          <span class="terminal-prompt">$ cat SCHEDULE.txt</span>
+          <h4>Schedule</h4>
+          <p>Review the MakeCU weekend timeline, from check-in and workshops through demos and awards.</p>
+          <a class="button button-secondary" href="{{ '/schedule/' | relative_url }}">View Schedule</a>
+        </article>
+        <article>
           <span class="terminal-prompt">$ ./meet_team.sh</span>
           <h4>Team</h4>
           <p>Meet the organizers building MakeCU 2026 across logistics, business, web, experience, and outreach.</p>
           <a class="button button-secondary" href="{{ '/team/' | relative_url }}">Meet the Team</a>
         </article>
       </div>
-    </div>
-  </section>
-
-  <section class="section sponsors snap-section" id="sponsors">
-    <div class="terminal-heading">
-      <span>$</span>
-      <h2><span class="terminal-command">tar</span> SPONSORS</h2>
-    </div>
-    <p class="sponsor-instruction">Hover over or click a sponsor logo to learn more.</p>
-    <div class="sponsor-grid" aria-label="Sponsor tiers">
-      {% for tier in site.event.sponsors %}
-        <article class="sponsor-tier sponsor-tier-{{ tier.tier | slugify }}">
-          <h3>{{ tier.tier }}</h3>
-          <div class="sponsor-slots">
-            {% for sponsor in tier.sponsors %}
-              <div class="sponsor-slot{% if sponsor.description and sponsor.description != "" %} sponsor-slot-featured{% endif %}"{% if sponsor.description and sponsor.description != "" %} data-sponsor-details{% endif %}>
-                <div class="sponsor-brand">
-                  {% if sponsor.description and sponsor.description != "" %}
-                    {% assign sponsor_details_id = tier.tier | slugify | append: '-sponsor-' | append: forloop.index %}
-                    <button class="sponsor-logo-trigger" type="button" aria-expanded="false" aria-controls="{{ sponsor_details_id }}" aria-label="Show information about {{ sponsor.name }}">
-                  {% elsif sponsor.url and sponsor.url != "" %}
-                    <a class="sponsor-logo-link" href="{{ sponsor.url }}" target="_blank" rel="noopener noreferrer" aria-label="Learn more about {{ sponsor.name }}">
-                  {% endif %}
-                  {% if sponsor.logo and sponsor.logo != "" %}
-                    <img src="{{ sponsor.logo | relative_url }}" alt="{{ sponsor.name }}">
-                  {% else %}
-                    <span class="sponsor-logo-placeholder" aria-hidden="true"></span>
-                  {% endif %}
-                  {% if sponsor.description and sponsor.description != "" %}
-                    </button>
-                  {% elsif sponsor.url and sponsor.url != "" %}
-                    </a>
-                  {% endif %}
-                  <strong>{{ sponsor.name }}</strong>
-                </div>
-                {% if sponsor.description and sponsor.description != "" %}
-                  <div class="sponsor-details" id="{{ sponsor_details_id }}" aria-hidden="true">
-                    <div class="sponsor-details-inner">
-                      <div class="sponsor-description">
-                        {{ sponsor.description | markdownify }}
-                      </div>
-                      {% if sponsor.url and sponsor.url != "" %}
-                        <a class="button sponsor-website-link" href="{{ sponsor.url }}" target="_blank" rel="noopener noreferrer">Visit {{ sponsor.name }}</a>
-                      {% endif %}
-                    </div>
-                  </div>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="section schedule snap-section" id="schedule">
-    <div class="terminal-heading">
-      <span>$</span>
-      <h2><span class="terminal-command">cat</span> SCHEDULE.txt</h2>
-    </div>
-    <div class="timeline">
-      {% for item in site.event.schedule %}
-        <article class="timeline-item">
-          <span>{{ item.time }}</span>
-          <div>
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.description }}</p>
-          </div>
-        </article>
-      {% endfor %}
     </div>
   </section>
 
@@ -303,6 +239,8 @@ layout: default
       </aside>
     </div>
   </section>
+
+  {% include sponsors_section.html %}
 
   <section class="section judges snap-section" id="judges">
     <div class="terminal-heading">

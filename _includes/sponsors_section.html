@@ -1,0 +1,51 @@
+<section class="section sponsors snap-section" id="sponsors">
+  <div class="terminal-heading">
+    <span>$</span>
+    <h2><span class="terminal-command">tar</span> SPONSORS</h2>
+  </div>
+  <p class="sponsor-instruction">Hover over or click a sponsor logo to learn more.</p>
+  <div class="sponsor-grid" aria-label="Sponsor tiers">
+    {% for tier in site.event.sponsors %}
+      <article class="sponsor-tier sponsor-tier-{{ tier.tier | slugify }}">
+        <h3>{{ tier.tier }}</h3>
+        <div class="sponsor-slots">
+          {% for sponsor in tier.sponsors %}
+            <div class="sponsor-slot{% if sponsor.description and sponsor.description != "" %} sponsor-slot-featured{% endif %}"{% if sponsor.description and sponsor.description != "" %} data-sponsor-details{% endif %}>
+              <div class="sponsor-brand">
+                {% if sponsor.description and sponsor.description != "" %}
+                  {% assign sponsor_details_id = tier.tier | slugify | append: '-sponsor-' | append: forloop.index %}
+                  <button class="sponsor-logo-trigger" type="button" aria-expanded="false" aria-controls="{{ sponsor_details_id }}" aria-label="Show information about {{ sponsor.name }}">
+                {% elsif sponsor.url and sponsor.url != "" %}
+                  <a class="sponsor-logo-link" href="{{ sponsor.url }}" target="_blank" rel="noopener noreferrer" aria-label="Learn more about {{ sponsor.name }}">
+                {% endif %}
+                {% if sponsor.logo and sponsor.logo != "" %}
+                  <img src="{{ sponsor.logo | relative_url }}" alt="{{ sponsor.name }}">
+                {% else %}
+                  <span class="sponsor-logo-placeholder" aria-hidden="true"></span>
+                {% endif %}
+                {% if sponsor.description and sponsor.description != "" %}
+                  </button>
+                {% elsif sponsor.url and sponsor.url != "" %}
+                  </a>
+                {% endif %}
+                <strong>{{ sponsor.name }}</strong>
+              </div>
+              {% if sponsor.description and sponsor.description != "" %}
+                <div class="sponsor-details" id="{{ sponsor_details_id }}" aria-hidden="true">
+                  <div class="sponsor-details-inner">
+                    <div class="sponsor-description">
+                      {{ sponsor.description | markdownify }}
+                    </div>
+                    {% if sponsor.url and sponsor.url != "" %}
+                      <a class="button sponsor-website-link" href="{{ sponsor.url }}" target="_blank" rel="noopener noreferrer">Visit {{ sponsor.name }}</a>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
