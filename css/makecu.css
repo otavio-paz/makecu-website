@@ -2496,7 +2496,7 @@ a {
 
 @media (max-width: 720px) {
   :root {
-    --header-height: 116px;
+    --header-height: 104px;
   }
 
   #mlh-trust-badge {
@@ -2504,12 +2504,23 @@ a {
   }
 
   .site-header {
-    padding-left: 112px;
-    padding-right: 112px;
+    gap: 8px;
+    padding: 8px 72px 8px 12px;
+  }
+
+  .brand {
+    transform: translateX(30px);
+  }
+
+  .site-nav {
+    column-gap: 10px;
+    row-gap: 4px;
   }
 
   .site-nav a {
-    font-size: 13px;
+    font-size: 11px;
+    line-height: 1.35;
+    white-space: nowrap;
   }
 
   .hero-content {
@@ -2712,15 +2723,22 @@ a {
   }
 
   .site-nav {
-    gap: 6px 10px;
+    column-gap: 8px;
+    row-gap: 4px;
   }
 
   .site-nav a {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .button {
     width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-nav {
+    column-gap: 6px;
   }
 }
 
