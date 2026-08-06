@@ -326,8 +326,6 @@
     var activeTrack = 0;
     var trackPanelTimer = null;
     var trackAnimationFrame = null;
-    var trackWheelTimer = null;
-    var trackWheelVelocity = 0;
     var trackDragging = false;
     var trackDragPointer = null;
     var trackLastX = 0;
@@ -449,12 +447,6 @@
 
       stopTrackMotion();
 
-      if (reducedTrackMotion.matches) {
-        trackRotation = target;
-        drawTrackWheel();
-        return;
-      }
-
       start = trackRotation;
       distance = target - start;
       startedAt = performance.now();
@@ -488,11 +480,11 @@
     };
 
     var snapTrackWheel = function () {
-      animateTrackRotation(Math.round(trackRotation / trackStepAngle) * trackStepAngle, 430);
+      animateTrackRotation(Math.round(trackRotation / trackStepAngle) * trackStepAngle, 520);
     };
 
     var startTrackInertia = function (velocity) {
-      var currentVelocity = Math.max(-1.25, Math.min(1.25, velocity));
+      var currentVelocity = Math.max(-1.75, Math.min(1.75, velocity * 1.35));
       var previousTime = performance.now();
 
       stopTrackMotion();
@@ -502,10 +494,10 @@
 
         previousTime = now;
         trackRotation += currentVelocity * elapsed;
-        currentVelocity *= Math.pow(0.925, elapsed / 16);
+        currentVelocity *= Math.pow(0.96, elapsed / 16);
         drawTrackWheel();
 
-        if (Math.abs(currentVelocity) > 0.018) {
+        if (Math.abs(currentVelocity) > 0.009) {
           trackAnimationFrame = window.requestAnimationFrame(coast);
         } else {
           trackAnimationFrame = null;
@@ -513,7 +505,7 @@
         }
       };
 
-      if (Math.abs(currentVelocity) < 0.04 || reducedTrackMotion.matches) {
+      if (Math.abs(currentVelocity) < 0.025) {
         snapTrackWheel();
       } else {
         trackAnimationFrame = window.requestAnimationFrame(coast);
@@ -536,52 +528,46 @@
       });
     });
 
-    trackWheel.addEventListener("pointerdown", function (event) {
+    var beginTrackDrag = function (clientX, pointerId) {
       stopTrackMotion();
-      window.clearTimeout(trackWheelTimer);
       trackDragging = true;
-      trackDragPointer = event.pointerId;
-      trackLastX = event.clientX;
+      trackDragPointer = pointerId;
+      trackLastX = clientX;
       trackLastTime = performance.now();
       trackDragVelocity = 0;
       trackDragDistance = 0;
       trackWheel.classList.add("is-dragging");
-      trackWheel.setPointerCapture(event.pointerId);
-    });
+    };
 
-    trackWheel.addEventListener("pointermove", function (event) {
+    var moveTrackDrag = function (clientX) {
       var now;
       var deltaX;
       var elapsed;
       var degrees;
 
-      if (!trackDragging || event.pointerId !== trackDragPointer) {
+      if (!trackDragging) {
         return;
       }
 
       now = performance.now();
-      deltaX = event.clientX - trackLastX;
+      deltaX = clientX - trackLastX;
       elapsed = Math.max(8, now - trackLastTime);
       degrees = deltaX * 0.42;
       trackRotation += degrees;
       trackDragDistance += Math.abs(deltaX);
       trackDragVelocity = (trackDragVelocity * 0.66) + ((degrees / elapsed) * 0.34);
-      trackLastX = event.clientX;
+      trackLastX = clientX;
       trackLastTime = now;
       drawTrackWheel();
-    });
+    };
 
-    var finishTrackDrag = function (event) {
-      if (!trackDragging || event.pointerId !== trackDragPointer) {
+    var finishTrackDrag = function () {
+      if (!trackDragging) {
         return;
       }
 
       trackDragging = false;
       trackWheel.classList.remove("is-dragging");
-
-      if (trackWheel.hasPointerCapture(event.pointerId)) {
-        trackWheel.releasePointerCapture(event.pointerId);
-      }
 
       if (trackDragDistance > 8) {
         suppressTrackClickUntil = Date.now() + 280;
@@ -591,26 +577,54 @@
       trackDragPointer = null;
     };
 
-    trackWheel.addEventListener("pointerup", finishTrackDrag);
-    trackWheel.addEventListener("pointercancel", finishTrackDrag);
+    if (window.PointerEvent) {
+      trackWheel.addEventListener("pointerdown", function (event) {
+        beginTrackDrag(event.clientX, event.pointerId);
+        trackWheel.setPointerCapture(event.pointerId);
+      });
 
-    trackWheel.addEventListener("wheel", function (event) {
-      var delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+      trackWheel.addEventListener("pointermove", function (event) {
+        if (event.pointerId === trackDragPointer) {
+          moveTrackDrag(event.clientX);
+        }
+      });
 
-      if (Math.abs(delta) < 2) {
-        return;
-      }
+      var finishPointerTrackDrag = function (event) {
+        if (!trackDragging || event.pointerId !== trackDragPointer) {
+          return;
+        }
 
-      event.preventDefault();
-      stopTrackMotion();
-      trackRotation -= delta * 0.16;
-      trackWheelVelocity = Math.max(-0.9, Math.min(0.9, -delta * 0.012));
-      drawTrackWheel();
-      window.clearTimeout(trackWheelTimer);
-      trackWheelTimer = window.setTimeout(function () {
-        startTrackInertia(trackWheelVelocity);
-      }, 85);
-    }, { passive: false });
+        if (trackWheel.hasPointerCapture(event.pointerId)) {
+          trackWheel.releasePointerCapture(event.pointerId);
+        }
+
+        finishTrackDrag();
+      };
+
+      trackWheel.addEventListener("pointerup", finishPointerTrackDrag);
+      trackWheel.addEventListener("pointercancel", finishPointerTrackDrag);
+    } else {
+      trackWheel.addEventListener("mousedown", function (event) {
+        if (event.button !== 0) {
+          return;
+        }
+
+        event.preventDefault();
+        beginTrackDrag(event.clientX, "mouse");
+      });
+
+      window.addEventListener("mousemove", function (event) {
+        if (trackDragPointer === "mouse") {
+          moveTrackDrag(event.clientX);
+        }
+      });
+
+      window.addEventListener("mouseup", function () {
+        if (trackDragPointer === "mouse") {
+          finishTrackDrag();
+        }
+      });
+    }
 
     trackSelector.addEventListener("keydown", function (event) {
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
