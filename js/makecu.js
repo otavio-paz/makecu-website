@@ -296,115 +296,331 @@
     });
   });
 
-  var trackShowcase = document.querySelector("[data-track-mascots]");
+  var trackSelector = document.querySelector("[data-track-selector]");
 
-  if (trackShowcase) {
-    var trackCards = Array.prototype.slice.call(trackShowcase.querySelectorAll(".track-card"));
-    var mascotPreview = trackShowcase.querySelector(".track-mascot-preview");
-    var mascotPreviewImage = mascotPreview ? mascotPreview.querySelector("img") : null;
-    var mascotPreviewName = mascotPreview ? mascotPreview.querySelector("[data-mascot-name]") : null;
-    var desktopTrackMedia = window.matchMedia("(min-width: 721px)");
-    var mascotSwapTimeout;
+  if (trackSelector) {
+    var trackCharacters = Array.prototype.slice.call(trackSelector.querySelectorAll(".track-selector-character"));
+    var trackImages = trackCharacters.map(function (character) {
+      return character.querySelector("img");
+    });
+    var trackDots = Array.prototype.slice.call(trackSelector.querySelectorAll(".track-selector-dot"));
+    var trackName = trackSelector.querySelector("[data-track-selector-name]");
+    var trackPanel = trackSelector.querySelector("[data-track-selector-info]");
+    var trackPanelIcon = trackPanel ? trackPanel.querySelector(".track-selector-info-icon img") : null;
+    var trackPanelHeading = trackPanel ? trackPanel.querySelector("h3") : null;
+    var trackPanelCopy = trackPanel ? trackPanel.querySelector("p") : null;
+    var trackWheel = trackSelector.querySelector("[data-track-selector-wheel]");
+    var trackData = trackCharacters.map(function (character) {
+      return {
+        name: character.getAttribute("data-track-name"),
+        title: character.getAttribute("data-track-title"),
+        description: character.getAttribute("data-track-description"),
+        icon: character.getAttribute("data-track-icon"),
+        iconAlt: character.getAttribute("data-track-icon-alt"),
+        still: character.getAttribute("data-track-still-src"),
+        selected: character.getAttribute("data-track-selected-src")
+      };
+    });
+    var trackStepAngle = 120;
+    var trackRotation = 0;
+    var activeTrack = 0;
+    var trackPanelTimer = null;
+    var trackAnimationFrame = null;
+    var trackWheelTimer = null;
+    var trackWheelVelocity = 0;
+    var trackDragging = false;
+    var trackDragPointer = null;
+    var trackLastX = 0;
+    var trackLastTime = 0;
+    var trackDragVelocity = 0;
+    var trackDragDistance = 0;
+    var suppressTrackClickUntil = 0;
+    var reducedTrackMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    var clearTrackSelection = function () {
-      trackCards.forEach(function (card) {
-        card.classList.remove("is-active");
-
-        if (card.hasAttribute("aria-expanded")) {
-          card.setAttribute("aria-expanded", "false");
-        }
-      });
+    var normalizedTrackIndex = function (index) {
+      return ((index % trackData.length) + trackData.length) % trackData.length;
     };
 
-    var updateMascotPreview = function (src, alt, key, name) {
-      if (!mascotPreview || !mascotPreviewImage) {
-        return;
-      }
-
-      mascotPreview.classList.remove("is-health", "is-nature", "is-creativity", "has-name");
-      mascotPreviewImage.setAttribute("src", src);
-      mascotPreviewImage.setAttribute("alt", alt);
-
-      if (key) {
-        mascotPreview.classList.add("is-" + key);
-      }
-
-      if (mascotPreviewName) {
-        mascotPreviewName.textContent = name;
-        mascotPreviewName.hidden = !name;
-
-        if (name) {
-          mascotPreview.classList.add("has-name");
-        }
-      }
-
-      void mascotPreview.offsetWidth;
-      mascotPreview.classList.add("is-visible");
+    var nearestTrackIndex = function () {
+      return normalizedTrackIndex(-Math.round(trackRotation / trackStepAngle));
     };
 
-    var showTrackMascot = function (card) {
-      var src = card.getAttribute("data-mascot-src");
-      var alt = card.getAttribute("data-mascot-alt") || "";
-      var key = card.getAttribute("data-mascot-key");
-      var name = card.getAttribute("data-mascot-name") || "";
+    var updateTrackSelection = function (next, animatePanel) {
+      var selected;
 
-      if (!src) {
+      if (typeof animatePanel === "undefined") {
+        animatePanel = true;
+      }
+
+      next = normalizedTrackIndex(next);
+
+      if (next === activeTrack) {
         return;
       }
 
-      clearTrackSelection();
-      void card.offsetWidth;
-      card.classList.add("is-active");
-      card.setAttribute("aria-expanded", "true");
+      activeTrack = next;
+      selected = trackData[activeTrack];
 
-      if (!mascotPreview || !mascotPreviewImage) {
+      trackCharacters.forEach(function (character, index) {
+        var nextSource = index === activeTrack && trackData[index].selected
+          ? trackData[index].selected
+          : trackData[index].still;
+
+        character.setAttribute("aria-pressed", String(index === activeTrack));
+
+        if (trackImages[index].getAttribute("src") !== nextSource) {
+          trackImages[index].setAttribute("src", nextSource);
+        }
+      });
+
+      trackDots.forEach(function (dot, index) {
+        dot.setAttribute("aria-pressed", String(index === activeTrack));
+      });
+
+      trackName.textContent = selected.name;
+      window.clearTimeout(trackPanelTimer);
+      trackPanel.classList.remove("is-fading-in");
+
+      var updateTrackPanel = function () {
+        trackPanel.classList.remove("track-selector-info-0", "track-selector-info-1", "track-selector-info-2");
+        trackPanel.classList.add("track-selector-info-" + activeTrack);
+        trackPanelIcon.setAttribute("src", selected.icon);
+        trackPanelIcon.setAttribute("alt", selected.iconAlt);
+        trackPanelHeading.textContent = selected.title;
+        trackPanelCopy.textContent = selected.description;
+      };
+
+      if (!animatePanel || reducedTrackMotion.matches) {
+        trackPanel.classList.remove("is-fading-out");
+        updateTrackPanel();
         return;
       }
 
-      window.clearTimeout(mascotSwapTimeout);
-
-      if (!desktopTrackMedia.matches) {
-        updateMascotPreview(src, alt, key, name);
-        return;
-      }
-
-      if (mascotPreviewImage.getAttribute("src") === src) {
-        mascotPreview.classList.add("is-visible");
-        return;
-      }
-
-      mascotPreview.classList.remove("is-visible");
-
-      if (!mascotPreviewImage.getAttribute("src")) {
-        updateMascotPreview(src, alt, key, name);
-        return;
-      }
-
-      mascotSwapTimeout = window.setTimeout(function () {
-        updateMascotPreview(src, alt, key, name);
-      }, 240);
+      trackPanel.classList.add("is-fading-out");
+      trackPanelTimer = window.setTimeout(function () {
+        updateTrackPanel();
+        trackPanel.classList.remove("is-fading-out");
+        void trackPanel.offsetWidth;
+        trackPanel.classList.add("is-fading-in");
+      }, 190);
     };
 
-    trackCards.forEach(function (card) {
-      card.addEventListener("mouseenter", function () {
-        showTrackMascot(card);
+    var drawTrackWheel = function () {
+      var wheelWidth = trackWheel.getBoundingClientRect().width;
+      var radius = Math.min(wheelWidth * 0.35, 315);
+      var nextActiveTrack = nearestTrackIndex();
+
+      trackCharacters.forEach(function (character, index) {
+        var radians = (index * trackStepAngle + trackRotation) * Math.PI / 180;
+        var depth = (Math.cos(radians) + 1) / 2;
+        var x = Math.sin(radians) * radius;
+        var y = -56 * (1 - depth);
+        var frontWeight = Math.max(0, Math.min(1, (depth - 0.55) / 0.45));
+        var frontScaleAdjustment = index === 0 ? 0.05 : (index === 1 ? -0.05 : 0);
+        var scale = (0.61 + (0.44 * depth)) * (1 + (frontScaleAdjustment * frontWeight));
+        var brightness = 0.72 + (0.34 * depth);
+        var saturation = 0.78 + (0.27 * depth);
+
+        character.style.transform = "translateX(calc(-50% + " + x + "px)) translateY(" + (y + 12) + "px) translateZ(" + ((depth - 0.5) * 220) + "px) scale(" + scale + ")";
+        character.style.filter = "brightness(" + brightness + ") saturate(" + saturation + ") drop-shadow(0 13px 15px rgba(0, 0, 0, 0.24))";
+        character.style.zIndex = String(Math.round(depth * 100) + 2);
+        character.setAttribute("data-track-position", index === nextActiveTrack ? "active" : (x < 0 ? "left" : "right"));
       });
 
-      card.addEventListener("focus", function () {
-        showTrackMascot(card);
-      });
+      updateTrackSelection(nextActiveTrack);
+    };
 
-      card.addEventListener("click", function () {
-        showTrackMascot(card);
-      });
+    var stopTrackMotion = function () {
+      if (trackAnimationFrame !== null) {
+        window.cancelAnimationFrame(trackAnimationFrame);
+      }
 
-      card.addEventListener("keydown", function (event) {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          showTrackMascot(card);
+      trackAnimationFrame = null;
+    };
+
+    var animateTrackRotation = function (target, duration) {
+      var start;
+      var distance;
+      var startedAt;
+
+      if (typeof duration === "undefined") {
+        duration = 520;
+      }
+
+      stopTrackMotion();
+
+      if (reducedTrackMotion.matches) {
+        trackRotation = target;
+        drawTrackWheel();
+        return;
+      }
+
+      start = trackRotation;
+      distance = target - start;
+      startedAt = performance.now();
+
+      var frame = function (now) {
+        var progress = Math.min(1, (now - startedAt) / duration);
+        var eased = 1 - Math.pow(1 - progress, 4);
+
+        trackRotation = start + (distance * eased);
+        drawTrackWheel();
+
+        if (progress < 1) {
+          trackAnimationFrame = window.requestAnimationFrame(frame);
+        } else {
+          trackRotation = target;
+          drawTrackWheel();
+          trackAnimationFrame = null;
         }
+      };
+
+      trackAnimationFrame = window.requestAnimationFrame(frame);
+    };
+
+    var targetTrackRotation = function (index) {
+      var base = -normalizedTrackIndex(index) * trackStepAngle;
+      return base + (Math.round((trackRotation - base) / 360) * 360);
+    };
+
+    var spinToTrack = function (index) {
+      animateTrackRotation(targetTrackRotation(index));
+    };
+
+    var snapTrackWheel = function () {
+      animateTrackRotation(Math.round(trackRotation / trackStepAngle) * trackStepAngle, 430);
+    };
+
+    var startTrackInertia = function (velocity) {
+      var currentVelocity = Math.max(-1.25, Math.min(1.25, velocity));
+      var previousTime = performance.now();
+
+      stopTrackMotion();
+
+      var coast = function (now) {
+        var elapsed = Math.min(32, now - previousTime);
+
+        previousTime = now;
+        trackRotation += currentVelocity * elapsed;
+        currentVelocity *= Math.pow(0.925, elapsed / 16);
+        drawTrackWheel();
+
+        if (Math.abs(currentVelocity) > 0.018) {
+          trackAnimationFrame = window.requestAnimationFrame(coast);
+        } else {
+          trackAnimationFrame = null;
+          snapTrackWheel();
+        }
+      };
+
+      if (Math.abs(currentVelocity) < 0.04 || reducedTrackMotion.matches) {
+        snapTrackWheel();
+      } else {
+        trackAnimationFrame = window.requestAnimationFrame(coast);
+      }
+    };
+
+    trackCharacters.forEach(function (character) {
+      character.addEventListener("click", function () {
+        if (Date.now() < suppressTrackClickUntil) {
+          return;
+        }
+
+        spinToTrack(Number(character.getAttribute("data-track-index")));
       });
     });
+
+    trackDots.forEach(function (dot) {
+      dot.addEventListener("click", function () {
+        spinToTrack(Number(dot.getAttribute("data-track-index")));
+      });
+    });
+
+    trackWheel.addEventListener("pointerdown", function (event) {
+      stopTrackMotion();
+      window.clearTimeout(trackWheelTimer);
+      trackDragging = true;
+      trackDragPointer = event.pointerId;
+      trackLastX = event.clientX;
+      trackLastTime = performance.now();
+      trackDragVelocity = 0;
+      trackDragDistance = 0;
+      trackWheel.classList.add("is-dragging");
+      trackWheel.setPointerCapture(event.pointerId);
+    });
+
+    trackWheel.addEventListener("pointermove", function (event) {
+      var now;
+      var deltaX;
+      var elapsed;
+      var degrees;
+
+      if (!trackDragging || event.pointerId !== trackDragPointer) {
+        return;
+      }
+
+      now = performance.now();
+      deltaX = event.clientX - trackLastX;
+      elapsed = Math.max(8, now - trackLastTime);
+      degrees = deltaX * 0.42;
+      trackRotation += degrees;
+      trackDragDistance += Math.abs(deltaX);
+      trackDragVelocity = (trackDragVelocity * 0.66) + ((degrees / elapsed) * 0.34);
+      trackLastX = event.clientX;
+      trackLastTime = now;
+      drawTrackWheel();
+    });
+
+    var finishTrackDrag = function (event) {
+      if (!trackDragging || event.pointerId !== trackDragPointer) {
+        return;
+      }
+
+      trackDragging = false;
+      trackWheel.classList.remove("is-dragging");
+
+      if (trackWheel.hasPointerCapture(event.pointerId)) {
+        trackWheel.releasePointerCapture(event.pointerId);
+      }
+
+      if (trackDragDistance > 8) {
+        suppressTrackClickUntil = Date.now() + 280;
+      }
+
+      startTrackInertia(trackDragVelocity);
+      trackDragPointer = null;
+    };
+
+    trackWheel.addEventListener("pointerup", finishTrackDrag);
+    trackWheel.addEventListener("pointercancel", finishTrackDrag);
+
+    trackWheel.addEventListener("wheel", function (event) {
+      var delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+
+      if (Math.abs(delta) < 2) {
+        return;
+      }
+
+      event.preventDefault();
+      stopTrackMotion();
+      trackRotation -= delta * 0.16;
+      trackWheelVelocity = Math.max(-0.9, Math.min(0.9, -delta * 0.012));
+      drawTrackWheel();
+      window.clearTimeout(trackWheelTimer);
+      trackWheelTimer = window.setTimeout(function () {
+        startTrackInertia(trackWheelVelocity);
+      }, 85);
+    }, { passive: false });
+
+    trackSelector.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        event.preventDefault();
+        spinToTrack(activeTrack + (event.key === "ArrowRight" ? 1 : -1));
+      }
+    });
+
+    window.addEventListener("resize", drawTrackWheel);
+    drawTrackWheel();
   }
 
   var sponsorCards = Array.prototype.slice.call(document.querySelectorAll("[data-sponsor-details]"));
