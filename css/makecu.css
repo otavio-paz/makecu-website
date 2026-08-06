@@ -122,16 +122,13 @@ a {
 }
 
 .brand-mark {
-  align-items: center;
-  background: var(--orange);
+  background: transparent;
   border: 2px solid var(--paper);
   box-shadow: 0 0 18px rgba(255, 103, 0, 0.52);
-  color: var(--paper);
-  display: inline-flex;
-  font-size: 10px;
-  height: 38px;
-  justify-content: center;
-  width: 46px;
+  display: block;
+  height: 42px;
+  object-fit: cover;
+  width: 42px;
 }
 
 .site-nav {
@@ -2335,8 +2332,8 @@ a {
   }
 
   .brand-mark {
-    height: 34px;
-    width: 40px;
+    height: 36px;
+    width: 36px;
   }
 
   .site-nav {
