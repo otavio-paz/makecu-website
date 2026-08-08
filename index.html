@@ -115,14 +115,14 @@ layout: default
     </div>
     <div class="hero-content">
       <p class="terminal-prompt">$ ./boot_makecu.sh</p>
-      <h1 class="glitch-title" aria-label="{{ site.event.name }} 2026">
-        <span class="glitch-main glitch-base"><span class="title-word"><span class="title-make">Make</span><span class="title-swap"><span class="title-cu">CU</span><span class="title-icon title-icon-health" aria-hidden="true"><img src="{{ '/images/icons/first_aid.png' | relative_url }}" alt=""></span><span class="title-icon title-icon-leaf" aria-hidden="true"><img src="{{ '/images/icons/leaf.svg' | relative_url }}" alt=""></span><span class="title-icon title-icon-bulb" aria-hidden="true"><img src="{{ '/images/icons/lightbulb.svg' | relative_url }}" alt=""></span></span></span> <span class="title-year">2026</span></span>
+      <h1 class="glitch-title" aria-label="{{ site.event.name }} {{ site.event.year }}">
+        <span class="glitch-main glitch-base"><span class="title-word"><span class="title-make">Make</span><span class="title-swap"><span class="title-cu">CU</span><span class="title-icon title-icon-health" aria-hidden="true"><img src="{{ '/images/icons/first_aid.png' | relative_url }}" alt=""></span><span class="title-icon title-icon-leaf" aria-hidden="true"><img src="{{ '/images/icons/leaf.svg' | relative_url }}" alt=""></span><span class="title-icon title-icon-bulb" aria-hidden="true"><img src="{{ '/images/icons/lightbulb.svg' | relative_url }}" alt=""></span></span></span> <span class="title-year">{{ site.event.year }}</span></span>
       </h1>
       <p class="date-line">{{ site.event.date }}</p>
       <p class="location-line">{{ site.event.location }}</p>
       <p class="hero-copy">{{ site.event.description }}</p>
       <div class="hero-actions" id="registration">
-        <a class="button button-primary" href="https://forms.gle/v4jbvYtr7cf161fb9">Interest Form</a>
+        <a class="button button-primary" href="{{ site.event.registration_url }}" target="_blank" rel="noopener noreferrer">Hackathon Form</a>
         <a class="button button-secondary" href="{{ site.event.discord_url }}">Join Discord</a>
         <a class="button button-quiet" href="https://makecu25.devpost.com/project-gallery">2025 Projects</a>
         <a class="button button-instagram" href="{{ site.social.instagram }}" target="_blank" rel="noopener noreferrer"><img class="button-icon" src="{{ '/images/icons/instagram-logo.png' | relative_url }}" alt="" aria-hidden="true">Instagram</a>
@@ -306,7 +306,7 @@ layout: default
     <div class="contact-panel">
       <p class="terminal-prompt">$ ping CURC</p>
       <h2>Organized by Columbia University Robotics Club.</h2>
-      <p>Questions, sponsor interest, and volunteer interest can go through the organizing team while the 2026 event plan is finalized.</p>
+      <p>Questions, sponsor interest, and volunteer interest can go through the organizing team while the {{ site.event.year }} event plan is finalized.</p>
       <div class="contact-actions">
         <a class="button button-primary" href="{{ site.event.discord_url }}">Join Discord</a>
         <a class="button button-secondary" href="mailto:{{ site.event.email }}">Email Us</a>
