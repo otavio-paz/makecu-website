@@ -92,7 +92,7 @@ event:
         items:
           - title: "Makerspace: Getting Started"
             kind: "Guide"
-            href: "https://make.columbia.edu/"
+            href: "https://make.columbia.edu/getting-started"
           - title: "Makerspace onboarding video"
             kind: "Video"
             href: "https://www.youtube.com/watch?v=E0Lh9JzMFLg"
