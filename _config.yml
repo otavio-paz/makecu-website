@@ -21,11 +21,13 @@ event:
   year: 2026
   description: "Columbia University Robotics Club's 24-hour hardware hackathon for students who want to design, prototype, and demo real hardware projects."
   past_event_photo: "/images/makecu-2025.png"
+  past_projects_url: "https://makecu25.devpost.com/project-gallery"
   date: "November 7-8, 2026"
   countdown_target: "2026-11-07T09:00:00-05:00"
   location: "Columbia University at Carleton Commons"
   email: "curc@columbia.edu"
   registration_url: "https://docs.google.com/forms/d/e/1FAIpQLSfJdWIQY6FtU1nswS9zYNWk3rIVp9drKUAmoozCCOo0F9EgSg/viewform"
+  volunteer_url: "https://docs.google.com/forms/d/e/1FAIpQLSdKjpNJ_RkKNWdquYlIOckF3HEzSVEsLPcyDMmyT6UbtDwoKw/viewform?usp=send_form"
   sponsor_interest_url: "mailto:makecu-placeholder@columbiarobotics.club?subject=MakeCU%202026%20sponsorship%20interest"
   mentor_interest_url: "mailto:makecu-placeholder@columbiarobotics.club?subject=MakeCU%202026%20mentor%20or%20judge%20interest"
   discord_url: "https://discord.gg/EPuGY7PFNn"

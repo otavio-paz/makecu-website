@@ -527,6 +527,12 @@ a {
   box-shadow: 0 0 18px rgba(255, 103, 0, 0.48);
 }
 
+
+.button-volunteer {
+  background: #ff9f5a;
+  box-shadow: 0 0 18px rgba(255, 159, 90, 0.4);
+}
+
 .button-secondary {
   background: rgba(235, 235, 235, 0.12);
 }
@@ -540,6 +546,19 @@ a {
   gap: 10px;
 }
 
+.button-discord {
+  background: var(--blue-dark);
+  box-shadow: 0 0 18px rgba(0, 81, 154, 0.5);
+  color: var(--paper);
+  gap: 10px;
+}
+
+.button-discord:hover,
+
+.button-discord:focus {
+  color: var(--paper);
+}
+
 .button-icon {
   display: block;
   flex: 0 0 auto;
@@ -547,6 +566,11 @@ a {
   image-rendering: pixelated;
   object-fit: contain;
   width: 50px;
+}
+
+.button-icon-discord {
+  height: 34px;
+  width: 34px;
 }
 
 .countdown-card {
@@ -722,6 +746,10 @@ a {
   grid-template-columns: minmax(0, 1fr);
   margin-top: 26px;
   min-width: 0;
+}
+
+.past-projects-button {
+  margin-top: 18px;
 }
 
 .past-event-preview .terminal-prompt {

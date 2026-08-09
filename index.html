@@ -122,9 +122,9 @@ layout: default
       <p class="location-line">{{ site.event.location }}</p>
       <p class="hero-copy">{{ site.event.description }}</p>
       <div class="hero-actions" id="registration">
-        <a class="button button-primary" href="{{ site.event.registration_url }}" target="_blank" rel="noopener noreferrer">Hackathon Form</a>
-        <a class="button button-secondary" href="{{ site.event.discord_url }}">Join Discord</a>
-        <a class="button button-quiet" href="https://makecu25.devpost.com/project-gallery">2025 Projects</a>
+        <a class="button button-primary" href="{{ site.event.registration_url }}" target="_blank" rel="noopener noreferrer">Application Form</a>
+        <a class="button button-volunteer" href="{{ site.event.volunteer_url }}" target="_blank" rel="noopener noreferrer">Volunteering Form</a>
+        <a class="button button-discord" href="{{ site.event.discord_url }}"><img class="button-icon button-icon-discord" src="{{ '/images/icons/discord-logo.png' | relative_url }}" alt="" aria-hidden="true">Discord</a>
         <a class="button button-instagram" href="{{ site.social.instagram }}" target="_blank" rel="noopener noreferrer"><img class="button-icon" src="{{ '/images/icons/instagram-logo.png' | relative_url }}" alt="" aria-hidden="true">Instagram</a>
       </div>
       <div class="countdown-card" data-countdown="{{ site.event.countdown_target }}" aria-live="polite">
@@ -152,6 +152,7 @@ layout: default
     <div class="section-panel centered-panel">
       <h3>Build something physical in one focused weekend.</h3>
       <p>{{ site.event.description }}</p>
+      <a class="button button-quiet past-projects-button" href="{{ site.event.past_projects_url }}">View 2025 Projects</a>
       <div class="past-event-preview">
         <p class="terminal-prompt">$ ./boot_makecu_2025.sh</p>
         {% if site.event.past_event_photo and site.event.past_event_photo != "" %}
@@ -308,7 +309,7 @@ layout: default
       <h2>Organized by Columbia University Robotics Club.</h2>
       <p>Questions, sponsor interest, and volunteer interest can go through the organizing team while the {{ site.event.year }} event plan is finalized.</p>
       <div class="contact-actions">
-        <a class="button button-primary" href="{{ site.event.discord_url }}">Join Discord</a>
+        <a class="button button-discord" href="{{ site.event.discord_url }}"><img class="button-icon button-icon-discord" src="{{ '/images/icons/discord-logo.png' | relative_url }}" alt="" aria-hidden="true">Discord</a>
         <a class="button button-secondary" href="mailto:{{ site.event.email }}">Email Us</a>
         <a class="button button-quiet" href="{{ site.event.code_of_conduct_url }}">MLH Code of Conduct</a>
       </div>
