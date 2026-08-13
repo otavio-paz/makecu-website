@@ -322,8 +322,8 @@
       };
     });
     var trackStepAngle = 120;
-    var trackRotation = 0;
-    var activeTrack = 0;
+    var trackRotation = 120;
+    var activeTrack = 2;
     var trackPanelTimer = null;
     var trackAnimationFrame = null;
     var trackDragging = false;

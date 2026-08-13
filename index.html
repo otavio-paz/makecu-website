@@ -195,7 +195,7 @@ layout: default
     <p class="track-selector-instruction">Drag or swipe to a robot to view its track</p>
 
     <div class="track-selector-stage">
-      <div class="track-selector-name" data-track-selector-name aria-live="polite">ELIE</div>
+      <div class="track-selector-name" data-track-selector-name aria-live="polite">EDDY</div>
 
       <div class="track-selector-wheel" data-track-selector-wheel>
         {% for track in site.event.tracks %}
@@ -222,33 +222,33 @@ layout: default
             class="track-selector-character"
             type="button"
             data-track-index="{{ forloop.index0 }}"
-            data-track-position="{% if forloop.first %}active{% elsif forloop.index == 2 %}right{% else %}left{% endif %}"
+            data-track-position="{% if forloop.index == 3 %}active{% elsif forloop.index == 1 %}right{% else %}left{% endif %}"
             data-track-name="{{ track_mascot_name | upcase }}"
             data-track-title="{{ track.title | escape }}"
             data-track-description="{{ track.description | escape }}"
             data-track-icon="{{ track_icon | relative_url }}"
             data-track-icon-alt="{{ track_icon_alt }}"
             data-track-still-src="{{ track_mascot | relative_url }}"
-            {% if forloop.index == 3 %}data-track-selected-src="{{ '/images/gifs/eddy_waving.gif' | relative_url }}"{% endif %}
+            {% if forloop.index == 1 %}data-track-selected-src="{{ '/images/gifs/elie_waving.gif' | relative_url }}"{% elsif forloop.index == 3 %}data-track-selected-src="{{ '/images/gifs/eddy_waving.gif' | relative_url }}"{% endif %}
             aria-label="Select {{ track_mascot_name }}, {{ track.title }}"
-            aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
-            <img src="{{ track_mascot | relative_url }}" alt="{{ track_mascot_alt }}">
+            aria-pressed="{% if forloop.index == 3 %}true{% else %}false{% endif %}">
+            <img src="{% if forloop.index == 3 %}{{ '/images/gifs/eddy_waving.gif' | relative_url }}{% else %}{{ track_mascot | relative_url }}{% endif %}" alt="{{ track_mascot_alt }}">
           </button>
         {% endfor %}
       </div>
 
       <div class="track-selector-dots" aria-label="Choose a track">
         {% for track in site.event.tracks %}
-          <button class="track-selector-dot" type="button" data-track-index="{{ forloop.index0 }}" aria-label="{{ track.title }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"></button>
+          <button class="track-selector-dot" type="button" data-track-index="{{ forloop.index0 }}" aria-label="{{ track.title }}" aria-pressed="{% if forloop.index == 3 %}true{% else %}false{% endif %}"></button>
         {% endfor %}
       </div>
 
-      <article class="track-selector-info track-selector-info-0" data-track-selector-info aria-live="polite">
+      <article class="track-selector-info track-selector-info-2" data-track-selector-info aria-live="polite">
         <div class="track-selector-info-title">
-          <span class="track-selector-info-icon"><img src="{{ '/images/icons/first_aid.png' | relative_url }}" alt="Healthcare track icon"></span>
-          <h3>{{ site.event.tracks[0].title }}</h3>
+          <span class="track-selector-info-icon"><img src="{{ '/images/icons/lightbulb.svg' | relative_url }}" alt="Creativity track icon"></span>
+          <h3>{{ site.event.tracks[2].title }}</h3>
         </div>
-        <p>{{ site.event.tracks[0].description }}</p>
+        <p>{{ site.event.tracks[2].description }}</p>
       </article>
     </div>
   </section>
