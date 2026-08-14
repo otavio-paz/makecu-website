@@ -229,7 +229,7 @@ layout: default
             data-track-icon="{{ track_icon | relative_url }}"
             data-track-icon-alt="{{ track_icon_alt }}"
             data-track-still-src="{{ track_mascot | relative_url }}"
-            {% if forloop.index == 1 %}data-track-selected-src="{{ '/images/gifs/elie_waving.gif' | relative_url }}"{% elsif forloop.index == 3 %}data-track-selected-src="{{ '/images/gifs/eddy_waving.gif' | relative_url }}"{% endif %}
+            {% if forloop.index == 1 %}data-track-selected-src="{{ '/images/gifs/elie_waving.gif' | relative_url }}"{% elsif forloop.index == 2 %}data-track-selected-src="{{ '/images/gifs/eden_waving.gif' | relative_url }}"{% elsif forloop.index == 3 %}data-track-selected-src="{{ '/images/gifs/eddy_waving.gif' | relative_url }}"{% endif %}
             aria-label="Select {{ track_mascot_name }}, {{ track.title }}"
             aria-pressed="{% if forloop.index == 3 %}true{% else %}false{% endif %}">
             <img src="{% if forloop.index == 3 %}{{ '/images/gifs/eddy_waving.gif' | relative_url }}{% else %}{{ track_mascot | relative_url }}{% endif %}" alt="{{ track_mascot_alt }}">
