@@ -163,14 +163,14 @@ event:
         Aniket is a Robotics Engineer at Clarapath, focusing on controls and software development. Having participated in numerous hackathons during his own studies, he is passionate about hardware-software integration and is thrilled to mentor students through the rapid prototyping process.
 
   sponsors:
-    - tier: "Platinum"
-      sponsors:
-        - name: "TBD"
-          logo: ""
-          url: ""
-        - name: "TBD"
-          logo: ""
-          url: ""
+    # - tier: "Platinum"
+    #   sponsors:
+    #     - name: "TBD"
+    #       logo: ""
+    #       url: ""
+    #     - name: "TBD"
+    #       logo: ""
+    #       url: ""
     # - tier: "Gold"
     #   sponsors:
     #     - name: "TBD"
