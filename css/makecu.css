@@ -2148,6 +2148,15 @@ a {
   max-width: 360px;
 }
 
+.sponsor-tier-gold .sponsor-logo-trigger {
+  width: min(432px, 100%);
+}
+
+.sponsor-tier-gold .sponsor-logo-trigger img {
+  max-height: 158.4px;
+  max-width: 432px;
+}
+
 .sponsor-tier-bronze .sponsor-logo-trigger img {
   width: 85%;
 }
@@ -2642,6 +2651,15 @@ a {
 
   .sponsor-tier-silver .sponsor-logo-trigger img {
     max-width: min(336px, 100%);
+  }
+
+  .sponsor-tier-gold .sponsor-logo-trigger {
+    width: min(403.2px, 100%);
+  }
+
+  .sponsor-tier-gold .sponsor-logo-trigger img {
+    max-height: 158.4px;
+    max-width: min(403.2px, 100%);
   }
 
   .sponsor-tier-silver {
