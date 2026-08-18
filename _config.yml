@@ -156,27 +156,39 @@ event:
       photo: "/images/judges/David-Watkins.jpg"
       bio: >-
         David Watkins is a Research Lead at Tutor Intelligence, where he works on foundation model research and training for robot manipulation, and an advisor to Tola Capital on robotics and AI investments. Previously, he was a Research Lead at the RAI Institute (formerly Boston Dynamics AI Institute), joining as one of its first employees and building its foundation models research team and its largest robot data collection effort. He created Theia, a vision foundation model published at CoRL 2024, and won first place in the MineRL BASALT competition at NeurIPS 2021. He earned his B.S., M.S., and Ph.D. at Columbia University in the Columbia Robotics Lab under Prof. Peter Allen, where his paper on mobile manipulation was an IROS 2022 Best Paper Finalist.
+    - name: "Aniket Dhole"
+      role: "Robotics Engineer at Clarapath"
+      photo: "/images/judges/Aniket-Dhole.jpg"
+      bio: >-
+        Aniket is a Robotics Engineer at Clarapath, focusing on controls and software development. Having participated in numerous hackathons during his own studies, he is passionate about hardware-software integration and is thrilled to mentor students through the rapid prototyping process.
 
   sponsors:
-    - tier: "Platinum"
+    # - tier: "Platinum"
+    #   sponsors:
+    #     - name: "TBD"
+    #       logo: ""
+    #       url: ""
+    #     - name: "TBD"
+    #       logo: ""
+    #       url: ""
+    # - tier: "Gold"
+    #   sponsors:
+    #     - name: "TBD"
+    #       logo: ""
+    #       url: ""
+    #     - name: "TBD"
+    #       logo: ""
+    #       url: ""
+    #     - name: "TBD"
+    #       logo: ""
+    #       url: ""
+    - tier: "Silver"
       sponsors:
-        - name: "TBD"
-          logo: ""
-          url: ""
-        - name: "TBD"
-          logo: ""
-          url: ""
-    - tier: "Gold"
-      sponsors:
-        - name: "TBD"
-          logo: ""
-          url: ""
-        - name: "TBD"
-          logo: ""
-          url: ""
-        - name: "TBD"
-          logo: ""
-          url: ""
+        - name: "Clarapath"
+          logo: "/images/logos/Clarapath-Logo.png"
+          url: "https://clarapath.com/"
+          description: |
+            **About Clarapath:** Clarapath is a medical robotics company based in Westchester County, NY. Our mission is to transform and modernize laboratory workflows with the goal of improving patient care, decreasing costs, and enhancing the quality and consistency of laboratory processes. SectionStar™ and TrimStar Pro™ by Clarapath are ground-breaking electro-mechanical systems designed to elevate and automate histology workflows and provide pathologists with the tissue samples they need to make the most accurate diagnoses. Through the use of innovative technology, data, and precision analytics, Clarapath is paving the way for a new era of laboratory medicine.
     - tier: "Bronze"
       sponsors:
         - name: "Tutor Intelligence"

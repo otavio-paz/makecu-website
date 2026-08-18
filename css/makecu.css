@@ -1860,6 +1860,11 @@ a {
   justify-content: center;
 }
 
+.judge-grid.judge-grid-double {
+  grid-template-columns: repeat(2, minmax(0, 320px));
+  justify-content: center;
+}
+
 .judge-card {
   appearance: none;
   cursor: pointer;
@@ -2034,6 +2039,10 @@ a {
   color: #ffd700;
 }
 
+.sponsor-tier-silver h3 {
+  color: #c0c0c0;
+}
+
 .sponsor-tier-bronze h3 {
   color: #ce8946;
 }
@@ -2128,6 +2137,19 @@ a {
   margin-inline: auto;
   max-height: 110px;
   max-width: 300px;
+}
+
+.sponsor-tier-silver .sponsor-logo-trigger {
+  width: min(360px, 100%);
+}
+
+.sponsor-tier-silver .sponsor-logo-trigger img {
+  max-height: 132px;
+  max-width: 360px;
+}
+
+.sponsor-tier-bronze .sponsor-logo-trigger img {
+  width: 85%;
 }
 
 .sponsor-slot strong {
@@ -2612,6 +2634,26 @@ a {
 
   .sponsor-logo-trigger {
     width: min(280px, 100%);
+  }
+
+  .sponsor-tier-silver .sponsor-logo-trigger {
+    width: min(336px, 100%);
+  }
+
+  .sponsor-tier-silver .sponsor-logo-trigger img {
+    max-width: min(336px, 100%);
+  }
+
+  .sponsor-tier-silver {
+    padding-inline: 16px;
+  }
+
+  .sponsor-tier-silver .sponsor-slot-featured {
+    padding-inline: 8px;
+  }
+
+  .judge-grid.judge-grid-double {
+    grid-template-columns: 1fr;
   }
 
   .quick-facts {
