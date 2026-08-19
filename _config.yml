@@ -171,17 +171,19 @@ event:
     #     - name: "TBD"
     #       logo: ""
     #       url: ""
-    # - tier: "Gold"
-    #   sponsors:
-    #     - name: "TBD"
-    #       logo: ""
-    #       url: ""
-    #     - name: "TBD"
-    #       logo: ""
-    #       url: ""
-    #     - name: "TBD"
-    #       logo: ""
-    #       url: ""
+    - tier: "Gold"
+      sponsors:
+        - name: "Midcentury"
+          logo: "/images/logos/Midcentury-labs.jpeg"
+          url: "https://www.midcentury.xyz/"
+          description: |
+            **About Midcentury:** We are a multimodal data research lab that builds high-quality datasets for training and evaluating real-world AI systems. We create and structure large-scale data across areas like voice, first-person vision, gameplay, and robotics, along with the infrastructure needed to make that data useful for AI labs. We take a research-driven approach by anticipating what future AI models will need, designing datasets around those capabilities, testing them internally, and scaling what works. Our mission is to advance AI by providing data that reflects the complexity of how the real world actually works.
+        # - name: "TBD"
+        #   logo: ""
+        #   url: ""
+        # - name: "TBD"
+        #   logo: ""
+        #   url: ""
     - tier: "Silver"
       sponsors:
         - name: "Clarapath"
