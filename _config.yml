@@ -161,6 +161,16 @@ event:
       photo: "/images/judges/Aniket-Dhole.jpg"
       bio: >-
         Aniket is a Robotics Engineer at Clarapath, focusing on controls and software development. Having participated in numerous hackathons during his own studies, he is passionate about hardware-software integration and is thrilled to mentor students through the rapid prototyping process.
+    - name: "Ali Al-Bustami"
+      role: "Robotics Research Lead at Midcentury Labs"
+      photo: "/images/judges/Ali-Al-Bustami.png"
+      bio: >-
+        Ali Al-Bustami is Robotics Research Lead at Midcentury Labs, where he leads the team's post-training and evaluation work for robot policies. His research sits at the intersection of computer vision, robotics, and foundation models, focused on egocentric perception, vision-language-action (VLA) models, and the benchmarks that make policy performance measurable.
+    - name: "Brandon Samaroo"
+      role: "Head of Research at Midcentury Labs"
+      photo: "/images/judges/Brandon-Samaroo.png"
+      bio: >-
+        Brandon Samaroo is the Head of Research at Midcentury Labs, where he leads the company's world model program and a research team spanning robotics and simulation. His work spans world model training on large-scale egocentric manipulation data, neural rendering for sim-to-real transfer, and evaluation methodology for physical world models. His current focus is autoregressive neural rendering with diffusion models, training them to convert a simulator's geometry and material buffers into photorealistic video to better model the real world. His longer-term goal is to close the sim-to-real gap by replacing the hand-built parts of simulation with learned systems: neural renderers in place of rasterization and path tracing, and learned dynamics in place of physics solvers.
 
   sponsors:
     # - tier: "Platinum"
@@ -173,11 +183,11 @@ event:
     #       url: ""
     - tier: "Gold"
       sponsors:
-        - name: "Midcentury"
+        - name: "Midcentury Labs"
           logo: "/images/logos/Midcentury-labs.jpeg"
           url: "https://www.midcentury.xyz/"
           description: |
-            **About Midcentury:** We are a multimodal data research lab that builds high-quality datasets for training and evaluating real-world AI systems. We create and structure large-scale data across areas like voice, first-person vision, gameplay, and robotics, along with the infrastructure needed to make that data useful for AI labs. We take a research-driven approach by anticipating what future AI models will need, designing datasets around those capabilities, testing them internally, and scaling what works. Our mission is to advance AI by providing data that reflects the complexity of how the real world actually works.
+            **About Midcentury Labs:** Midcentury Labs is an applied research lab building datasets and simulation infrastructure to accelerate robotics. Founded by a team of Stanford AI Lab, DeepMind, and OpenAI alumni, we work with frontier labs and enterprises to help develop and deploy the next generation of embodied agents.
         # - name: "TBD"
         #   logo: ""
         #   url: ""
@@ -225,7 +235,7 @@ event:
       bio: "Giana is a junior studying Computer Science at Columbia Engineering with a strong passion for STEM and community building. As CURC’s Career Chair and member of MakeCU’s Business Team, she facilitates sponsorship relations and connects with Columbia Engineering alumni to garner financial support for the event and to build greater industry liaisons for CURC"
       linkedin_url: "https://www.linkedin.com/in/gianacastro/"
     - name: "Otavio Paz"
-      role: "Webmaster & Design"
+      role: "Webmaster & Hacker Experience"
       photo: "/images/team/Otavio-Paz.png"
       linkedin_url: "https://www.linkedin.com/in/otavio-paz/"
     - name: "Arnia Goode"

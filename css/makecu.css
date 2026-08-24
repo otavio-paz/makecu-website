@@ -1865,6 +1865,11 @@ a {
   justify-content: center;
 }
 
+.judge-grid.judge-grid-quad {
+  grid-template-columns: repeat(2, minmax(0, 320px));
+  justify-content: center;
+}
+
 .judge-card {
   appearance: none;
   cursor: pointer;
@@ -2670,7 +2675,8 @@ a {
     padding-inline: 8px;
   }
 
-  .judge-grid.judge-grid-double {
+  .judge-grid.judge-grid-double,
+  .judge-grid.judge-grid-quad {
     grid-template-columns: 1fr;
   }
 

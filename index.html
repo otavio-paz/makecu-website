@@ -260,7 +260,7 @@ layout: default
       <span>$</span>
       <h2><span class="terminal-command">open</span> JUDGES</h2>
     </div>
-    <div class="judge-grid{% if site.event.judges.size == 1 %} judge-grid-single{% elsif site.event.judges.size == 2 %} judge-grid-double{% endif %}">
+    <div class="judge-grid{% if site.event.judges.size == 1 %} judge-grid-single{% elsif site.event.judges.size == 2 %} judge-grid-double{% elsif site.event.judges.size == 4 %} judge-grid-quad{% endif %}">
       {% for judge in site.event.judges %}
         <button class="judge-card" type="button" data-dialog-target="judge-{{ forloop.index }}">
           {% if judge.photo and judge.photo != "" %}
