@@ -37,7 +37,6 @@ custom_class: checkout-page
     <div class="checkout-auth-copy">
       <span class="checkout-kicker">MAKECU 2026</span>
       <h1>Hardware Checkout</h1>
-      <p>Browse parts, reserve an order, and follow its pickup status from one place.</p>
       <div class="checkout-flow" aria-label="Checkout process">
         <span>Browse</span><span aria-hidden="true">→</span><span>Reserve</span><span aria-hidden="true">→</span><span>Pickup</span><span aria-hidden="true">→</span><span>Return</span>
       </div>
@@ -48,7 +47,7 @@ custom_class: checkout-page
       <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
       <p class="checkout-form-error" data-login-error role="alert" hidden></p>
       <button class="checkout-button checkout-button-primary" type="submit">Sign in</button>
-      <p class="checkout-form-note">Teams receive credentials from the hardware desk. Volunteers use their admin account.</p>
+      <p class="checkout-form-note">Teams receive credentials from MakeCU volunteers. Volunteers use their admin account.</p>
     </form>
   </section>
 
@@ -62,7 +61,7 @@ custom_class: checkout-page
     <div data-team-panel="catalog">
       <div class="checkout-page-heading">
         <div><span class="checkout-kicker">TEAM CATALOG</span><h1>Choose your hardware</h1></div>
-        <button class="checkout-button checkout-button-primary" type="button" data-open-cart>Review Order <span data-cart-button-count>0</span></button>
+        <button class="checkout-button checkout-button-primary" type="button" data-open-cart>Review order <span data-cart-button-count>0</span></button>
       </div>
       <aside class="checkout-cooldown" data-cooldown hidden aria-live="polite"></aside>
       <div class="checkout-filters">
@@ -101,7 +100,7 @@ custom_class: checkout-page
 
     <div data-admin-panel="orders" hidden>
       <div class="checkout-page-heading"><div><span class="checkout-kicker">ORDER QUEUE</span><h1>Prepare & hand out</h1></div><button class="checkout-button checkout-button-secondary" type="button" data-refresh-orders>Refresh</button></div>
-      <div class="checkout-order-list" data-admin-orders></div>
+      <div class="checkout-order-board" data-admin-orders aria-label="Orders grouped by fulfillment stage"></div>
     </div>
 
     <div data-admin-panel="teams" hidden>

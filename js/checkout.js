@@ -126,6 +126,49 @@
     return '<span class="checkout-component-placeholder" aria-hidden="true">' + escapeHtml(component.name.slice(0, 2).toUpperCase()) + "</span>";
   };
 
+  var tagTone = function (value) {
+    var tones = {
+      "Audio": 0,
+      "Button": 4,
+      "Camera": 3,
+      "Communication": 1,
+      "Distance": 5,
+      "Electronics": 2,
+      "Microcontroller": 0,
+      "Motor": 4,
+      "Motor Related": 3,
+      "Pi-related": 1,
+      "Power": 5,
+      "Sensor": 2,
+      "Tool": 0,
+      "Arduino": 0,
+      "Raspberry Pi": 1,
+      "Arduino + Raspberry Pi": 3,
+      "N/A": 5
+    };
+
+    if (Object.prototype.hasOwnProperty.call(tones, value)) {
+      return " checkout-tag-tone-" + tones[value];
+    }
+
+    var hash = String(value).split("").reduce(function (total, character) {
+      return total + character.charCodeAt(0);
+    }, 0);
+    return " checkout-tag-tone-" + (hash % 6);
+  };
+
+  var tagMarkup = function (value) {
+    return '<span class="checkout-tag' + tagTone(value) + '">' + escapeHtml(value) + "</span>";
+  };
+
+  var itemImageMarkup = function (item) {
+    if (item.imageUrl) {
+      return '<img src="' + escapeHtml(item.imageUrl) + '" alt="">';
+    }
+
+    return '<span aria-hidden="true">' + escapeHtml(item.name.slice(0, 2).toUpperCase()) + "</span>";
+  };
+
   var updateCartCounts = function () {
     var count = Object.keys(state.cart).reduce(function (total, key) {
       return total + state.cart[key];
@@ -180,7 +223,7 @@
       return '<article class="checkout-component-card" data-component-id="' + component.id + '">' +
         '<div class="checkout-component-image">' + imageMarkup(component) + "</div>" +
         '<div class="checkout-component-body"><h2>' + escapeHtml(component.name) + "</h2>" +
-        '<div class="checkout-tags"><span class="checkout-tag">' + escapeHtml(component.category) + '</span><span class="checkout-tag">' + escapeHtml(component.compatibility) + "</span></div>" +
+        '<div class="checkout-tags">' + tagMarkup(component.category) + tagMarkup(component.compatibility) + "</div>" +
         '<p class="checkout-component-description">' + escapeHtml(component.description) + "</p>" +
         '<p class="checkout-stock' + stockClass + '">' + stockLabel + "</p>" + limit +
         '<div class="checkout-quantity-row"><button type="button" data-quantity-change="-1" aria-label="Remove one ' + escapeHtml(component.name) + '"' + (quantity === 0 ? " disabled" : "") + '>−</button><output aria-live="polite">' + quantity + '</output><button type="button" data-quantity-change="1" aria-label="Add one ' + escapeHtml(component.name) + '"' + (quantity >= maximum ? " disabled" : "") + ">+</button></div>" +
@@ -203,7 +246,7 @@
     cooldown.hidden = false;
   };
 
-  var orderItemsMarkup = function (order, adjustable) {
+  var orderItemsMarkup = function (order, adjustable, showImages) {
     return '<div class="checkout-order-items">' + order.items.map(function (item) {
       var changed = item.approvedQuantity !== item.requestedQuantity;
       var adjustment = changed
@@ -215,7 +258,12 @@
         controls = '<div class="checkout-approved-input"><label>Approved<input type="number" min="0" max="' + item.requestedQuantity + '" value="' + item.approvedQuantity + '" data-adjust-quantity="' + item.id + '"></label><label>Reason<select data-adjust-reason="' + item.id + '"><option value="">No adjustment</option><option>Out of Stock</option><option>Reached Max Per Team</option><option>Component Unavailable</option><option>Quantity Adjusted by Volunteer</option><option>Other</option></select></label><label>Note<input maxlength="1000" data-adjust-note="' + item.id + '" value="' + escapeHtml(item.note || "") + '"></label></div>';
       }
 
-      return '<div class="checkout-order-item"><span><strong>' + escapeHtml(item.name) + "</strong>" + adjustment + controls + '</span><span>× ' + item.approvedQuantity + "</span></div>";
+      var image = showImages
+        ? '<div class="checkout-order-item-image">' + itemImageMarkup(item) + "</div>"
+        : "";
+      var category = showImages ? '<div class="checkout-order-item-tags">' + tagMarkup(item.category) + "</div>" : "";
+
+      return '<div class="checkout-order-item' + (showImages ? " checkout-order-item-with-image" : "") + '">' + image + '<span><strong>' + escapeHtml(item.name) + "</strong>" + category + adjustment + controls + '</span><span class="checkout-order-item-quantity">× ' + item.approvedQuantity + "</span></div>";
     }).join("") + "</div>";
   };
 
@@ -253,7 +301,7 @@
     }
 
     grid.innerHTML = state.dashboard.inventory.map(function (item) {
-      return '<article class="checkout-holding-card"><span class="checkout-tag">' + escapeHtml(item.category) + '</span><h2>' + escapeHtml(item.name) + '</h2><p class="checkout-holding-quantity">× ' + item.checkedOutQuantity + "</p></article>";
+      return '<article class="checkout-holding-card">' + tagMarkup(item.category) + '<h2>' + escapeHtml(item.name) + '</h2><p class="checkout-holding-quantity">× ' + item.checkedOutQuantity + "</p></article>";
     }).join("");
   };
 
@@ -327,16 +375,23 @@
 
   var renderAdminOrders = function () {
     var list = document.querySelector("[data-admin-orders]");
+    var stages = [
+      { status: "submitted", label: "Submitted" },
+      { status: "reviewing", label: "Reviewing" },
+      { status: "ready", label: "Ready for pickup" },
+      { status: "picked_up", label: "Picked up" },
+      { status: "cancelled", label: "Cancelled" }
+    ];
 
-    if (!state.adminOrders.length) {
-      list.innerHTML = '<p class="checkout-empty">The order queue is empty.</p>';
-      return;
-    }
+    list.innerHTML = stages.map(function (stage) {
+      var orders = state.adminOrders.filter(function (order) { return order.status === stage.status; });
+      var cards = orders.length ? orders.map(function (order) {
+        var adjustable = order.status === "reviewing" && order.reviewedBy === state.user.id;
+        return '<article class="checkout-order-card checkout-order-board-card" data-admin-order="' + order.id + '"><div class="checkout-order-card-header"><div><h2>#' + order.id + " — " + escapeHtml(order.teamName) + '</h2><p class="checkout-order-card-meta">Submitted ' + formatDate(order.createdAt) + (order.reviewerName ? " · " + escapeHtml(order.reviewerName) : "") + "</p></div></div>" +
+          orderItemsMarkup(order, adjustable, true) + '<div class="checkout-order-actions">' + adminOrderActions(order) + "</div></article>";
+      }).join("") : '<p class="checkout-stage-empty">No ' + stage.label.toLowerCase() + " orders.</p>";
 
-    list.innerHTML = state.adminOrders.map(function (order) {
-      var adjustable = order.status === "reviewing" && order.reviewedBy === state.user.id;
-      return '<article class="checkout-order-card" data-admin-order="' + order.id + '"><div class="checkout-order-card-header"><div><h2>#' + order.id + " — " + escapeHtml(order.teamName) + '</h2><p class="checkout-order-card-meta">Submitted ' + formatDate(order.createdAt) + (order.reviewerName ? " · Reviewing volunteer: " + escapeHtml(order.reviewerName) : "") + '</p></div><span class="checkout-status checkout-status-' + order.status + '">' + escapeHtml(statusLabel(order.status)) + "</span></div>" +
-        orderItemsMarkup(order, adjustable) + '<div class="checkout-order-actions">' + adminOrderActions(order) + "</div></article>";
+      return '<section class="checkout-order-column checkout-order-column-' + stage.status + '"><header><span class="checkout-status checkout-status-' + stage.status + '">' + escapeHtml(stage.label) + '</span><strong>' + orders.length + '</strong></header><div class="checkout-order-column-cards">' + cards + "</div></section>";
     }).join("");
   };
 
