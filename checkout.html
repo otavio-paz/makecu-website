@@ -1,0 +1,173 @@
+---
+layout: default
+title: MakeCU Hardware Checkout
+permalink: /checkout/
+custom_class: checkout-page
+---
+
+<header class="checkout-header">
+  <a class="brand" href="{{ '/' | relative_url }}" aria-label="{{ site.event.name }} home">
+    <span class="brand-mark" aria-hidden="true">MC</span>
+    <span>Hardware Desk</span>
+  </a>
+  <div class="checkout-session" data-session hidden>
+    <span data-session-name></span>
+    <button class="checkout-link-button" type="button" data-logout>Sign out</button>
+  </div>
+</header>
+
+<main class="checkout-main" data-checkout-app>
+  <section class="checkout-state-card" data-loading-state aria-live="polite">
+    <span class="checkout-kicker">$ ./hardware_checkout</span>
+    <h1>Connecting to the hardware desk…</h1>
+  </section>
+
+  <section class="checkout-state-card" data-closed-state hidden>
+    <span class="checkout-kicker">SYSTEM STANDBY</span>
+    <h1>Hardware checkout opens when MakeCU goes live.</h1>
+    <p>The catalog, ordering, and volunteer tools are locked outside the live hackathon window.</p>
+    <dl class="checkout-window">
+      <div><dt>Opens</dt><dd data-live-start></dd></div>
+      <div><dt>Closes</dt><dd data-live-end></dd></div>
+    </dl>
+    <a class="checkout-button checkout-button-secondary" href="{{ '/' | relative_url }}">Back to MakeCU</a>
+  </section>
+
+  <section class="checkout-auth" data-login-state hidden>
+    <div class="checkout-auth-copy">
+      <span class="checkout-kicker">MAKECU 2026</span>
+      <h1>Hardware Checkout</h1>
+      <p>Browse parts, reserve an order, and follow its pickup status from one place.</p>
+      <div class="checkout-flow" aria-label="Checkout process">
+        <span>Browse</span><span aria-hidden="true">→</span><span>Reserve</span><span aria-hidden="true">→</span><span>Pickup</span><span aria-hidden="true">→</span><span>Return</span>
+      </div>
+    </div>
+    <form class="checkout-login-card" data-login-form>
+      <h2>Team & volunteer login</h2>
+      <label>Username<input name="username" autocomplete="username" required></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+      <p class="checkout-form-error" data-login-error role="alert" hidden></p>
+      <button class="checkout-button checkout-button-primary" type="submit">Sign in</button>
+      <p class="checkout-form-note">Teams receive credentials from the hardware desk. Volunteers use their admin account.</p>
+    </form>
+  </section>
+
+  <section class="checkout-app-shell" data-team-app hidden>
+    <nav class="checkout-tabs" aria-label="Team hardware navigation">
+      <button class="is-active" type="button" data-team-tab="catalog">Components <span data-cart-count>0</span></button>
+      <button type="button" data-team-tab="orders">Orders</button>
+      <button type="button" data-team-tab="holding">Checked Out</button>
+    </nav>
+
+    <div data-team-panel="catalog">
+      <div class="checkout-page-heading">
+        <div><span class="checkout-kicker">TEAM CATALOG</span><h1>Choose your hardware</h1></div>
+        <button class="checkout-button checkout-button-primary" type="button" data-open-cart>Review Order <span data-cart-button-count>0</span></button>
+      </div>
+      <aside class="checkout-cooldown" data-cooldown hidden aria-live="polite"></aside>
+      <div class="checkout-filters">
+        <label class="checkout-search"><span class="screen-reader-text">Search components</span><input type="search" placeholder="Search name or description" data-component-search></label>
+        <label><span>Category</span><select data-category-filter><option value="">All categories</option></select></label>
+        <label><span>Compatibility</span><select data-compatibility-filter><option value="">All platforms</option><option>Arduino</option><option>Raspberry Pi</option><option>Arduino + Raspberry Pi</option><option>N/A</option></select></label>
+        <label class="checkout-checkbox"><input type="checkbox" data-availability-filter> Available only</label>
+      </div>
+      <div class="checkout-component-grid" data-component-grid aria-live="polite"></div>
+    </div>
+
+    <div data-team-panel="orders" hidden>
+      <div class="checkout-page-heading"><div><span class="checkout-kicker">RECEIPTS</span><h1>Your orders</h1></div></div>
+      <div class="checkout-order-list" data-team-orders></div>
+    </div>
+
+    <div data-team-panel="holding" hidden>
+      <div class="checkout-page-heading"><div><span class="checkout-kicker">TEAM HARDWARE</span><h1>Currently checked out</h1></div></div>
+      <div class="checkout-holding-grid" data-team-holding></div>
+    </div>
+  </section>
+
+  <section class="checkout-app-shell checkout-admin-shell" data-admin-app hidden>
+    <nav class="checkout-tabs checkout-admin-tabs" aria-label="Volunteer navigation">
+      <button class="is-active" type="button" data-admin-tab="overview">Overview</button>
+      <button type="button" data-admin-tab="orders">Orders</button>
+      <button type="button" data-admin-tab="teams">Teams / Returns</button>
+      <button type="button" data-admin-tab="inventory">Inventory</button>
+      <button type="button" data-admin-tab="activity">Activity</button>
+    </nav>
+
+    <div data-admin-panel="overview">
+      <div class="checkout-page-heading"><div><span class="checkout-kicker">VOLUNTEER DESK</span><h1>Live overview</h1></div></div>
+      <div class="checkout-overview-grid" data-admin-overview></div>
+    </div>
+
+    <div data-admin-panel="orders" hidden>
+      <div class="checkout-page-heading"><div><span class="checkout-kicker">ORDER QUEUE</span><h1>Prepare & hand out</h1></div><button class="checkout-button checkout-button-secondary" type="button" data-refresh-orders>Refresh</button></div>
+      <div class="checkout-order-list" data-admin-orders></div>
+    </div>
+
+    <div data-admin-panel="teams" hidden>
+      <div class="checkout-page-heading"><div><span class="checkout-kicker">RETURNS</span><h1>Team hardware</h1></div><button class="checkout-button checkout-button-secondary" type="button" data-open-team-create>Add team</button></div>
+      <label class="checkout-search checkout-team-search"><span class="screen-reader-text">Search teams</span><input type="search" placeholder="Search team name or identifier" data-team-search></label>
+      <div class="checkout-team-layout"><div class="checkout-team-list" data-team-list></div><div class="checkout-team-detail" data-team-detail><p class="checkout-empty">Select a team to view outstanding hardware and receipts.</p></div></div>
+    </div>
+
+    <div data-admin-panel="inventory" hidden>
+      <div class="checkout-page-heading"><div><span class="checkout-kicker">INVENTORY</span><h1>Hardware catalog</h1></div><button class="checkout-button checkout-button-primary" type="button" data-new-component>Add component</button></div>
+      <div class="checkout-inventory-table-wrap"><table class="checkout-table"><thead><tr><th>Component</th><th>Available</th><th>Reserved</th><th>Out</th><th>Unavailable</th><th>Total</th><th></th></tr></thead><tbody data-inventory-table></tbody></table></div>
+    </div>
+
+    <div data-admin-panel="activity" hidden>
+      <div class="checkout-page-heading"><div><span class="checkout-kicker">AUDIT TRAIL</span><h1>Desk activity</h1></div></div>
+      <ol class="checkout-activity-list" data-activity-list></ol>
+    </div>
+  </section>
+
+  <div class="checkout-toast" data-toast role="status" hidden></div>
+</main>
+
+<dialog class="checkout-dialog" data-cart-dialog>
+  <form method="dialog" class="checkout-dialog-header"><div><span class="checkout-kicker">RESERVATION</span><h2>Your order</h2></div><button class="checkout-icon-button" value="cancel" aria-label="Close order">×</button></form>
+  <div data-cart-items></div>
+  <p class="checkout-form-error" data-cart-error role="alert" hidden></p>
+  <div class="checkout-dialog-actions"><button class="checkout-button checkout-button-secondary" type="button" data-cart-close>Keep browsing</button><button class="checkout-button checkout-button-primary" type="button" data-submit-order>Submit Order</button></div>
+</dialog>
+
+<dialog class="checkout-dialog checkout-dialog-wide" data-order-dialog>
+  <form method="dialog" class="checkout-dialog-header"><div><span class="checkout-kicker">ORDER RECEIPT</span><h2 data-order-dialog-title></h2></div><button class="checkout-icon-button" value="cancel" aria-label="Close receipt">×</button></form>
+  <div data-order-dialog-body></div>
+</dialog>
+
+<dialog class="checkout-dialog" data-confirm-dialog>
+  <div class="checkout-dialog-header"><div><span class="checkout-kicker">PLEASE CONFIRM</span><h2 data-confirm-title></h2></div></div>
+  <div data-confirm-body></div>
+  <div class="checkout-dialog-actions"><button class="checkout-button checkout-button-secondary" type="button" data-confirm-cancel>Cancel</button><button class="checkout-button checkout-button-danger" type="button" data-confirm-accept>Confirm</button></div>
+</dialog>
+
+<dialog class="checkout-dialog" data-team-create-dialog>
+  <form data-team-create-form>
+    <div class="checkout-dialog-header"><div><span class="checkout-kicker">TEAM ACCESS</span><h2>Create team credentials</h2></div><button class="checkout-icon-button" type="button" data-dialog-close>×</button></div>
+    <label>Team name<input name="name" required maxlength="120"></label>
+    <label>Identifier<input name="identifier" required maxlength="80" placeholder="byte-builders"></label>
+    <label>Username<input name="username" maxlength="80" placeholder="Defaults to identifier"></label>
+    <label>Temporary password<input name="password" type="password" required minlength="8"></label>
+    <p class="checkout-form-error" data-team-create-error hidden></p>
+    <div class="checkout-dialog-actions"><button class="checkout-button checkout-button-secondary" type="button" data-dialog-close>Cancel</button><button class="checkout-button checkout-button-primary" type="submit">Create team</button></div>
+  </form>
+</dialog>
+
+<dialog class="checkout-dialog" data-component-dialog>
+  <form data-component-form>
+    <div class="checkout-dialog-header"><div><span class="checkout-kicker">INVENTORY ITEM</span><h2 data-component-form-title>Component</h2></div><button class="checkout-icon-button" type="button" data-dialog-close>×</button></div>
+    <input type="hidden" name="id">
+    <div class="checkout-form-grid"><label>Component name<input name="name" required maxlength="120"></label><label>Category<select name="category" required></select></label></div>
+    <label>Description<textarea name="description" rows="3" maxlength="2000"></textarea></label>
+    <label>Photo URL<input name="imageUrl" type="url" maxlength="1000" placeholder="https://…"></label>
+    <div class="checkout-form-grid"><label>Compatibility<select name="compatibility" required><option>Arduino</option><option>Raspberry Pi</option><option>Arduino + Raspberry Pi</option><option>N/A</option></select></label><label>Maximum per team<input name="maxActivePerTeam" type="number" min="1" placeholder="No limit"></label></div>
+    <div class="checkout-form-grid"><label>Total quantity<input name="totalQuantity" type="number" min="0" required></label><label>Unavailable / damaged<input name="unavailableQuantity" type="number" min="0" required value="0"></label></div>
+    <label>Internal notes<textarea name="adminNotes" rows="2" maxlength="2000"></textarea></label>
+    <label class="checkout-checkbox"><input name="active" type="checkbox" checked> Active for team ordering</label>
+    <p class="checkout-form-error" data-component-error hidden></p>
+    <div class="checkout-dialog-actions"><button class="checkout-button checkout-button-secondary" type="button" data-dialog-close>Cancel</button><button class="checkout-button checkout-button-primary" type="submit">Save component</button></div>
+  </form>
+</dialog>
+
+<script src="{{ '/js/checkout.js' | relative_url }}"></script>
