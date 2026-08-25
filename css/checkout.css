@@ -501,8 +501,7 @@
 .checkout-order-board {
   display: grid;
   gap: 16px;
-  grid-auto-columns: minmax(310px, calc((100% - 32px) / 3));
-  grid-auto-flow: column;
+  grid-template-columns: repeat(5, calc((100% - 32px) / 3));
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   padding: 2px 2px 18px;
@@ -548,6 +547,16 @@
 
 .checkout-order-board-card h2 {
   font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.checkout-order-board-card .checkout-order-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.checkout-order-board-card .checkout-order-actions .checkout-button {
+  width: 100%;
 }
 
 .checkout-stage-empty {
@@ -593,6 +602,10 @@
   grid-template-columns: 56px minmax(0, 1fr) auto;
 }
 
+.checkout-order-item-with-image .checkout-approved-input {
+  grid-column: 1 / -1;
+}
+
 .checkout-order-item-image {
   align-items: center;
   background: #dce7ed;
@@ -625,6 +638,7 @@
 .checkout-order-item small {
   color: #9a3e29;
   display: block;
+  overflow-wrap: anywhere;
 }
 
 .checkout-order-actions {
@@ -639,10 +653,32 @@
 
 .checkout-approved-input {
   align-items: end;
+  background: #e8eff3;
+  border-radius: 7px;
   display: grid;
   gap: 8px;
-  grid-template-columns: 80px 1fr 1fr;
-  margin-top: 8px;
+  grid-template-columns: 82px minmax(0, 1fr);
+  margin-top: 2px;
+  padding: 10px;
+}
+
+.checkout-approved-input label,
+.checkout-approved-input input,
+.checkout-approved-input select {
+  min-width: 0;
+}
+
+.checkout-approved-input label {
+  font-size: 11px;
+}
+
+.checkout-approved-input input,
+.checkout-approved-input select {
+  font-size: 12px;
+}
+
+.checkout-approved-note {
+  grid-column: 1 / -1;
 }
 
 .checkout-holding-card {
@@ -951,6 +987,10 @@
   .checkout-team-list {
     max-height: 280px;
   }
+
+  .checkout-order-board {
+    grid-template-columns: repeat(5, minmax(310px, calc((100% - 16px) / 2)));
+  }
 }
 
 @media (max-width: 650px) {
@@ -1003,7 +1043,7 @@
   }
 
   .checkout-order-board {
-    grid-auto-columns: minmax(290px, calc(100vw - 44px));
+    grid-template-columns: repeat(5, minmax(290px, calc(100vw - 44px)));
   }
 
   .checkout-approved-input label:last-child {

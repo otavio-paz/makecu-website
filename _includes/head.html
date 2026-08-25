@@ -30,7 +30,7 @@
   <link rel="stylesheet" type="text/css" href="{{ '/css/bootstrap.min.css' | relative_url }}" />
   <link rel="stylesheet" type="text/css" href="{{ '/css/base.css' | relative_url }}" />
   <link rel="stylesheet" type="text/css" href="{{ '/css/' | relative_url }}{{ site.style.theme | append: '.css' }}" />
-  {% if page.custom_class == 'checkout-page' %}<link rel="stylesheet" type="text/css" href="{{ '/css/checkout.css' | relative_url }}" />{% endif %}
+  {% if page.custom_class == 'checkout-page' %}<link rel="stylesheet" type="text/css" href="{{ '/css/checkout.css' | relative_url }}?v={{ site.time | date: '%s' }}" />{% endif %}
 
   <!-- Favicon -->
   <link rel="canonical" href="{{ page.url | replace: 'index.html', '' | prepend: site.baseurl | prepend: site.url }}">

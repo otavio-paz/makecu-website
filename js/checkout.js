@@ -255,7 +255,14 @@
       var controls = "";
 
       if (adjustable) {
-        controls = '<div class="checkout-approved-input"><label>Approved<input type="number" min="0" max="' + item.requestedQuantity + '" value="' + item.approvedQuantity + '" data-adjust-quantity="' + item.id + '"></label><label>Reason<select data-adjust-reason="' + item.id + '"><option value="">No adjustment</option><option>Out of Stock</option><option>Reached Max Per Team</option><option>Component Unavailable</option><option>Quantity Adjusted by Volunteer</option><option>Other</option></select></label><label>Note<input maxlength="1000" data-adjust-note="' + item.id + '" value="' + escapeHtml(item.note || "") + '"></label></div>';
+        var reasons = ["", "Out of Stock", "Reached Max Per Team", "Component Unavailable", "Quantity Adjusted by Volunteer", "Other"];
+        var reasonOptions = reasons.map(function (reason) {
+          var label = reason || "No adjustment";
+          var selected = item.adjustmentReason === reason || (!item.adjustmentReason && !reason) ? " selected" : "";
+          return '<option value="' + escapeHtml(reason) + '"' + selected + ">" + escapeHtml(label) + "</option>";
+        }).join("");
+
+        controls = '<div class="checkout-approved-input"><label class="checkout-approved-quantity">Approved<input type="number" min="0" max="' + item.requestedQuantity + '" value="' + item.approvedQuantity + '" data-adjust-quantity="' + item.id + '"></label><label class="checkout-approved-reason">Reason<select data-adjust-reason="' + item.id + '">' + reasonOptions + '</select></label><label class="checkout-approved-note">Note<input maxlength="1000" data-adjust-note="' + item.id + '" value="' + escapeHtml(item.note || "") + '" placeholder="Optional volunteer note"></label></div>';
       }
 
       var image = showImages
@@ -263,7 +270,7 @@
         : "";
       var category = showImages ? '<div class="checkout-order-item-tags">' + tagMarkup(item.category) + "</div>" : "";
 
-      return '<div class="checkout-order-item' + (showImages ? " checkout-order-item-with-image" : "") + '">' + image + '<span><strong>' + escapeHtml(item.name) + "</strong>" + category + adjustment + controls + '</span><span class="checkout-order-item-quantity">× ' + item.approvedQuantity + "</span></div>";
+      return '<div class="checkout-order-item' + (showImages ? " checkout-order-item-with-image" : "") + '">' + image + '<span><strong>' + escapeHtml(item.name) + "</strong>" + category + adjustment + '</span><span class="checkout-order-item-quantity">× ' + item.approvedQuantity + "</span>" + controls + "</div>";
     }).join("") + "</div>";
   };
 
