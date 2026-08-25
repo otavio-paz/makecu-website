@@ -1,0 +1,14 @@
+{
+  "name": "makecu-website",
+  "private": true,
+  "scripts": {
+    "checkout:dev": "node scripts/checkout-dev-server.js",
+    "checkout:seed": "node scripts/seed-checkout.js",
+    "test": "node --test tests/*.test.js",
+    "test:checkout": "node --test tests/checkout-*.test.js"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.3.10",
+    "pg": "^8.16.3"
+  }
+}
