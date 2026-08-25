@@ -78,6 +78,10 @@ async function createPostgresDatabase() {
 }
 
 async function initializeDatabase() {
+  if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
+    throw new Error("DATABASE_URL is required for the production checkout system.");
+  }
+
   const database = process.env.DATABASE_URL
     ? await createPostgresDatabase()
     : await createPgliteDatabase();

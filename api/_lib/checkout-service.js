@@ -587,6 +587,11 @@ async function adjustOrder(database, body, actor) {
       }
 
       const previous = Number(item.approved_quantity);
+
+      if (approved > previous) {
+        throw httpError(409, `${item.name}: approved quantity can only be lowered after reservation. Ask the team to place a later order for additional units.`);
+      }
+
       const released = previous - approved;
       const reason = cleanString(adjustment.reason, "Adjustment reason", { optional: approved === previous, max: 120 });
       const note = cleanString(adjustment.note, "Adjustment note", { optional: true, max: 1000 });

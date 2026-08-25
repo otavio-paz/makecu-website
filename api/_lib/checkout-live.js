@@ -5,7 +5,7 @@ function liveStatus(now) {
   const start = new Date(process.env.CHECKOUT_LIVE_START || DEFAULT_START);
   const end = new Date(process.env.CHECKOUT_LIVE_END || DEFAULT_END);
   const current = now || new Date();
-  const forced = process.env.CHECKOUT_FORCE_LIVE === "true";
+  const forced = process.env.NODE_ENV !== "production" && process.env.CHECKOUT_FORCE_LIVE === "true";
   const live = forced || (current >= start && current <= end);
 
   return {

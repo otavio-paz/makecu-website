@@ -38,10 +38,16 @@ function componentInput(body) {
     ? null
     : positiveInteger(body.maxActivePerTeam, "Maximum per team");
 
+  const imageUrl = cleanString(body.imageUrl, "Image URL", { max: 1000, optional: true });
+
+  if (imageUrl && !/^https?:\/\//i.test(imageUrl) && !imageUrl.startsWith("/")) {
+    throw httpError(400, "Image URL must use http(s) or be a site-relative path beginning with /.");
+  }
+
   return {
     name: cleanString(body.name, "Component name", { max: 120 }),
     description: cleanString(body.description, "Description", { max: 2000, optional: true }),
-    imageUrl: cleanString(body.imageUrl, "Image URL", { max: 1000, optional: true }),
+    imageUrl,
     category: oneOf(body.category, CATEGORIES, "Category"),
     compatibility: oneOf(body.compatibility, COMPATIBILITY, "Compatibility"),
     totalQuantity: positiveInteger(body.totalQuantity, "Total quantity", true),

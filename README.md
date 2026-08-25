@@ -13,6 +13,24 @@ bundle exec jekyll serve
 
 Open `http://localhost:4000`.
 
+## Hardware Checkout Development
+
+The hardware checkout app uses PostgreSQL in production and a local PGlite database for development.
+
+```bash
+npm install
+$env:CHECKOUT_FORCE_LIVE="true"
+$env:CHECKOUT_ADMIN_PASSWORD="replace-with-a-long-password"
+$env:CHECKOUT_PGLITE_PATH="./checkout-dev-data"
+npm run checkout:seed
+bundle exec jekyll build
+npm run checkout:dev
+```
+
+Open `http://127.0.0.1:4173/checkout/`. The checkout API fails closed outside the configured event window. Set `CHECKOUT_LIVE_START` and `CHECKOUT_LIVE_END` in production; `CHECKOUT_FORCE_LIVE` is intended only for local testing.
+
+Run `npm test` for the inventory concurrency, authorization, cooldown, pickup, return, and audit regression tests. See [DEPLOYMENT.md](DEPLOYMENT.md) for production database and event-window configuration.
+
 ## Edit Content
 
 Most event copy lives in `_config.yml`.

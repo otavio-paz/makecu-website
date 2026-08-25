@@ -1,6 +1,9 @@
 {
   "name": "makecu-website",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "checkout:dev": "node scripts/checkout-dev-server.js",
     "checkout:seed": "node scripts/seed-checkout.js",

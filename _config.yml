@@ -280,6 +280,10 @@ event:
 
 markdown: kramdown
 exclude:
+  - api
+  - db
+  - scripts
+  - tests
   - node_modules
   - vendor
   - vercel.json
@@ -287,6 +291,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - package.json
+  - package-lock.json
   - README.md
   - DEPLOYMENT.md
   - CNAME
