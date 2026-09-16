@@ -126,7 +126,7 @@ event:
             href: "https://forms.gle/vWUz3frgi7Ze4zVSA"
 
   schedule:
-    - time: "Saturday morning"
+    - time: "Saturday, 9:00 AM"
       title: "Check-in and opening ceremony"
       description: "Registration, team formation, safety notes, and opening remarks."
     - time: "Saturday afternoon"
@@ -141,6 +141,9 @@ event:
     - time: "Sunday afternoon"
       title: "Demos and awards"
       description: "Judging, closing ceremony, prize announcements, and cleanup."
+    - time: "Sunday, 5:00 PM"
+      title: "Event ends"
+      description: "MakeCU wraps up. Thanks for building with us!"
 
   tracks:
     - title: "Healthcare Track"
