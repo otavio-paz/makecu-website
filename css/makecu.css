@@ -1958,6 +1958,15 @@ a {
   text-align: left;
 }
 
+.judge-email {
+  margin: 8px 0 18px;
+}
+
+.judge-email a {
+  color: var(--paper);
+  font-family: var(--font-ui);
+}
+
 .checklist-complete-panel {
   padding-top: 72px;
 }
@@ -2055,7 +2064,7 @@ a {
 .sponsor-slots {
   display: grid;
   gap: 14px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   margin-top: 22px;
 }
 
@@ -2083,7 +2092,6 @@ a {
 }
 
 .sponsor-slot-featured {
-  grid-column: 1 / -1;
   gap: 0;
   grid-template-columns: minmax(0, 1fr);
   justify-content: center;
@@ -2154,6 +2162,9 @@ a {
 }
 
 .sponsor-tier-gold .sponsor-logo-trigger {
+  align-items: center;
+  display: grid;
+  min-height: 158.4px;
   width: min(432px, 100%);
 }
 
@@ -2623,7 +2634,6 @@ a {
   .track-grid,
   .judge-grid,
   .team-grid,
-  .sponsor-slots,
   .timeline-item {
     grid-template-columns: 1fr;
   }

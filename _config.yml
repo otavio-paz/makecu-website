@@ -154,16 +154,6 @@ event:
       description: "Create robots that inspire, educate, entertain, or enable new forms of expression."
 
   judges:
-    - name: "David Watkins"
-      role: "Research Lead at Tutor Intelligence"
-      photo: "/images/judges/David-Watkins.jpg"
-      bio: >-
-        David Watkins is a Research Lead at Tutor Intelligence, where he works on foundation model research and training for robot manipulation, and an advisor to Tola Capital on robotics and AI investments. Previously, he was a Research Lead at the RAI Institute (formerly Boston Dynamics AI Institute), joining as one of its first employees and building its foundation models research team and its largest robot data collection effort. He created Theia, a vision foundation model published at CoRL 2024, and won first place in the MineRL BASALT competition at NeurIPS 2021. He earned his B.S., M.S., and Ph.D. at Columbia University in the Columbia Robotics Lab under Prof. Peter Allen, where his paper on mobile manipulation was an IROS 2022 Best Paper Finalist.
-    - name: "Aniket Dhole"
-      role: "Robotics Engineer at Clarapath"
-      photo: "/images/judges/Aniket-Dhole.jpg"
-      bio: >-
-        Aniket is a Robotics Engineer at Clarapath, focusing on controls and software development. Having participated in numerous hackathons during his own studies, he is passionate about hardware-software integration and is thrilled to mentor students through the rapid prototyping process.
     - name: "Ali Al-Bustami"
       role: "Robotics Research Lead at Midcentury Labs"
       photo: "/images/judges/Ali-Al-Bustami.png"
@@ -174,6 +164,22 @@ event:
       photo: "/images/judges/Brandon-Samaroo.png"
       bio: >-
         Brandon Samaroo is the Head of Research at Midcentury Labs, where he leads the company's world model program and a research team spanning robotics and simulation. His work spans world model training on large-scale egocentric manipulation data, neural rendering for sim-to-real transfer, and evaluation methodology for physical world models. His current focus is autoregressive neural rendering with diffusion models, training them to convert a simulator's geometry and material buffers into photorealistic video to better model the real world. His longer-term goal is to close the sim-to-real gap by replacing the hand-built parts of simulation with learned systems: neural renderers in place of rasterization and path tracing, and learned dynamics in place of physics solvers.
+    - name: "Josh Elijah"
+      role: "CEO at BotBlox"
+      email: "josh@botblox.com"
+      photo: "/images/judges/Josh-Elijah.png"
+      bio: >-
+        Josh holds a master's degree in Electronic Engineering from the University of Manchester, five patents, and deep experience in electronics, manufacturing, and FPGA technology. He currently leads BotBlox Inc., a hardware company enabling the wired data backbone of modern autonomous systems.
+    - name: "Aniket Dhole"
+      role: "Robotics Engineer at Clarapath"
+      photo: "/images/judges/Aniket-Dhole.jpg"
+      bio: >-
+        Aniket is a Robotics Engineer at Clarapath, focusing on controls and software development. Having participated in numerous hackathons during his own studies, he is passionate about hardware-software integration and is thrilled to mentor students through the rapid prototyping process.
+    - name: "David Watkins"
+      role: "Research Lead at Tutor Intelligence"
+      photo: "/images/judges/David-Watkins.jpg"
+      bio: >-
+        David Watkins is a Research Lead at Tutor Intelligence, where he works on foundation model research and training for robot manipulation, and an advisor to Tola Capital on robotics and AI investments. Previously, he was a Research Lead at the RAI Institute (formerly Boston Dynamics AI Institute), joining as one of its first employees and building its foundation models research team and its largest robot data collection effort. He created Theia, a vision foundation model published at CoRL 2024, and won first place in the MineRL BASALT competition at NeurIPS 2021. He earned his B.S., M.S., and Ph.D. at Columbia University in the Columbia Robotics Lab under Prof. Peter Allen, where his paper on mobile manipulation was an IROS 2022 Best Paper Finalist.
 
   sponsors:
     # - tier: "Platinum"
@@ -191,6 +197,11 @@ event:
           url: "https://www.midcentury.xyz/"
           description: |
             **About Midcentury Labs:** Midcentury Labs is an applied research lab building datasets and simulation infrastructure to accelerate robotics. Founded by a team of Stanford AI Lab, DeepMind, and OpenAI alumni, we work with frontier labs and enterprises to help develop and deploy the next generation of embodied agents.
+        - name: "BotBlox"
+          logo: "/images/logos/BotBlox-Logo.png"
+          url: "https://botblox.com/"
+          description: |
+            **About BotBlox:** We build tiny, rugged networking hardware that modern autonomous systems rely on.
         # - name: "TBD"
         #   logo: ""
         #   url: ""
