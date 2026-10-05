@@ -69,7 +69,10 @@ CREATE TABLE IF NOT EXISTS checkout_orders (
   cancelled_at TIMESTAMPTZ,
   expired_at TIMESTAMPTZ,
   reservation_expires_at TIMESTAMPTZ,
-  cancellation_note TEXT NOT NULL DEFAULT ''
+  cancellation_note TEXT NOT NULL DEFAULT '',
+  protected_stock_override_by BIGINT REFERENCES checkout_users(id),
+  protected_stock_override_reason TEXT NOT NULL DEFAULT '',
+  protected_stock_override_at TIMESTAMPTZ
 );
 
 CREATE TABLE IF NOT EXISTS checkout_order_items (
@@ -195,6 +198,9 @@ ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS accepted_at TIMESTAMPTZ;
 ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS expired_at TIMESTAMPTZ;
 ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS reservation_expires_at TIMESTAMPTZ;
 ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS cancellation_note TEXT NOT NULL DEFAULT '';
+ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS protected_stock_override_by BIGINT REFERENCES checkout_users(id);
+ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS protected_stock_override_reason TEXT NOT NULL DEFAULT '';
+ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS protected_stock_override_at TIMESTAMPTZ;
 ALTER TABLE checkout_orders DROP CONSTRAINT IF EXISTS checkout_orders_status_check;
 ALTER TABLE checkout_orders ADD CONSTRAINT checkout_orders_status_check
   CHECK (status IN ('submitted', 'reviewing', 'accepted', 'ready', 'picked_up', 'cancelled', 'expired'));

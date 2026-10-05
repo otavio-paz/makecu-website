@@ -263,6 +263,35 @@
 
 .checkout-relationship-row:first-child { border-top: 0; }
 
+.checkout-override-notice,
+.checkout-protected-order {
+  margin: 0.8rem 0;
+  padding: 0.85rem;
+  border: 1px solid #d88b1f;
+  border-radius: 0.55rem;
+  background: rgba(216, 139, 31, 0.08);
+}
+
+.checkout-override-notice p { margin: 0.25rem 0 0; }
+.checkout-protected-order summary { cursor: pointer; font-weight: 700; }
+
+.checkout-override-row {
+  display: grid;
+  grid-template-columns: 1fr 7rem;
+  gap: 1rem;
+  align-items: end;
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--checkout-border);
+}
+
+.checkout-override-row strong span {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--checkout-muted);
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
 @media (max-width: 900px) {
   .checkout-relationship-row { grid-template-columns: 1fr 1fr; }
   .checkout-relationship-message { grid-column: 1 / -1; }

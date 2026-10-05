@@ -108,6 +108,9 @@ function orderView(row, items) {
     cancellationNote: row.cancellation_note,
     expiredAt: row.expired_at,
     reservationExpiresAt: row.reservation_expires_at,
+    protectedStockOverrideBy: row.protected_stock_override_by == null ? null : Number(row.protected_stock_override_by),
+    protectedStockOverrideReason: row.protected_stock_override_reason || "",
+    protectedStockOverrideAt: row.protected_stock_override_at,
     events: row.events || [],
     items: items || []
   };
@@ -727,6 +730,146 @@ async function submitOrder(database, body, actor) {
   });
 }
 
+async function createProtectedStockOverrideOrder(database, body, actor) {
+  const teamId = positiveInteger(body.teamId, "Team ID");
+  const reason = cleanString(body.reason, "Override reason", { max: 500 });
+  const normalized = normalizedOrderItems(body.items);
+
+  if (!normalized.size) {
+    throw httpError(400, "Add at least one component to the override order.");
+  }
+
+  return database.transaction(async function (transaction) {
+    const teamResult = await transaction.query(
+      "SELECT * FROM checkout_teams WHERE id = $1 FOR UPDATE",
+      [teamId]
+    );
+    const team = teamResult.rows[0];
+
+    if (!team) {
+      throw httpError(404, "Team not found.");
+    }
+
+    const componentIds = Array.from(normalized.keys()).sort(function (a, b) { return a - b; });
+    const componentsResult = await transaction.query(
+      "SELECT * FROM checkout_components WHERE id = ANY($1::bigint[]) ORDER BY id FOR UPDATE",
+      [componentIds]
+    );
+    const components = new Map(componentsResult.rows.map(function (component) {
+      return [Number(component.id), component];
+    }));
+    const activeResult = await transaction.query(
+      `SELECT components.id,
+              COALESCE(inventory.checked_out_quantity, 0) + COALESCE(reservations.quantity, 0) AS active_quantity
+         FROM checkout_components components
+         LEFT JOIN checkout_team_inventory inventory
+           ON inventory.component_id = components.id AND inventory.team_id = $1
+         LEFT JOIN (
+           SELECT items.component_id, SUM(items.approved_quantity) AS quantity
+             FROM checkout_order_items items
+             JOIN checkout_orders orders ON orders.id = items.order_id
+            WHERE orders.team_id = $1 AND orders.status IN ('submitted', 'reviewing', 'accepted', 'ready')
+            GROUP BY items.component_id
+         ) reservations ON reservations.component_id = components.id
+        WHERE components.id = ANY($2::bigint[])`,
+      [teamId, componentIds]
+    );
+    const active = new Map(activeResult.rows.map(function (row) {
+      return [Number(row.id), Number(row.active_quantity)];
+    }));
+    let usesProtectedStock = false;
+    const errors = [];
+
+    componentIds.forEach(function (componentId) {
+      const component = components.get(componentId);
+      const quantity = normalized.get(componentId);
+
+      if (!component || !component.active) {
+        errors.push({ componentId, message: "This component is missing or disabled." });
+        return;
+      }
+
+      const physicalAvailable = Number(component.total_quantity) - Number(component.reserved_quantity) -
+        Number(component.checked_out_quantity) - Number(component.unavailable_quantity);
+      const normalAvailable = Math.max(0, physicalAvailable - Number(component.protected_stock));
+
+      if (quantity > physicalAvailable) {
+        errors.push({ componentId, message: `${component.name}: only ${physicalAvailable} physically available.` });
+      }
+
+      if (quantity > normalAvailable) {
+        usesProtectedStock = true;
+      }
+
+      const limit = component.max_active_per_team == null ? null : Number(component.max_active_per_team);
+      if (limit != null && (active.get(componentId) || 0) + quantity > limit) {
+        errors.push({ componentId, message: `${component.name}: this would exceed the per-team maximum of ${limit}.` });
+      }
+    });
+
+    if (errors.length) {
+      throw httpError(409, "The protected-stock order could not be created.", { items: errors });
+    }
+
+    if (!usesProtectedStock) {
+      throw httpError(400, "This order does not need a protected-stock override; the requested quantities are normally available.");
+    }
+
+    const adviceActor = { team_id: teamId };
+    const advice = await cartAdvice(transaction, adviceActor, Array.from(normalized, function (entry) {
+      return { componentId: entry[0], quantity: entry[1] };
+    }));
+    const blockers = advice.filter(function (item) { return item.severity === "required"; });
+
+    if (blockers.length) {
+      throw httpError(409, "The override order is missing required supporting hardware.", { advice: blockers });
+    }
+
+    const orderResult = await transaction.query(
+      `INSERT INTO checkout_orders
+        (team_id, status, reviewed_by, reviewing_at, claim_expires_at, reservation_expires_at,
+         protected_stock_override_by, protected_stock_override_reason, protected_stock_override_at)
+       VALUES ($1, 'reviewing', $2, NOW(), NOW() + INTERVAL '7 minutes', NOW() + INTERVAL '30 minutes',
+               $2, $3, NOW())
+       RETURNING *`,
+      [teamId, actor.id, reason]
+    );
+    const order = orderResult.rows[0];
+    const receiptCode = `O-${String(order.id).padStart(5, "0")}`;
+    await transaction.query("UPDATE checkout_orders SET receipt_code = $2 WHERE id = $1", [order.id, receiptCode]);
+
+    for (const componentId of componentIds) {
+      const quantity = normalized.get(componentId);
+      const component = components.get(componentId);
+      await transaction.query(
+        `INSERT INTO checkout_order_items
+          (order_id, component_id, requested_quantity, approved_quantity,
+           component_name_snapshot, component_image_url_snapshot, component_image_alt_snapshot, component_category_snapshot)
+         VALUES ($1, $2, $3, $3, $4, $5, $6, $7)`,
+        [order.id, componentId, quantity, component.name, component.image_url, component.image_alt, component.category]
+      );
+      await transaction.query(
+        "UPDATE checkout_components SET reserved_quantity = reserved_quantity + $2, updated_at = NOW() WHERE id = $1",
+        [componentId, quantity]
+      );
+      await transaction.query(
+        `INSERT INTO checkout_inventory_transactions
+          (component_id, team_id, order_id, admin_id, actor_user_id, transaction_type, quantity, note)
+         VALUES ($1, $2, $3, $4, $4, 'PROTECTED_STOCK_OVERRIDE', $5, $6)`,
+        [componentId, teamId, order.id, actor.id, quantity, reason]
+      );
+    }
+
+    await recordOrderEvent(transaction, order.id, actor.id, "PROTECTED_STOCK_OVERRIDE", { reason });
+    await transaction.query(
+      `INSERT INTO checkout_activity (actor_user_id, team_id, order_id, message)
+       VALUES ($1, $2, $3, $4)`,
+      [actor.id, teamId, order.id, `${actor.display_name} created ${receiptCode} using protected stock: ${reason}`]
+    );
+    return orderDetails(transaction, order.id);
+  });
+}
+
 async function orderDetails(database, orderId, teamId) {
   const values = [orderId];
   let teamClause = "";
@@ -1275,6 +1418,15 @@ async function teamAdminDetail(database, teamIdInput) {
     "SELECT * FROM checkout_teams WHERE id = $1",
     [teamId]
   );
+  const protectedInventory = await database.query(
+    `SELECT id, name, category, protected_stock,
+            GREATEST(0, total_quantity - reserved_quantity - checked_out_quantity - unavailable_quantity) AS physical_available,
+            GREATEST(0, total_quantity - reserved_quantity - checked_out_quantity - unavailable_quantity - protected_stock) AS normal_available
+       FROM checkout_components
+      WHERE active = TRUE AND protected_stock > 0
+        AND total_quantity - reserved_quantity - checked_out_quantity - unavailable_quantity > 0
+      ORDER BY category, name`
+  );
 
   if (!teamResult.rows[0]) {
     throw httpError(404, "Team not found.");
@@ -1353,6 +1505,16 @@ async function teamAdminDetail(database, teamIdInput) {
         imageUrl: row.image_url,
         category: row.category,
         checkedOutQuantity: Number(row.checked_out_quantity)
+      };
+    }),
+    protectedInventory: protectedInventory.rows.map(function (row) {
+      return {
+        componentId: Number(row.id),
+        name: row.name,
+        category: row.category,
+        protectedStock: Number(row.protected_stock),
+        physicalAvailable: Number(row.physical_available),
+        normalAvailable: Number(row.normal_available)
       };
     }),
     orders: ordersResult.rows.map(function (order) {
@@ -1468,6 +1630,7 @@ module.exports = {
   resetTeamPassword,
   saveComponent,
   submitOrder,
+  createProtectedStockOverrideOrder,
   orderDetails,
   teamDashboard,
   adminOrders,

@@ -338,6 +338,7 @@
     orderDialog.querySelector("[data-order-dialog-title]").textContent = title;
     orderDialog.querySelector("[data-order-dialog-body]").innerHTML =
       '<div class="checkout-receipt-hero' + heroClass + '"><span>' + escapeHtml(statusLabel(order.status).toUpperCase()) + '</span><strong>' + escapeHtml(order.receiptCode || "#" + order.id) + "</strong><span>" + escapeHtml(order.teamName) + " · " + formatDate(order.createdAt) + "</span></div>" +
+      (order.protectedStockOverrideReason ? '<div class="checkout-override-notice"><strong>Protected-stock exception</strong><p>' + escapeHtml(order.protectedStockOverrideReason) + "</p></div>" : "") +
       orderItemsMarkup(order, false) +
       (order.status === "ready" ? "<p><strong>Please bring this screen to the hardware desk.</strong></p>" : "") + events;
     orderDialog.showModal();
@@ -482,6 +483,7 @@
         var adjustable = order.status === "reviewing" && order.reviewedBy === state.user.id;
         var claimMeta = order.status === "reviewing" && order.claimExpiresAt ? " · claim until " + formatDate(order.claimExpiresAt) : "";
         return '<article class="checkout-order-card checkout-order-board-card" data-admin-order="' + order.id + '"><div class="checkout-order-card-header"><div><h2>' + escapeHtml(order.receiptCode || "#" + order.id) + " — " + escapeHtml(order.teamName) + '</h2><p class="checkout-order-card-meta">Submitted ' + formatDate(order.createdAt) + (order.reviewerName ? " · " + escapeHtml(order.reviewerName) : "") + claimMeta + "</p></div></div>" +
+          (order.protectedStockOverrideReason ? '<div class="checkout-override-notice"><strong>Protected-stock exception</strong><p>' + escapeHtml(order.protectedStockOverrideReason) + "</p></div>" : "") +
           orderItemsMarkup(order, adjustable, true) + '<div class="checkout-order-actions">' + adminOrderActions(order) + "</div></article>";
       }).join("") : '<p class="checkout-stage-empty">No ' + stage.label.toLowerCase() + " orders.</p>";
 
@@ -528,8 +530,13 @@
     var orders = detail.orders.length ? detail.orders.map(function (order) {
       return '<button class="checkout-team-button" type="button" data-view-admin-order="' + order.id + '"><strong>Order #' + order.id + '</strong><small>' + escapeHtml(statusLabel(order.status)) + " · " + formatDate(order.createdAt) + "</small></button>";
     }).join("") : '<p class="checkout-empty">No orders yet.</p>';
+    var protectedOrder = detail.protectedInventory && detail.protectedInventory.length
+      ? '<details class="checkout-protected-order"><summary>Create protected-stock exception</summary><p class="checkout-form-note">Use only for an organizer-approved exception. The quantity must consume protected reserve, and a reason is required.</p>' + detail.protectedInventory.map(function (item) {
+        return '<div class="checkout-override-row" data-override-component="' + item.componentId + '"><strong>' + escapeHtml(item.name) + '<span>Normally available ' + item.normalAvailable + ' · physically available ' + item.physicalAvailable + '</span></strong><label>Quantity<input type="number" min="0" max="' + item.physicalAvailable + '" value="0" data-override-quantity></label></div>';
+      }).join("") + '<label>Required override reason<textarea maxlength="500" rows="2" data-override-reason placeholder="Why should protected stock be released for this team?"></textarea></label><div class="checkout-order-actions"><button class="checkout-button checkout-button-danger" type="button" data-create-protected-order="' + detail.team.id + '">Create exception order</button></div></details>'
+      : "";
 
-    container.innerHTML = '<div class="checkout-order-card-header"><div><span class="checkout-kicker">TEAM</span><h2>' + escapeHtml(detail.team.name) + '</h2><p class="checkout-order-card-meta">' + escapeHtml(detail.team.identifier) + '</p></div><button class="checkout-button checkout-button-secondary" type="button" data-reset-password="' + detail.team.id + '">Reset password</button></div><h3 class="checkout-section-title">Currently Holding</h3>' + holding + '<h3 class="checkout-section-title">Orders & Pickup History</h3>' + orders + '<h3 class="checkout-section-title">Return History</h3>' + receipts;
+    container.innerHTML = '<div class="checkout-order-card-header"><div><span class="checkout-kicker">TEAM</span><h2>' + escapeHtml(detail.team.name) + '</h2><p class="checkout-order-card-meta">' + escapeHtml(detail.team.identifier) + '</p></div><button class="checkout-button checkout-button-secondary" type="button" data-reset-password="' + detail.team.id + '">Reset password</button></div><h3 class="checkout-section-title">Currently Holding</h3>' + holding + protectedOrder + '<h3 class="checkout-section-title">Orders & Pickup History</h3>' + orders + '<h3 class="checkout-section-title">Return History</h3>' + receipts;
   };
 
   var loadTeamDetail = async function (teamId) {
@@ -879,6 +886,7 @@
     var returnButton = event.target.closest("[data-process-return]");
     var resetButton = event.target.closest("[data-reset-password]");
     var orderButton = event.target.closest("[data-view-admin-order]");
+    var protectedButton = event.target.closest("[data-create-protected-order]");
 
     try {
       if (returnButton) {
@@ -915,6 +923,32 @@
 
         await mutate("reset-team-password", { teamId: Number(resetButton.dataset.resetPassword), password: password });
         notify("Team password reset. Existing team sessions were signed out.");
+      } else if (protectedButton) {
+        var overrideItems = Array.prototype.slice.call(document.querySelectorAll("[data-override-component]")).map(function (row) {
+          return {
+            componentId: Number(row.dataset.overrideComponent),
+            quantity: Number(row.querySelector("[data-override-quantity]").value)
+          };
+        }).filter(function (item) { return item.quantity > 0; });
+        var overrideReason = document.querySelector("[data-override-reason]").value.trim();
+
+        if (!overrideItems.length || !overrideReason) {
+          notify("Choose hardware and enter the required override reason.");
+          return;
+        }
+
+        if (!(await confirmAction("Release protected stock?", "This creates a claimed order for the team and records your reason permanently in the audit trail.", "Create Exception"))) {
+          return;
+        }
+
+        setBusy(protectedButton, true, "Creating…");
+        await mutate("create-protected-stock-order", {
+          teamId: Number(protectedButton.dataset.createProtectedOrder),
+          reason: overrideReason,
+          items: overrideItems
+        });
+        await Promise.all([loadTeamDetail(state.selectedTeamId), loadAdminOverview()]);
+        notify("Protected-stock exception order created and assigned to you.");
       } else if (orderButton) {
         var result = await api("order", { orderId: Number(orderButton.dataset.viewAdminOrder) });
         openOrderReceipt(result.order);
@@ -924,6 +958,9 @@
     } finally {
       if (returnButton) {
         setBusy(returnButton, false);
+      }
+      if (protectedButton) {
+        setBusy(protectedButton, false);
       }
     }
   });

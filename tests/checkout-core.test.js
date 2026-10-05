@@ -550,3 +550,52 @@ test("structured relationships drive cart advice and block missing required hard
   }, teamCookie);
   assert.equal(submitted.status, 201);
 });
+
+test("admins can create a reason-required protected-stock exception order", async function () {
+  const team = await request("create-team", {
+    name: "Protected Stock Team",
+    identifier: "protected-stock-team",
+    username: "protected-stock-team",
+    password: "protected-test-2026"
+  }, adminCookie);
+  const component = await request("save-component", {
+    name: "Protected Test Board",
+    description: "Scarce board reserved for exceptions.",
+    imageUrl: "/images/checkout-image-pending.svg",
+    imageAlt: "Placeholder for a scarce test board",
+    category: "Microcontroller",
+    compatibility: "Arduino",
+    totalQuantity: 3,
+    unavailableQuantity: 0,
+    protectedStock: 2,
+    maxActivePerTeam: 3,
+    active: true
+  }, adminCookie);
+  const teamCookie = await login("protected-stock-team", "protected-test-2026");
+  const blocked = await request("submit-order", {
+    items: [{ componentId: component.body.component.id, quantity: 2 }]
+  }, teamCookie);
+  assert.equal(blocked.status, 409);
+
+  const missingReason = await request("create-protected-stock-order", {
+    teamId: team.body.team.id,
+    reason: "",
+    items: [{ componentId: component.body.component.id, quantity: 2 }]
+  }, adminCookie);
+  assert.equal(missingReason.status, 400);
+
+  const override = await request("create-protected-stock-order", {
+    teamId: team.body.team.id,
+    reason: "Approved replacement board for the final demo.",
+    items: [{ componentId: component.body.component.id, quantity: 2 }]
+  }, adminCookie);
+  assert.equal(override.status, 201);
+  assert.equal(override.body.order.status, "reviewing");
+  assert.equal(override.body.order.protectedStockOverrideReason, "Approved replacement board for the final demo.");
+  assert.equal(override.body.order.reviewedBy > 0, true);
+
+  const activity = await request("activity", {}, adminCookie);
+  assert.ok(activity.body.activity.some(function (item) {
+    return item.message.indexOf("using protected stock") >= 0;
+  }));
+});
