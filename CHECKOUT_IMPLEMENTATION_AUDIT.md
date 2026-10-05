@@ -1,21 +1,21 @@
 # MakeCU Checkout System: Implementation Guide and Readiness Audit
 
-**Updated:** October 4, 2026  
-**Branch:** `checkout`  
-**Base commit audited:** `f113f0bec802eb5144ddeec14c8abac1141f870b`  
+**Updated:** October 5, 2026
+**Branch:** `checkout`
+**Base commit audited:** `f113f0bec802eb5144ddeec14c8abac1141f870b`
 **Design reference:** `CHECKOUT_SYSTEM_DESIGN_HACKATHON.md`
 
 ## Current conclusion
 
-The checkout system now implements the event-critical P0 workflow and safeguards in the working tree. It is suitable for a supervised staging rehearsal, but it should not yet be declared fully competition-ready.
+All required application features in the design document are implemented on the local `checkout` branch, subject to the explicit exclusions below. The build is feature-complete for a supervised competition rehearsal.
 
-The remaining readiness blockers are:
+The remaining readiness work is operational rather than missing application behavior:
 
-1. Run the concurrency suite against a real production-style PostgreSQL database. The current automated suite uses in-memory PGlite.
-2. Add structured component relationships and cart-level driver/power recommendations. Free-form technical guidance is present, but relationship-aware prompts are not.
-3. Review and supply the final component images. The application now requires a photo and accessible image description before a component can be activated. The local full-catalog preview contains 58 provisional supplier-page images and uses an explicit “photo pending review” image for the remaining 130 items. Neither set should be treated as the approved production image set until organizers verify identity and usage rights.
-4. Decide whether protected-stock exceptions need a dedicated per-order override flow. Protected stock is enforced, and admins can change it through a versioned/audited inventory edit, but there is no one-click order-specific exception.
-5. Decide whether automatic expiry must run without any site traffic. Expired reservations are released safely on subsequent catalog, dashboard, queue, or team-detail activity; there is no scheduled background job.
+1. Run `npm run test:checkout:postgres` against a disposable production-style PostgreSQL database. The suite uses independent pooled connections but has not been executed because no PostgreSQL test URL is configured locally.
+2. Verify final physical counts, team limits, protected stock, bin locations, and curated compatibility relationships against the hardware on hand.
+3. Image review is intentionally deferred. The local full-catalog preview contains 58 provisional supplier-page images and uses an explicit “photo pending review” image for the remaining 130 items.
+
+Per organizer direction, unattended scheduled expiry and expiring-soon warnings are intentionally excluded. Lazy expiry remains enforced whenever the application receives traffic.
 
 ## How the system works
 
@@ -203,16 +203,34 @@ Admins process returns from the team's current holdings. Team holding and compon
 
 Damaged and missing entries require a note. Partial returns are supported. Return item names are snapshotted, and idempotent retry returns the original receipt instead of processing the hardware twice.
 
+If a volunteer records the wrong return, the original `R-#####` receipt remains unchanged. A reason-required `C-#####` correction receipt records the affected quantity, original outcome, corrected outcome, volunteer, note, and time. The correction transaction updates team holdings and inventory, rejects over-correction, and refuses unsafe changes after intervening allocations.
+
+### Compatibility guidance and relationships
+
+Components have separate Arduino and Raspberry Pi guidance plus structured `requires`, `recommends`, `compatible_driver`, and `compatible_power_supply` relationships. Each relationship stores a target component, capacity ratio, activation threshold, and participant-facing message.
+
+The cart calculation counts checked-out hardware, active reservations, and the current cart. Missing required hardware blocks submission server-side; warnings and recommendations remain advisory. Teams can add the calculated missing quantity directly. Admins edit relationships in the inventory form.
+
+The local 188-item catalog has curated guidance on 25 motor, servo, controller, and Pi-related components and 15 driver/recommendation relationships. `npm run checkout:seed-relationships` reapplies this data idempotently after a catalog import.
+
+### Protected-stock exceptions
+
+Normal team orders cannot consume protected stock. From the selected team's admin screen, a volunteer can create a reason-required exception order. Physical-stock and per-team checks still apply. The order is reserved and claimed immediately, while the reason is recorded on the order, event stream, inventory ledger, and activity log.
+
+### End-of-event reconciliation
+
+The admin report compares component reserved counters with active order items and checked-out counters with per-team holdings. It flags mismatches, lists outstanding team hardware, and summarizes reserved, checked-out, unavailable, damaged, missing, and correction-receipt totals.
+
 ### Live updates
 
-Team catalog, order, holding, and cooldown data refresh every five seconds. Admin overview data also refreshes every five seconds, along with whichever admin tab is active: order queue, teams/returns, inventory, or activity. The order board shows claim ownership and lease expiry.
+Team catalog, order, holding, and cooldown data refresh every five seconds. Admin overview data also refreshes every five seconds, along with whichever admin tab is active: order queue, teams/returns, inventory, activity, or reconciliation report. The order board shows claim ownership and lease expiry.
 
 ## Acceptance-criteria status
 
 | # | Acceptance criterion | Status |
 |---:|---|---|
-| 1 | At least three admins can use it simultaneously | **Met in code and PGlite test** |
-| 2 | Multiple teams cannot drive inventory negative | **Implemented; real PostgreSQL verification pending** |
+| 1 | At least three admins can use it simultaneously | **Met in code and PGlite test; PostgreSQL rehearsal pending** |
+| 2 | Multiple teams cannot drive inventory negative | **Met; PostgreSQL rehearsal pending** |
 | 3 | One team cannot bypass limits with multiple tabs | **Met** |
 | 4 | Duplicate mutations do not repeat inventory changes | **Met** |
 | 5 | Only one admin can own an active claim | **Met** |
@@ -223,18 +241,18 @@ Team catalog, order, holding, and cooldown data refresh every five seconds. Admi
 | 10 | Every return records what came back | **Met** |
 | 11 | Damaged and missing hardware remain traceable | **Met** |
 | 12 | Team limits include reserved plus checked-out stock | **Met** |
-| 13 | Protected stock is enforced | **Met; dedicated per-order override UI pending** |
-| 14 | Motors/servos recommend driver and power hardware | **Not yet met** |
-| 15 | Arduino/Raspberry Pi safety warnings are visible | **Partial: technical guidance exists; relationship-aware prompts pending** |
+| 13 | Protected stock is enforced | **Met, including a reason-required per-order exception flow** |
+| 14 | Motors/servos recommend driver and power hardware | **Met through structured relationships and cart calculations** |
+| 15 | Arduino/Raspberry Pi safety warnings are visible | **Met through platform-specific guidance and relationship messages** |
 | 16 | Every active component has an image | **Enforced; actual images await organizer review** |
 | 17 | Volunteers can see physical bin/location | **Met** |
-| 18 | Abandoned orders release inventory | **Met on subsequent application activity; scheduled sweep pending if required** |
+| 18 | Abandoned orders release inventory | **Met on subsequent application activity; unattended scheduling intentionally excluded** |
 | 19 | Server rechecks inventory rules | **Met** |
-| 20 | Concurrency tests pass on production-style PostgreSQL | **Not yet verified** |
+| 20 | Concurrency tests pass on production-style PostgreSQL | **Suite implemented; execution pending a disposable PostgreSQL URL** |
 
 ## Verification performed
 
-`npm test` currently passes 13 tests with zero failures. The suite covers:
+`npm test` currently passes 17 tests with zero failures. The suite covers:
 
 - live-window enforcement;
 - salted password hashing;
@@ -249,7 +267,13 @@ Team catalog, order, holding, and cooldown data refresh every five seconds. Admi
 - automatic reservation expiry and stock release;
 - damaged returns and audit data;
 - safe image URLs and the active-image requirement;
-- required damaged/missing notes.
+- required damaged/missing notes;
+- structured driver relationships and required-item blocking;
+- protected-stock exception orders;
+- append-only return corrections;
+- end-of-event reconciliation and mismatch detection.
+
+`npm run test:checkout:postgres` creates an isolated temporary schema and uses independent pooled PostgreSQL connections to test final-item races, same-team serialization, and three-admin claims. Without `CHECKOUT_POSTGRES_TEST_URL`, it skips safely rather than guessing at a database.
 
 `bundle exec jekyll build` succeeds. The build emits non-fatal Ruby warnings that `csv`, `base64`, and `bigdecimal` may need explicit Gemfile entries on a future Ruby release.
 
@@ -262,17 +286,15 @@ The local branch and locally known `origin/checkout` ref pointed to `f113f0b` be
 - Each volunteer uses a separate admin credential.
 - Organizers set all three event timestamps with explicit timezone offsets.
 - Final counts, limits, protected stock, bin locations, technical guidance, and images are verified against the physical inventory.
-- An active browser/API request occurs often enough for lazy reservation expiry, unless a scheduled expiry job is added.
+- An active browser/API request occurs often enough for lazy reservation expiry. Unattended scheduled expiry and expiring-soon warnings were explicitly excluded.
 - Users may need to sign in again during an event longer than the 18-hour session lifetime.
 - Barcode scanning, payments, shipping, and general warehouse management remain out of scope.
 
-## Remaining implementation order
+## Remaining readiness checklist
 
-1. Add component-relationship administration and cart driver/power calculations.
-2. Add a dedicated, reason-required protected-stock override for a specific team/order if organizers want this workflow.
-3. Add a return correction entry flow that adjusts holdings/inventory without deleting the original receipt.
-4. Add a PostgreSQL integration-test command using independent pooled connections and run the complete concurrency matrix against the production database engine.
-5. Optionally add a scheduled expiry endpoint/job so reservations release even when there is no traffic.
-6. Add the end-of-event discrepancy report and expiring-soon visual warnings.
+1. Set `CHECKOUT_POSTGRES_TEST_URL` to a disposable PostgreSQL database and run `npm run test:checkout:postgres`.
+2. Rehearse submit → claim → accept → ready → pickup → partial return → correction with at least three volunteer accounts.
+3. Verify relationships, ratios, platform guidance, limits, protected quantities, bin locations, and counts against the physical inventory.
+4. Review or replace provisional component images when the organizer is ready.
 
-Until the PostgreSQL rehearsal and image/inventory review are complete, the recommended label is: **P0-complete staging build, pending production rehearsal and compatibility guidance.**
+Recommended label: **feature-complete staging build, pending PostgreSQL and physical-inventory rehearsal.**
