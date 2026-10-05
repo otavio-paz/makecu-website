@@ -572,6 +572,26 @@
     }).join("") : '<li class="checkout-empty">No activity yet.</li>';
   };
 
+  var renderDiscrepancyReport = function (report) {
+    var summary = report.summary;
+    var flagged = report.components.filter(function (component) { return component.mismatch; });
+    var componentRows = report.components.map(function (component) {
+      return '<tr class="' + (component.mismatch ? "checkout-report-mismatch" : "") + '"><td><strong>' + escapeHtml(component.name) + '</strong><br><small>' + escapeHtml(component.category) + '</small></td><td>' + component.reservedQuantity + ' / ' + component.expectedReservedQuantity + '</td><td>' + component.checkedOutQuantity + ' / ' + component.expectedCheckedOutQuantity + '</td><td>' + component.unavailableQuantity + '</td><td>' + component.availableQuantity + '</td><td>' + (component.mismatch ? "Review" : "Balanced") + "</td></tr>";
+    }).join("");
+    var teams = report.outstandingTeams.length ? report.outstandingTeams.map(function (team) {
+      return '<article class="checkout-report-team"><h3>' + escapeHtml(team.teamName) + ' <span>' + team.totalQuantity + ' unit' + (team.totalQuantity === 1 ? "" : "s") + '</span></h3><p>' + team.items.map(function (item) { return item.quantity + " × " + escapeHtml(item.name); }).join("<br>") + "</p></article>";
+    }).join("") : '<p class="checkout-empty">No teams are holding hardware.</p>';
+
+    document.querySelector("[data-discrepancy-report]").innerHTML =
+      '<p class="checkout-order-card-meta">Generated ' + formatDate(report.generatedAt) + '</p><div class="checkout-overview-grid"><article class="checkout-metric-card"><h2>Reconciliation</h2><dl class="checkout-metric-list"><div><dt>Counter mismatches</dt><dd>' + summary.componentsWithMismatches + '</dd></div><div><dt>Components checked</dt><dd>' + summary.components + '</dd></div></dl></article><article class="checkout-metric-card"><h2>Outstanding</h2><dl class="checkout-metric-list"><div><dt>Teams holding hardware</dt><dd>' + summary.teamsHoldingHardware + '</dd></div><div><dt>Units still out</dt><dd>' + summary.unitsStillCheckedOut + '</dd></div><div><dt>Units reserved</dt><dd>' + summary.unitsReserved + '</dd></div></dl></article><article class="checkout-metric-card"><h2>Return outcomes</h2><dl class="checkout-metric-list"><div><dt>Damaged</dt><dd>' + report.returnOutcomes.damaged + '</dd></div><div><dt>Missing</dt><dd>' + report.returnOutcomes.missing + '</dd></div><div><dt>Corrections</dt><dd>' + summary.returnCorrections + '</dd></div></dl></article></div>' +
+      (flagged.length ? '<div class="checkout-override-notice"><strong>Action required</strong><p>' + flagged.length + ' component counter' + (flagged.length === 1 ? " does" : "s do") + ' not match the underlying orders or team holdings.</p></div>' : '<div class="checkout-report-balanced"><strong>Inventory counters reconcile with orders and team holdings.</strong></div>') +
+      '<h2 class="checkout-section-title">Component reconciliation</h2><div class="checkout-inventory-table-wrap"><table class="checkout-table"><thead><tr><th>Component</th><th>Reserved / orders</th><th>Out / teams</th><th>Unavailable</th><th>Available</th><th>Status</th></tr></thead><tbody>' + componentRows + '</tbody></table></div><h2 class="checkout-section-title">Outstanding team holdings</h2><div class="checkout-report-teams">' + teams + "</div>";
+  };
+
+  var loadDiscrepancyReport = async function () {
+    renderDiscrepancyReport(await api("discrepancy-report"));
+  };
+
   var adminTab = async function (name) {
     state.activeAdminTab = name;
     document.querySelectorAll("[data-admin-tab]").forEach(function (button) {
@@ -592,6 +612,8 @@
         await loadInventory();
       } else if (name === "activity") {
         await loadActivity();
+      } else if (name === "report") {
+        await loadDiscrepancyReport();
       }
     } catch (error) {
       notify(error.message);
@@ -638,6 +660,8 @@
           loadInventory().catch(function () {});
         } else if (state.activeAdminTab === "activity") {
           loadActivity().catch(function () {});
+        } else if (state.activeAdminTab === "report") {
+          loadDiscrepancyReport().catch(function () {});
         }
       }
     }, 5000);
@@ -812,6 +836,9 @@
     button.addEventListener("click", function () { adminTab(button.dataset.adminTab); });
   });
   document.querySelector("[data-refresh-orders]").addEventListener("click", loadAdminOrders);
+  document.querySelector("[data-refresh-report]").addEventListener("click", function () {
+    loadDiscrepancyReport().catch(function (error) { notify(error.message); });
+  });
   document.querySelector("[data-admin-orders]").addEventListener("click", async function (event) {
     var actionButton = event.target.closest("button[data-claim-order], button[data-save-adjustments], button[data-accept-order], button[data-release-claim], button[data-mark-ready], button[data-confirm-pickup], button[data-cancel-order]");
 

@@ -91,6 +91,7 @@ custom_class: checkout-page
       <button type="button" data-admin-tab="teams">Teams / Returns</button>
       <button type="button" data-admin-tab="inventory">Inventory</button>
       <button type="button" data-admin-tab="activity">Activity</button>
+      <button type="button" data-admin-tab="report">End-of-event report</button>
     </nav>
 
     <div data-admin-panel="overview">
@@ -117,6 +118,12 @@ custom_class: checkout-page
     <div data-admin-panel="activity" hidden>
       <div class="checkout-page-heading"><div><span class="checkout-kicker">AUDIT TRAIL</span><h1>Desk activity</h1></div></div>
       <ol class="checkout-activity-list" data-activity-list></ol>
+    </div>
+
+    <div data-admin-panel="report" hidden>
+      <div class="checkout-page-heading"><div><span class="checkout-kicker">RECONCILIATION</span><h1>End-of-event discrepancy report</h1></div><button class="checkout-button checkout-button-secondary" type="button" data-refresh-report>Refresh</button></div>
+      <p class="checkout-form-note">Compares component counters with active order reservations and per-team holdings. Resolve every mismatch and outstanding team before closing the hardware desk.</p>
+      <div data-discrepancy-report></div>
     </div>
   </section>
 

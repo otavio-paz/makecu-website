@@ -296,6 +296,8 @@ async function handler(request, response) {
       }));
     } else if (action === "activity") {
       send(response, 200, { activity: await service.activity(database) });
+    } else if (action === "discrepancy-report") {
+      send(response, 200, await service.discrepancyReport(database));
     } else {
       throw httpError(404, "Unknown checkout action.");
     }

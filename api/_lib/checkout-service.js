@@ -1804,6 +1804,98 @@ async function activity(database) {
   });
 }
 
+async function discrepancyReport(database) {
+  await expireOrders(database);
+  const componentsResult = await database.query(
+    `SELECT components.id, components.name, components.category, components.total_quantity,
+            components.reserved_quantity, components.checked_out_quantity, components.unavailable_quantity,
+            COALESCE(reservations.quantity, 0) AS expected_reserved,
+            COALESCE(holdings.quantity, 0) AS expected_checked_out
+       FROM checkout_components components
+       LEFT JOIN (
+         SELECT items.component_id, SUM(items.approved_quantity) AS quantity
+           FROM checkout_order_items items
+           JOIN checkout_orders orders ON orders.id = items.order_id
+          WHERE orders.status IN ('submitted', 'reviewing', 'accepted', 'ready')
+          GROUP BY items.component_id
+       ) reservations ON reservations.component_id = components.id
+       LEFT JOIN (
+         SELECT component_id, SUM(checked_out_quantity) AS quantity
+           FROM checkout_team_inventory
+          GROUP BY component_id
+       ) holdings ON holdings.component_id = components.id
+      ORDER BY components.category, components.name`
+  );
+  const outstandingResult = await database.query(
+    `SELECT teams.id AS team_id, teams.name AS team_name, components.id AS component_id,
+            components.name AS component_name, inventory.checked_out_quantity
+       FROM checkout_team_inventory inventory
+       JOIN checkout_teams teams ON teams.id = inventory.team_id
+       JOIN checkout_components components ON components.id = inventory.component_id
+      WHERE inventory.checked_out_quantity > 0
+      ORDER BY teams.name, components.name`
+  );
+  const outcomesResult = await database.query(
+    `SELECT condition, COALESCE(SUM(quantity), 0) AS quantity
+       FROM checkout_return_items
+      GROUP BY condition`
+  );
+  const correctionsResult = await database.query("SELECT COUNT(*) AS count FROM checkout_return_corrections");
+  const components = componentsResult.rows.map(function (row) {
+    const reserved = Number(row.reserved_quantity);
+    const checkedOut = Number(row.checked_out_quantity);
+    const expectedReserved = Number(row.expected_reserved);
+    const expectedCheckedOut = Number(row.expected_checked_out);
+    const total = Number(row.total_quantity);
+    const unavailable = Number(row.unavailable_quantity);
+    return {
+      componentId: Number(row.id),
+      name: row.name,
+      category: row.category,
+      totalQuantity: total,
+      reservedQuantity: reserved,
+      expectedReservedQuantity: expectedReserved,
+      checkedOutQuantity: checkedOut,
+      expectedCheckedOutQuantity: expectedCheckedOut,
+      unavailableQuantity: unavailable,
+      availableQuantity: total - reserved - checkedOut - unavailable,
+      reservationDifference: reserved - expectedReserved,
+      holdingDifference: checkedOut - expectedCheckedOut,
+      mismatch: reserved !== expectedReserved || checkedOut !== expectedCheckedOut || reserved + checkedOut + unavailable > total
+    };
+  });
+  const outstandingByTeam = new Map();
+
+  outstandingResult.rows.forEach(function (row) {
+    const teamId = Number(row.team_id);
+    if (!outstandingByTeam.has(teamId)) {
+      outstandingByTeam.set(teamId, { teamId, teamName: row.team_name, items: [], totalQuantity: 0 });
+    }
+    const team = outstandingByTeam.get(teamId);
+    const quantity = Number(row.checked_out_quantity);
+    team.items.push({ componentId: Number(row.component_id), name: row.component_name, quantity });
+    team.totalQuantity += quantity;
+  });
+  const outcomes = { good: 0, damaged: 0, missing: 0 };
+  outcomesResult.rows.forEach(function (row) { outcomes[row.condition] = Number(row.quantity); });
+
+  return {
+    generatedAt: new Date().toISOString(),
+    summary: {
+      components: components.length,
+      componentsWithMismatches: components.filter(function (component) { return component.mismatch; }).length,
+      teamsHoldingHardware: outstandingByTeam.size,
+      unitsStillCheckedOut: components.reduce(function (sum, component) { return sum + component.checkedOutQuantity; }, 0),
+      unitsUnavailable: components.reduce(function (sum, component) { return sum + component.unavailableQuantity; }, 0),
+      unitsReserved: components.reduce(function (sum, component) { return sum + component.reservedQuantity; }, 0),
+      returnCorrections: Number(correctionsResult.rows[0].count)
+    },
+    returnOutcomes: outcomes,
+    components,
+    outstandingTeams: Array.from(outstandingByTeam.values())
+  };
+}
+
 module.exports = {
   catalog,
   cartAdvice,
@@ -1824,5 +1916,6 @@ module.exports = {
   teamAdminDetail,
   processReturn,
   correctReturn,
-  activity
+  activity,
+  discrepancyReport
 };

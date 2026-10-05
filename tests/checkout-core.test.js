@@ -660,3 +660,28 @@ test("return mistakes are corrected with append-only correction receipts", async
   assert.equal(correctedComponent.checkedOutQuantity, 1);
   assert.equal(correctedComponent.availableQuantity, 1);
 });
+
+test("end-of-event report reconciles counters and flags discrepancies", async function () {
+  const balanced = await request("discrepancy-report", {}, adminCookie);
+  assert.equal(balanced.status, 200);
+  assert.equal(balanced.body.summary.componentsWithMismatches, 0);
+  assert.ok(balanced.body.summary.teamsHoldingHardware > 0);
+
+  const componentResult = await database.query(
+    "SELECT id FROM checkout_components WHERE name = 'Correction Test Sensor'"
+  );
+  const componentId = componentResult.rows[0].id;
+  await database.query(
+    "UPDATE checkout_components SET checked_out_quantity = checked_out_quantity + 1 WHERE id = $1",
+    [componentId]
+  );
+  const mismatched = await request("discrepancy-report", {}, adminCookie);
+  assert.equal(mismatched.body.summary.componentsWithMismatches, 1);
+  assert.equal(mismatched.body.components.find(function (item) {
+    return item.componentId === Number(componentId);
+  }).holdingDifference, 1);
+  await database.query(
+    "UPDATE checkout_components SET checked_out_quantity = checked_out_quantity - 1 WHERE id = $1",
+    [componentId]
+  );
+});
