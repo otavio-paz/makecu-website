@@ -39,6 +39,15 @@ Add these environment variables to the Vercel project for Production and Preview
 
 Use `.env.checkout.example` as a key-only reference. Never commit real credentials. Do not set `CHECKOUT_FORCE_LIVE` in Vercel; the override is ignored when `NODE_ENV=production`.
 
+Before the event, run the row-locking integration suite against a disposable PostgreSQL database (never the production database):
+
+```powershell
+$env:CHECKOUT_POSTGRES_TEST_URL="postgresql://.../disposable_test_database"
+npm run test:checkout:postgres
+```
+
+The suite creates and removes its own isolated schema while exercising simultaneous team reservations, same-team submissions, and three-admin order claims over independent pooled connections.
+
 After configuring the database, seed the first admin and sample catalog from a trusted local terminal:
 
 ```powershell
