@@ -10,6 +10,19 @@ function normalizeResult(result) {
   };
 }
 
+function transactionAdapter(query) {
+  const adapter = {
+    query: async function (text, values) {
+      return normalizeResult(await query(text, values || []));
+    }
+  };
+
+  adapter.transaction = async function (callback) {
+    return callback(adapter);
+  };
+  return adapter;
+}
+
 async function createPgliteDatabase() {
   const { PGlite } = await import("@electric-sql/pglite");
   const dataPath = process.env.CHECKOUT_PGLITE_PATH || "memory://";
@@ -27,11 +40,7 @@ async function createPgliteDatabase() {
     },
     async transaction(callback) {
       return client.transaction(async function (transaction) {
-        return callback({
-          query: async function (text, values) {
-            return normalizeResult(await transaction.query(text, values || []));
-          }
-        });
+        return callback(transactionAdapter(transaction.query.bind(transaction)));
       });
     },
     async close() {
@@ -61,7 +70,7 @@ async function createPostgresDatabase() {
 
       try {
         await client.query("BEGIN");
-        const result = await callback({ query: client.query.bind(client) });
+        const result = await callback(transactionAdapter(client.query.bind(client)));
         await client.query("COMMIT");
         return result;
       } catch (error) {

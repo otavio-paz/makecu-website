@@ -6,6 +6,10 @@ _site
 vendor/
 node_modules/
 checkout-dev-data/
+checkout-preview-data/
+checkout-catalog-preview-data/
+checkout-legacy-restore/
+checkout-legacy-data.zip
 .next/
 .DS_Store
 images/makecu-hero.png

@@ -6,6 +6,8 @@
   },
   "scripts": {
     "checkout:dev": "node scripts/checkout-dev-server.js",
+    "checkout:download-images": "node scripts/download-checkout-images.js",
+    "checkout:enrich-descriptions": "node scripts/enrich-checkout-descriptions.js",
     "checkout:seed": "node scripts/seed-checkout.js",
     "test": "node --test tests/*.test.js",
     "test:checkout": "node --test tests/checkout-*.test.js"

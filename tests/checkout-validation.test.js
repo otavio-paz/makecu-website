@@ -8,10 +8,14 @@ function validComponent(overrides) {
     name: "Arduino Uno",
     description: "Microcontroller",
     imageUrl: "/images/hardware/arduino.png",
+    imageAlt: "Arduino Uno board",
     category: "Microcontroller",
     compatibility: "Arduino",
+    binLocation: "Cabinet A / Drawer 1",
+    technicalSpecs: "USB powered for basic use.",
     totalQuantity: 10,
     unavailableQuantity: 0,
+    protectedStock: 0,
     maxActivePerTeam: 2,
     active: true,
     adminNotes: ""
@@ -27,6 +31,13 @@ test("component validation rejects executable photo URLs", function () {
   assert.throws(function () {
     componentInput(validComponent({ imageUrl: "javascript:alert(1)" }));
   }, /must use http/i);
+});
+
+test("active components require an image and accessible description", function () {
+  assert.throws(function () {
+    componentInput(validComponent({ imageUrl: "", imageAlt: "" }));
+  }, /active component requires/i);
+  assert.equal(componentInput(validComponent({ imageUrl: "", imageAlt: "", active: false })).active, false);
 });
 
 test("damaged and missing returns require an accountability note", function () {

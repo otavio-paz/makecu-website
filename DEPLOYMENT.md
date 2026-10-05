@@ -34,7 +34,8 @@ Add these environment variables to the Vercel project for Production and Preview
 - `CHECKOUT_ADMIN_PASSWORD`: initial volunteer password with at least 10 characters.
 - `CHECKOUT_ADMIN_NAME`: volunteer display name.
 - `CHECKOUT_LIVE_START`: opening time as an ISO 8601 timestamp with timezone.
-- `CHECKOUT_LIVE_END`: closing time as an ISO 8601 timestamp with timezone.
+- `CHECKOUT_ORDERING_END`: time when new team orders stop, as an ISO 8601 timestamp with timezone.
+- `CHECKOUT_RETURN_END`: time when the admin return period stops, as an ISO 8601 timestamp with timezone.
 
 Use `.env.checkout.example` as a key-only reference. Never commit real credentials. Do not set `CHECKOUT_FORCE_LIVE` in Vercel; the override is ignored when `NODE_ENV=production`.
 
@@ -48,9 +49,11 @@ $env:CHECKOUT_ADMIN_NAME="Volunteer Name"
 npm run checkout:seed
 ```
 
-The API creates missing tables idempotently. Running the seed command again updates the named admin's password and leaves existing inventory intact. Set `CHECKOUT_SEED_SAMPLES=false` when production inventory should start empty.
+The API creates missing tables and applies additive checkout migrations idempotently. Running the seed command again updates the named admin's password and leaves existing inventory intact. Run the seed command once per volunteer username to create separate admin accounts. Set `CHECKOUT_SEED_SAMPLES=false` when production inventory should start empty.
 
-Before the event, verify the production window from `/api/checkout?action=status`, create unique credentials for every team in **Teams / Returns**, replace sample inventory, and run a rehearsal using at least two team sessions and three volunteer sessions. Test order competition, claim competition, pickup, partial returns, damaged/missing handling, and the Activity trail.
+Seeded sample components are inactive because active inventory requires a verified photo and image description. Add the final photo, alt text, bin location, stock counts, protected stock, and technical/power guidance in the Inventory screen before activating each item.
+
+Before the event, verify all three production window timestamps from `/api/checkout?action=status`, create unique credentials for every team in **Teams / Returns**, replace sample inventory, and run a rehearsal using at least two team sessions and three volunteer sessions. Test order competition, same-team submission competition, claim competition and takeover, accepted/ready separation, pickup versus cancellation, partial returns, damaged/missing handling, idempotent retries, stale inventory forms, automatic expiry, and the Activity trail.
 
 Vercel's Hobby plan is free for personal and small-scale projects, but Vercel's docs say it is restricted to non-commercial, personal use. If Columbia Robotics wants shared team access or official organization ownership, check whether the club should use a Vercel team or another free host such as GitHub Pages.
 

@@ -12,17 +12,23 @@ function componentView(row) {
     name: row.name,
     description: row.description,
     imageUrl: row.image_url,
+    imageAlt: row.image_alt,
     category: row.category,
     compatibility: row.compatibility,
+    binLocation: row.bin_location,
+    technicalSpecs: row.technical_specs,
     totalQuantity: total,
     reservedQuantity: reserved,
     checkedOutQuantity: checkedOut,
     unavailableQuantity: unavailable,
     availableQuantity: total - reserved - checkedOut - unavailable,
+    teamAvailableQuantity: Math.max(0, total - reserved - checkedOut - unavailable - Number(row.protected_stock || 0)),
+    protectedStock: Number(row.protected_stock || 0),
     maxActivePerTeam: row.max_active_per_team == null ? null : Number(row.max_active_per_team),
     teamActiveQuantity: Number(row.team_active_quantity || 0),
     active: row.active,
     adminNotes: row.admin_notes,
+    version: Number(row.version || 1),
     updatedAt: row.updated_at
   };
 }
@@ -30,6 +36,7 @@ function componentView(row) {
 function orderView(row, items) {
   return {
     id: Number(row.id),
+    receiptCode: row.receipt_code || `O-${String(row.id).padStart(5, "0")}`,
     teamId: Number(row.team_id),
     teamName: row.team_name,
     status: row.status,
@@ -37,9 +44,20 @@ function orderView(row, items) {
     reviewerName: row.reviewer_name,
     createdAt: row.created_at,
     reviewingAt: row.reviewing_at,
+    claimExpiresAt: row.claim_expires_at,
+    acceptedAt: row.accepted_at,
+    acceptedBy: row.accepted_by == null ? null : Number(row.accepted_by),
+    acceptedByName: row.accepted_by_name,
     readyAt: row.ready_at,
+    readyByName: row.ready_by_name,
     pickedUpAt: row.picked_up_at,
+    pickedUpByName: row.picked_up_by_name,
     cancelledAt: row.cancelled_at,
+    cancelledByName: row.cancelled_by_name,
+    cancellationNote: row.cancellation_note,
+    expiredAt: row.expired_at,
+    reservationExpiresAt: row.reservation_expires_at,
+    events: row.events || [],
     items: items || []
   };
 }
@@ -48,9 +66,11 @@ function itemView(row) {
   return {
     id: Number(row.id),
     componentId: Number(row.component_id),
-    name: row.name,
-    imageUrl: row.image_url,
-    category: row.category,
+    name: row.component_name_snapshot || row.name,
+    imageUrl: row.component_image_url_snapshot || row.image_url,
+    imageAlt: row.component_image_alt_snapshot || row.image_alt,
+    category: row.component_category_snapshot || row.category,
+    binLocation: row.bin_location || "",
     requestedQuantity: Number(row.requested_quantity),
     approvedQuantity: Number(row.approved_quantity),
     adjustmentReason: row.adjustment_reason,
@@ -64,7 +84,8 @@ async function orderItems(database, orderIds) {
   }
 
   const result = await database.query(
-    `SELECT items.*, components.name, components.image_url, components.category
+    `SELECT items.*, components.name, components.image_url, components.image_alt,
+            components.category, components.bin_location
        FROM checkout_order_items items
        JOIN checkout_components components ON components.id = items.component_id
       WHERE items.order_id = ANY($1::bigint[])
@@ -86,7 +107,73 @@ async function orderItems(database, orderIds) {
   return grouped;
 }
 
+async function recordOrderEvent(database, orderId, actorId, eventType, details) {
+  await database.query(
+    `INSERT INTO checkout_order_events (order_id, actor_user_id, event_type, details)
+     VALUES ($1, $2, $3, $4)`,
+    [orderId, actorId || null, eventType, JSON.stringify(details || {})]
+  );
+}
+
+async function expireOrders(database) {
+  return database.transaction(async function (transaction) {
+    const result = await transaction.query(
+      `SELECT * FROM checkout_orders
+        WHERE status IN ('submitted', 'reviewing', 'accepted', 'ready')
+          AND reservation_expires_at IS NOT NULL
+          AND reservation_expires_at <= NOW()
+          AND (status <> 'reviewing' OR claim_expires_at IS NULL OR claim_expires_at <= NOW())
+        ORDER BY id
+        FOR UPDATE SKIP LOCKED`
+    );
+
+    for (const order of result.rows) {
+      const items = await transaction.query(
+        "SELECT * FROM checkout_order_items WHERE order_id = $1 ORDER BY component_id FOR UPDATE",
+        [order.id]
+      );
+
+      for (const item of items.rows) {
+        const quantity = Number(item.approved_quantity);
+
+        if (!quantity) {
+          continue;
+        }
+
+        await transaction.query(
+          `UPDATE checkout_components
+              SET reserved_quantity = reserved_quantity - $2, updated_at = NOW()
+            WHERE id = $1`,
+          [item.component_id, quantity]
+        );
+        await transaction.query(
+          `INSERT INTO checkout_inventory_transactions
+            (component_id, team_id, order_id, transaction_type, quantity, note)
+           VALUES ($1, $2, $3, 'ORDER_EXPIRED', $4, 'Reservation expired automatically')`,
+          [item.component_id, order.team_id, order.id, -quantity]
+        );
+      }
+
+      await transaction.query(
+        `UPDATE checkout_orders
+            SET status = 'expired', expired_at = NOW(), claim_expires_at = NULL
+          WHERE id = $1`,
+        [order.id]
+      );
+      await recordOrderEvent(transaction, order.id, null, "ORDER_EXPIRED", {});
+      await transaction.query(
+        `INSERT INTO checkout_activity (team_id, order_id, message)
+         VALUES ($1, $2, $3)`,
+        [order.team_id, order.id, `Order ${order.receipt_code || `#${order.id}`} expired and its reservation was released.`]
+      );
+    }
+
+    return result.rowCount;
+  });
+}
+
 async function catalog(database, user, includeInactive) {
+  await expireOrders(database);
   const teamId = user && user.role === "team" ? user.team_id : null;
   const result = await database.query(
     `SELECT components.*,
@@ -100,7 +187,7 @@ async function catalog(database, user, includeInactive) {
            FROM checkout_order_items items
            JOIN checkout_orders orders ON orders.id = items.order_id
           WHERE orders.team_id = $1
-            AND orders.status IN ('submitted', 'reviewing', 'ready')
+            AND orders.status IN ('submitted', 'reviewing', 'accepted', 'ready')
           GROUP BY items.component_id
        ) reservations ON reservations.component_id = components.id
       WHERE ($2::boolean = TRUE OR components.active = TRUE)
@@ -183,21 +270,24 @@ async function resetTeamPassword(database, body, actor) {
 async function saveComponent(database, body, actor) {
   const input = componentInput(body);
   const componentId = body.id == null ? null : positiveInteger(body.id, "Component ID");
+  const changeReason = cleanString(body.changeReason, "Inventory change reason", { optional: !componentId, max: 500 });
 
   return database.transaction(async function (transaction) {
     if (!componentId) {
-      if (input.unavailableQuantity > input.totalQuantity) {
-        throw httpError(409, "Unavailable quantity cannot exceed total inventory.");
+      if (input.unavailableQuantity + input.protectedStock > input.totalQuantity) {
+        throw httpError(409, "Unavailable quantity and protected stock cannot exceed total inventory.");
       }
 
       const created = await transaction.query(
         `INSERT INTO checkout_components
-          (name, description, image_url, category, compatibility, total_quantity,
-           unavailable_quantity, max_active_per_team, active, admin_notes)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          (name, description, image_url, image_alt, category, compatibility, bin_location,
+           technical_specs, total_quantity, unavailable_quantity, protected_stock,
+           max_active_per_team, active, admin_notes)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
          RETURNING *`,
-        [input.name, input.description, input.imageUrl, input.category, input.compatibility,
-          input.totalQuantity, input.unavailableQuantity, input.maxActivePerTeam,
+        [input.name, input.description, input.imageUrl, input.imageAlt, input.category,
+          input.compatibility, input.binLocation, input.technicalSpecs, input.totalQuantity,
+          input.unavailableQuantity, input.protectedStock, input.maxActivePerTeam,
           input.active, input.adminNotes]
       );
       const component = created.rows[0];
@@ -205,8 +295,8 @@ async function saveComponent(database, body, actor) {
       await transaction.query(
         `INSERT INTO checkout_inventory_transactions
           (component_id, admin_id, actor_user_id, transaction_type, quantity, new_state, note)
-         VALUES ($1, $2, $2, 'INVENTORY_ADJUSTMENT', $3, $4, 'Component created')`,
-        [component.id, actor.id, input.totalQuantity, JSON.stringify(componentView(component))]
+         VALUES ($1, $2, $2, 'INVENTORY_ADJUSTMENT', $3, $4, $5)`,
+        [component.id, actor.id, input.totalQuantity, JSON.stringify(componentView(component)), changeReason || "Component created"]
       );
       await transaction.query(
         `INSERT INTO checkout_activity (actor_user_id, message)
@@ -226,31 +316,46 @@ async function saveComponent(database, body, actor) {
       throw httpError(404, "Component not found.");
     }
 
+    const expectedVersion = positiveInteger(body.expectedVersion, "Expected component version");
+
+    if (Number(current.version) !== expectedVersion) {
+      throw httpError(409, "This component changed since you opened it. Review the latest values before saving.", {
+        current: componentView(current)
+      });
+    }
+
     const allocated = Number(current.reserved_quantity) + Number(current.checked_out_quantity);
 
     if (input.totalQuantity < allocated + input.unavailableQuantity) {
       throw httpError(409, `Total inventory cannot be lower than the ${allocated} reserved/checked-out and ${input.unavailableQuantity} unavailable units.`);
     }
 
+    if (input.protectedStock > input.totalQuantity - input.unavailableQuantity) {
+      throw httpError(409, "Protected stock cannot exceed usable inventory.");
+    }
+
     const updatedResult = await transaction.query(
       `UPDATE checkout_components
-          SET name = $2, description = $3, image_url = $4, category = $5,
-              compatibility = $6, total_quantity = $7, unavailable_quantity = $8,
-              max_active_per_team = $9, active = $10, admin_notes = $11, updated_at = NOW()
+          SET name = $2, description = $3, image_url = $4, image_alt = $5, category = $6,
+              compatibility = $7, bin_location = $8, technical_specs = $9,
+              total_quantity = $10, unavailable_quantity = $11, protected_stock = $12,
+              max_active_per_team = $13, active = $14, admin_notes = $15,
+              version = version + 1, updated_at = NOW()
         WHERE id = $1
         RETURNING *`,
-      [componentId, input.name, input.description, input.imageUrl, input.category,
-        input.compatibility, input.totalQuantity, input.unavailableQuantity,
-        input.maxActivePerTeam, input.active, input.adminNotes]
+      [componentId, input.name, input.description, input.imageUrl, input.imageAlt, input.category,
+        input.compatibility, input.binLocation, input.technicalSpecs, input.totalQuantity,
+        input.unavailableQuantity, input.protectedStock, input.maxActivePerTeam,
+        input.active, input.adminNotes]
     );
     const updated = updatedResult.rows[0];
 
     await transaction.query(
       `INSERT INTO checkout_inventory_transactions
         (component_id, admin_id, actor_user_id, transaction_type, quantity, previous_state, new_state, note)
-       VALUES ($1, $2, $2, 'INVENTORY_ADJUSTMENT', $3, $4, $5, 'Component updated')`,
+       VALUES ($1, $2, $2, 'INVENTORY_ADJUSTMENT', $3, $4, $5, $6)`,
       [componentId, actor.id, input.totalQuantity - Number(current.total_quantity),
-        JSON.stringify(componentView(current)), JSON.stringify(componentView(updated))]
+        JSON.stringify(componentView(current)), JSON.stringify(componentView(updated)), changeReason]
     );
     await transaction.query(
       `INSERT INTO checkout_activity (actor_user_id, message)
@@ -276,6 +381,15 @@ async function submitOrder(database, body, actor) {
   }
 
   return database.transaction(async function (transaction) {
+    const teamLock = await transaction.query(
+      "SELECT id FROM checkout_teams WHERE id = $1 FOR UPDATE",
+      [actor.team_id]
+    );
+
+    if (!teamLock.rows[0]) {
+      throw httpError(404, "Team not found.");
+    }
+
     const cooldown = await transaction.query(
       `SELECT id, created_at,
               GREATEST(0, CEIL(EXTRACT(EPOCH FROM (created_at + INTERVAL '10 minutes' - NOW())))) AS seconds_left
@@ -304,7 +418,7 @@ async function submitOrder(database, body, actor) {
       `SELECT components.id,
               COALESCE(inventory.checked_out_quantity, 0) +
               COALESCE(SUM(items.approved_quantity) FILTER (
-                WHERE orders.status IN ('submitted', 'reviewing', 'ready')
+                WHERE orders.status IN ('submitted', 'reviewing', 'accepted', 'ready')
               ), 0) AS active_quantity
          FROM checkout_components components
          LEFT JOIN checkout_team_inventory inventory
@@ -334,11 +448,11 @@ async function submitOrder(database, body, actor) {
         return;
       }
 
-      const available = Number(component.total_quantity) - Number(component.reserved_quantity) -
-        Number(component.checked_out_quantity) - Number(component.unavailable_quantity);
+      const available = Math.max(0, Number(component.total_quantity) - Number(component.reserved_quantity) -
+        Number(component.checked_out_quantity) - Number(component.unavailable_quantity) - Number(component.protected_stock || 0));
 
       if (requested > available) {
-        errors.push({ componentId, message: `${component.name}: only ${available} currently available.` });
+        errors.push({ componentId, message: `${component.name}: only ${available} currently available for team orders.` });
       }
 
       const limit = component.max_active_per_team == null ? null : Number(component.max_active_per_team);
@@ -354,10 +468,17 @@ async function submitOrder(database, body, actor) {
     }
 
     const orderResult = await transaction.query(
-      "INSERT INTO checkout_orders (team_id) VALUES ($1) RETURNING *",
+      `INSERT INTO checkout_orders (team_id, reservation_expires_at)
+       VALUES ($1, NOW() + INTERVAL '30 minutes') RETURNING *`,
       [actor.team_id]
     );
     const order = orderResult.rows[0];
+    const receiptCode = `O-${String(order.id).padStart(5, "0")}`;
+
+    await transaction.query(
+      "UPDATE checkout_orders SET receipt_code = $2 WHERE id = $1",
+      [order.id, receiptCode]
+    );
 
     for (const componentId of componentIds) {
       const quantity = normalized.get(componentId);
@@ -365,9 +486,12 @@ async function submitOrder(database, body, actor) {
 
       await transaction.query(
         `INSERT INTO checkout_order_items
-          (order_id, component_id, requested_quantity, approved_quantity)
-         VALUES ($1, $2, $3, $3)`,
-        [order.id, componentId, quantity]
+          (order_id, component_id, requested_quantity, approved_quantity,
+           component_name_snapshot, component_image_url_snapshot,
+           component_image_alt_snapshot, component_category_snapshot)
+         VALUES ($1, $2, $3, $3, $4, $5, $6, $7)`,
+        [order.id, componentId, quantity, component.name, component.image_url,
+          component.image_alt, component.category]
       );
       await transaction.query(
         `UPDATE checkout_components
@@ -386,8 +510,11 @@ async function submitOrder(database, body, actor) {
     await transaction.query(
       `INSERT INTO checkout_activity (actor_user_id, team_id, order_id, message)
        VALUES ($1, $2, $3, $4)`,
-      [actor.id, actor.team_id, order.id, `Team ${actor.team_name} submitted Order #${order.id}.`]
+      [actor.id, actor.team_id, order.id, `Team ${actor.team_name} submitted ${receiptCode}.`]
     );
+    await recordOrderEvent(transaction, order.id, actor.id, "ORDER_SUBMITTED", {
+      reservationExpiresAt: order.reservation_expires_at
+    });
 
     return orderDetails(transaction, order.id);
   });
@@ -403,10 +530,16 @@ async function orderDetails(database, orderId, teamId) {
   }
 
   const result = await database.query(
-    `SELECT orders.*, teams.name AS team_name, users.display_name AS reviewer_name
+    `SELECT orders.*, teams.name AS team_name, reviewer.display_name AS reviewer_name,
+            accepted.display_name AS accepted_by_name, ready.display_name AS ready_by_name,
+            picked_up.display_name AS picked_up_by_name, cancelled.display_name AS cancelled_by_name
        FROM checkout_orders orders
        JOIN checkout_teams teams ON teams.id = orders.team_id
-       LEFT JOIN checkout_users users ON users.id = orders.reviewed_by
+       LEFT JOIN checkout_users reviewer ON reviewer.id = orders.reviewed_by
+       LEFT JOIN checkout_users accepted ON accepted.id = orders.accepted_by
+       LEFT JOIN checkout_users ready ON ready.id = orders.ready_by
+       LEFT JOIN checkout_users picked_up ON picked_up.id = orders.picked_up_by
+       LEFT JOIN checkout_users cancelled ON cancelled.id = orders.cancelled_by
       WHERE orders.id = $1${teamClause}`,
     values
   );
@@ -416,15 +549,38 @@ async function orderDetails(database, orderId, teamId) {
   }
 
   const items = await orderItems(database, [Number(orderId)]);
-  return orderView(result.rows[0], items.get(Number(orderId)) || []);
+  const eventsResult = await database.query(
+    `SELECT events.event_type, events.details, events.created_at, users.display_name AS actor_name
+       FROM checkout_order_events events
+       LEFT JOIN checkout_users users ON users.id = events.actor_user_id
+      WHERE events.order_id = $1 ORDER BY events.created_at, events.id`,
+    [orderId]
+  );
+  const row = result.rows[0];
+  row.events = eventsResult.rows.map(function (event) {
+    return {
+      type: event.event_type,
+      details: event.details || {},
+      createdAt: event.created_at,
+      actorName: event.actor_name
+    };
+  });
+  return orderView(row, items.get(Number(orderId)) || []);
 }
 
 async function teamDashboard(database, actor) {
+  await expireOrders(database);
   const ordersResult = await database.query(
-    `SELECT orders.*, teams.name AS team_name, users.display_name AS reviewer_name
+    `SELECT orders.*, teams.name AS team_name, reviewer.display_name AS reviewer_name,
+            accepted.display_name AS accepted_by_name, ready.display_name AS ready_by_name,
+            picked_up.display_name AS picked_up_by_name, cancelled.display_name AS cancelled_by_name
        FROM checkout_orders orders
        JOIN checkout_teams teams ON teams.id = orders.team_id
-       LEFT JOIN checkout_users users ON users.id = orders.reviewed_by
+       LEFT JOIN checkout_users reviewer ON reviewer.id = orders.reviewed_by
+       LEFT JOIN checkout_users accepted ON accepted.id = orders.accepted_by
+       LEFT JOIN checkout_users ready ON ready.id = orders.ready_by
+       LEFT JOIN checkout_users picked_up ON picked_up.id = orders.picked_up_by
+       LEFT JOIN checkout_users cancelled ON cancelled.id = orders.cancelled_by
       WHERE orders.team_id = $1
       ORDER BY orders.created_at DESC`,
     [actor.team_id]
@@ -464,11 +620,18 @@ async function teamDashboard(database, actor) {
 }
 
 async function adminOrders(database) {
+  await expireOrders(database);
   const result = await database.query(
-    `SELECT orders.*, teams.name AS team_name, users.display_name AS reviewer_name
+    `SELECT orders.*, teams.name AS team_name, reviewer.display_name AS reviewer_name,
+            accepted.display_name AS accepted_by_name, ready.display_name AS ready_by_name,
+            picked_up.display_name AS picked_up_by_name, cancelled.display_name AS cancelled_by_name
        FROM checkout_orders orders
        JOIN checkout_teams teams ON teams.id = orders.team_id
-       LEFT JOIN checkout_users users ON users.id = orders.reviewed_by
+       LEFT JOIN checkout_users reviewer ON reviewer.id = orders.reviewed_by
+       LEFT JOIN checkout_users accepted ON accepted.id = orders.accepted_by
+       LEFT JOIN checkout_users ready ON ready.id = orders.ready_by
+       LEFT JOIN checkout_users picked_up ON picked_up.id = orders.picked_up_by
+       LEFT JOIN checkout_users cancelled ON cancelled.id = orders.cancelled_by
       ORDER BY orders.created_at DESC`
   );
   const ids = result.rows.map(function (order) { return Number(order.id); });
@@ -479,6 +642,7 @@ async function adminOrders(database) {
 }
 
 async function adminOverview(database) {
+  await expireOrders(database);
   const orders = await database.query(
     "SELECT status, COUNT(*) AS count FROM checkout_orders GROUP BY status"
   );
@@ -510,7 +674,8 @@ async function claimOrder(database, body, actor) {
 
   return database.transaction(async function (transaction) {
     const result = await transaction.query(
-      `SELECT orders.*, users.display_name AS reviewer_name
+      `SELECT orders.*, users.display_name AS reviewer_name,
+              (orders.claim_expires_at IS NOT NULL AND orders.claim_expires_at <= NOW()) AS claim_expired
          FROM checkout_orders orders
          LEFT JOIN checkout_users users ON users.id = orders.reviewed_by
         WHERE orders.id = $1 FOR UPDATE OF orders`,
@@ -522,25 +687,69 @@ async function claimOrder(database, body, actor) {
       throw httpError(404, "Order not found.");
     }
 
-    if (order.status === "reviewing" && Number(order.reviewed_by) === Number(actor.id)) {
+    if (order.status === "reviewing" && Number(order.reviewed_by) === Number(actor.id) && !order.claim_expired) {
+      await transaction.query(
+        "UPDATE checkout_orders SET claim_expires_at = NOW() + INTERVAL '7 minutes' WHERE id = $1",
+        [orderId]
+      );
       return orderDetails(transaction, orderId);
     }
 
-    if (order.status !== "submitted") {
+    const canTakeExpiredClaim = order.status === "reviewing" && order.claim_expired;
+
+    if (order.status !== "submitted" && !canTakeExpiredClaim) {
       const reviewer = order.reviewer_name ? ` by ${order.reviewer_name}` : "";
       throw httpError(409, `This order is already ${order.status.replace("_", " ")}${reviewer}.`);
     }
 
     await transaction.query(
       `UPDATE checkout_orders
-          SET status = 'reviewing', reviewed_by = $2, reviewing_at = NOW()
+          SET status = 'reviewing', reviewed_by = $2, reviewing_at = NOW(),
+              claim_expires_at = NOW() + INTERVAL '7 minutes'
         WHERE id = $1`,
       [orderId, actor.id]
     );
     await transaction.query(
       `INSERT INTO checkout_activity (actor_user_id, team_id, order_id, message)
        SELECT $2, team_id, id, $3 FROM checkout_orders WHERE id = $1`,
-      [orderId, actor.id, `${actor.display_name} claimed Order #${orderId} for review.`]
+      [orderId, actor.id, `${actor.display_name} ${canTakeExpiredClaim ? "took over the expired claim on" : "claimed"} Order #${orderId} for review.`]
+    );
+    await recordOrderEvent(transaction, orderId, actor.id, canTakeExpiredClaim ? "ORDER_CLAIM_TAKEN_OVER" : "ORDER_CLAIMED", {});
+    return orderDetails(transaction, orderId);
+  });
+}
+
+async function releaseClaim(database, body, actor) {
+  const orderId = positiveInteger(body.orderId, "Order ID");
+
+  return database.transaction(async function (transaction) {
+    const result = await transaction.query(
+      "SELECT * FROM checkout_orders WHERE id = $1 FOR UPDATE",
+      [orderId]
+    );
+    const order = result.rows[0];
+
+    if (!order) {
+      throw httpError(404, "Order not found.");
+    }
+
+    if (order.status !== "reviewing" || Number(order.reviewed_by) !== Number(actor.id)) {
+      throw httpError(409, "Only the volunteer holding this claim can release it.");
+    }
+
+    await transaction.query(
+      `UPDATE checkout_orders
+          SET status = 'submitted', reviewed_by = NULL, reviewing_at = NULL,
+              claim_expires_at = NULL,
+              reservation_expires_at = GREATEST(reservation_expires_at, NOW() + INTERVAL '20 minutes')
+        WHERE id = $1`,
+      [orderId]
+    );
+    await recordOrderEvent(transaction, orderId, actor.id, "ORDER_CLAIM_RELEASED", {});
+    await transaction.query(
+      `INSERT INTO checkout_activity (actor_user_id, team_id, order_id, message)
+       VALUES ($1, $2, $3, $4)`,
+      [actor.id, order.team_id, orderId, `${actor.display_name} released the claim on Order #${orderId}.`]
     );
     return orderDetails(transaction, orderId);
   });
@@ -561,7 +770,8 @@ async function adjustOrder(database, body, actor) {
       throw httpError(404, "Order not found.");
     }
 
-    if (order.status !== "reviewing" || Number(order.reviewed_by) !== Number(actor.id)) {
+    if (order.status !== "reviewing" || Number(order.reviewed_by) !== Number(actor.id) ||
+        !order.claim_expires_at || new Date(order.claim_expires_at) <= new Date()) {
       throw httpError(409, "Claim this reviewing order before changing approved quantities.");
     }
 
@@ -624,6 +834,11 @@ async function adjustOrder(database, body, actor) {
        VALUES ($1, $2, $3, $4)`,
       [actor.id, order.team_id, orderId, `${actor.display_name} updated approved quantities for Order #${orderId}.`]
     );
+    await transaction.query(
+      "UPDATE checkout_orders SET claim_expires_at = NOW() + INTERVAL '7 minutes' WHERE id = $1",
+      [orderId]
+    );
+    await recordOrderEvent(transaction, orderId, actor.id, "ORDER_ADJUSTED", {});
     return orderDetails(transaction, orderId);
   });
 }
@@ -642,16 +857,49 @@ async function transitionOrder(database, body, actor, transition) {
       throw httpError(404, "Order not found.");
     }
 
+    if (transition === "accept") {
+      if (order.status === "accepted") {
+        return orderDetails(transaction, orderId);
+      }
+
+      if (order.status !== "reviewing" || Number(order.reviewed_by) !== Number(actor.id) ||
+          !order.claim_expires_at || new Date(order.claim_expires_at) <= new Date()) {
+        throw httpError(409, "Only the volunteer with the active claim can accept this order.");
+      }
+
+      await transaction.query(
+        `UPDATE checkout_orders
+            SET status = 'accepted', accepted_by = $2, accepted_at = NOW(),
+                claim_expires_at = NULL, reservation_expires_at = NOW() + INTERVAL '45 minutes'
+          WHERE id = $1`,
+        [orderId, actor.id]
+      );
+      await recordOrderEvent(transaction, orderId, actor.id, "ORDER_ACCEPTED", {});
+      await transaction.query(
+        `INSERT INTO checkout_activity (actor_user_id, team_id, order_id, message)
+         VALUES ($1, $2, $3, $4)`,
+        [actor.id, order.team_id, orderId, `${actor.display_name} accepted Order #${orderId}.`]
+      );
+      return orderDetails(transaction, orderId);
+    }
+
     if (transition === "ready") {
       if (order.status === "ready") {
         return orderDetails(transaction, orderId);
       }
 
-      if (order.status !== "reviewing" || Number(order.reviewed_by) !== Number(actor.id)) {
-        throw httpError(409, "Only the volunteer reviewing this order can mark it ready.");
+      if (order.status !== "accepted" || Number(order.accepted_by) !== Number(actor.id)) {
+        throw httpError(409, "Only the volunteer who accepted this order can mark it ready.");
       }
 
-      await transaction.query("UPDATE checkout_orders SET status = 'ready', ready_at = NOW() WHERE id = $1", [orderId]);
+      await transaction.query(
+        `UPDATE checkout_orders
+            SET status = 'ready', ready_by = $2, ready_at = NOW(),
+                reservation_expires_at = NOW() + INTERVAL '30 minutes'
+          WHERE id = $1`,
+        [orderId, actor.id]
+      );
+      await recordOrderEvent(transaction, orderId, actor.id, "ORDER_READY", {});
       await transaction.query(
         `INSERT INTO checkout_activity (actor_user_id, team_id, order_id, message)
          VALUES ($1, $2, $3, $4)`,
@@ -715,9 +963,13 @@ async function transitionOrder(database, body, actor, transition) {
       }
 
       await transaction.query(
-        "UPDATE checkout_orders SET status = 'picked_up', picked_up_at = NOW() WHERE id = $1",
-        [orderId]
+        `UPDATE checkout_orders
+            SET status = 'picked_up', picked_up_by = $2, picked_up_at = NOW(),
+                reservation_expires_at = NULL
+          WHERE id = $1`,
+        [orderId, actor.id]
       );
+      await recordOrderEvent(transaction, orderId, actor.id, "ORDER_PICKED_UP", {});
       await transaction.query(
         `INSERT INTO checkout_activity (actor_user_id, team_id, order_id, message)
          VALUES ($1, $2, $3, $4)`,
@@ -763,9 +1015,15 @@ async function transitionOrder(database, body, actor, transition) {
       }
 
       await transaction.query(
-        "UPDATE checkout_orders SET status = 'cancelled', cancelled_at = NOW() WHERE id = $1",
-        [orderId]
+        `UPDATE checkout_orders
+            SET status = 'cancelled', cancelled_by = $2, cancelled_at = NOW(),
+                claim_expires_at = NULL, reservation_expires_at = NULL, cancellation_note = $3
+          WHERE id = $1`,
+        [orderId, actor.id, cleanString(body.note, "Cancellation note", { optional: true, max: 1000 })]
       );
+      await recordOrderEvent(transaction, orderId, actor.id, "ORDER_CANCELLED", {
+        note: cleanString(body.note, "Cancellation note", { optional: true, max: 1000 })
+      });
       await transaction.query(
         `INSERT INTO checkout_activity (actor_user_id, team_id, order_id, message)
          VALUES ($1, $2, $3, $4)`,
@@ -804,6 +1062,7 @@ async function teamsList(database, search) {
 }
 
 async function teamAdminDetail(database, teamIdInput) {
+  await expireOrders(database);
   const teamId = positiveInteger(teamIdInput, "Team ID");
   const teamResult = await database.query(
     "SELECT * FROM checkout_teams WHERE id = $1",
@@ -824,18 +1083,25 @@ async function teamAdminDetail(database, teamIdInput) {
     [teamId]
   );
   const ordersResult = await database.query(
-    `SELECT orders.*, teams.name AS team_name, users.display_name AS reviewer_name
+    `SELECT orders.*, teams.name AS team_name, reviewer.display_name AS reviewer_name,
+            accepted.display_name AS accepted_by_name, ready.display_name AS ready_by_name,
+            picked_up.display_name AS picked_up_by_name, cancelled.display_name AS cancelled_by_name
        FROM checkout_orders orders
        JOIN checkout_teams teams ON teams.id = orders.team_id
-       LEFT JOIN checkout_users users ON users.id = orders.reviewed_by
+       LEFT JOIN checkout_users reviewer ON reviewer.id = orders.reviewed_by
+       LEFT JOIN checkout_users accepted ON accepted.id = orders.accepted_by
+       LEFT JOIN checkout_users ready ON ready.id = orders.ready_by
+       LEFT JOIN checkout_users picked_up ON picked_up.id = orders.picked_up_by
+       LEFT JOIN checkout_users cancelled ON cancelled.id = orders.cancelled_by
       WHERE orders.team_id = $1 ORDER BY orders.created_at DESC`,
     [teamId]
   );
   const orderIds = ordersResult.rows.map(function (row) { return Number(row.id); });
   const items = await orderItems(database, orderIds);
   const returns = await database.query(
-    `SELECT receipts.id, receipts.created_at, users.display_name AS processed_by,
-            items.component_id, items.quantity, items.condition, items.note, components.name
+    `SELECT receipts.id, receipts.receipt_code, receipts.created_at, users.display_name AS processed_by,
+            items.component_id, items.quantity, items.condition, items.note,
+            COALESCE(NULLIF(items.component_name_snapshot, ''), components.name) AS name
        FROM checkout_return_receipts receipts
        JOIN checkout_users users ON users.id = receipts.processed_by
        JOIN checkout_return_items items ON items.return_receipt_id = receipts.id
@@ -849,7 +1115,13 @@ async function teamAdminDetail(database, teamIdInput) {
     const id = Number(row.id);
 
     if (!receiptMap.has(id)) {
-      receiptMap.set(id, { id, createdAt: row.created_at, processedBy: row.processed_by, items: [] });
+      receiptMap.set(id, {
+        id,
+        receiptCode: row.receipt_code || `R-${String(id).padStart(5, "0")}`,
+        createdAt: row.created_at,
+        processedBy: row.processed_by,
+        items: []
+      });
     }
 
     receiptMap.get(id).items.push({
@@ -898,6 +1170,12 @@ async function processReturn(database, body, actor) {
       [teamId, actor.id]
     );
     const receipt = receiptResult.rows[0];
+    const receiptCode = `R-${String(receipt.id).padStart(5, "0")}`;
+
+    await transaction.query(
+      "UPDATE checkout_return_receipts SET receipt_code = $2 WHERE id = $1",
+      [receipt.id, receiptCode]
+    );
 
     for (const item of items.sort(function (a, b) { return a.componentId - b.componentId; })) {
       const inventoryResult = await transaction.query(
@@ -932,9 +1210,9 @@ async function processReturn(database, body, actor) {
       );
       await transaction.query(
         `INSERT INTO checkout_return_items
-          (return_receipt_id, component_id, quantity, condition, note)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [receipt.id, item.componentId, item.quantity, item.condition, item.note]
+          (return_receipt_id, component_id, quantity, condition, note, component_name_snapshot)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [receipt.id, item.componentId, item.quantity, item.condition, item.note, current.name]
       );
       const transactionType = item.condition === "good" ? "RETURN" : item.condition.toUpperCase();
       await transaction.query(
@@ -949,7 +1227,7 @@ async function processReturn(database, body, actor) {
     await transaction.query(
       `INSERT INTO checkout_activity (actor_user_id, team_id, message)
        VALUES ($1, $2, $3)`,
-      [actor.id, teamId, `${actor.display_name} processed Return #R-${receipt.id}.`]
+      [actor.id, teamId, `${actor.display_name} processed ${receiptCode}.`]
     );
     return teamAdminDetail(transaction, teamId);
   });
@@ -987,6 +1265,7 @@ module.exports = {
   adminOrders,
   adminOverview,
   claimOrder,
+  releaseClaim,
   adjustOrder,
   transitionOrder,
   teamsList,

@@ -39,21 +39,31 @@ function componentInput(body) {
     : positiveInteger(body.maxActivePerTeam, "Maximum per team");
 
   const imageUrl = cleanString(body.imageUrl, "Image URL", { max: 1000, optional: true });
+  const imageAlt = cleanString(body.imageAlt, "Image description", { max: 240, optional: true });
+  const active = body.active !== false;
 
   if (imageUrl && !/^https?:\/\//i.test(imageUrl) && !imageUrl.startsWith("/")) {
     throw httpError(400, "Image URL must use http(s) or be a site-relative path beginning with /.");
+  }
+
+  if (active && (!imageUrl || !imageAlt)) {
+    throw httpError(400, "An active component requires both a photo and an image description.");
   }
 
   return {
     name: cleanString(body.name, "Component name", { max: 120 }),
     description: cleanString(body.description, "Description", { max: 2000, optional: true }),
     imageUrl,
+    imageAlt,
     category: oneOf(body.category, CATEGORIES, "Category"),
     compatibility: oneOf(body.compatibility, COMPATIBILITY, "Compatibility"),
+    binLocation: cleanString(body.binLocation, "Bin location", { max: 240, optional: true }),
+    technicalSpecs: cleanString(body.technicalSpecs, "Technical guidance", { max: 4000, optional: true }),
     totalQuantity: positiveInteger(body.totalQuantity, "Total quantity", true),
     unavailableQuantity: positiveInteger(body.unavailableQuantity || 0, "Unavailable quantity", true),
+    protectedStock: positiveInteger(body.protectedStock || 0, "Protected stock", true),
     maxActivePerTeam: max,
-    active: body.active !== false,
+    active,
     adminNotes: cleanString(body.adminNotes, "Admin notes", { max: 2000, optional: true })
   };
 }

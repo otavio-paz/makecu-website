@@ -157,11 +157,15 @@ custom_class: checkout-page
   <form data-component-form>
     <div class="checkout-dialog-header"><div><span class="checkout-kicker">INVENTORY ITEM</span><h2 data-component-form-title>Component</h2></div><button class="checkout-icon-button" type="button" data-dialog-close>×</button></div>
     <input type="hidden" name="id">
+    <input type="hidden" name="expectedVersion">
     <div class="checkout-form-grid"><label>Component name<input name="name" required maxlength="120"></label><label>Category<select name="category" required></select></label></div>
     <label>Description<textarea name="description" rows="3" maxlength="2000"></textarea></label>
-    <label>Photo URL<input name="imageUrl" type="url" maxlength="1000" placeholder="https://…"></label>
+    <div class="checkout-form-grid"><label>Photo URL<input name="imageUrl" maxlength="1000" placeholder="https://… or /images/…"></label><label>Image description<input name="imageAlt" maxlength="240" placeholder="Required when active"></label></div>
+    <label>Physical bin/location<input name="binLocation" maxlength="240" placeholder="Cabinet A / Drawer 3"></label>
     <div class="checkout-form-grid"><label>Compatibility<select name="compatibility" required><option>Arduino</option><option>Raspberry Pi</option><option>Arduino + Raspberry Pi</option><option>N/A</option></select></label><label>Maximum per team<input name="maxActivePerTeam" type="number" min="1" placeholder="No limit"></label></div>
+    <label>Technical / power guidance<textarea name="technicalSpecs" rows="3" maxlength="4000" placeholder="Drivers, external power, and platform safety guidance"></textarea></label>
     <div class="checkout-form-grid"><label>Total quantity<input name="totalQuantity" type="number" min="0" required></label><label>Unavailable / damaged<input name="unavailableQuantity" type="number" min="0" required value="0"></label></div>
+    <div class="checkout-form-grid"><label>Protected stock<input name="protectedStock" type="number" min="0" required value="0"></label><label>Change reason<input name="changeReason" maxlength="500" placeholder="Required when editing"></label></div>
     <label>Internal notes<textarea name="adminNotes" rows="2" maxlength="2000"></textarea></label>
     <label class="checkout-checkbox"><input name="active" type="checkbox" checked> Active for team ordering</label>
     <p class="checkout-form-error" data-component-error hidden></p>

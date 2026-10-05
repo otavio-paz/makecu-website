@@ -27,9 +27,23 @@ bundle exec jekyll build
 npm run checkout:dev
 ```
 
-Open `http://127.0.0.1:4173/checkout/`. The checkout API fails closed outside the configured event window. Set `CHECKOUT_LIVE_START` and `CHECKOUT_LIVE_END` in production; `CHECKOUT_FORCE_LIVE` is intended only for local testing.
+Open `http://127.0.0.1:4173/checkout/`. The checkout API fails closed outside the configured event window. Set `CHECKOUT_LIVE_START`, `CHECKOUT_ORDERING_END`, and `CHECKOUT_RETURN_END` in production; `CHECKOUT_FORCE_LIVE` is intended only for local testing.
 
-Run `npm test` for the inventory concurrency, authorization, cooldown, pickup, return, and audit regression tests. See [DEPLOYMENT.md](DEPLOYMENT.md) for production database and event-window configuration.
+Run `npm test` for the inventory concurrency, idempotency, authorization, claim lease, stale-edit, pickup/cancel, return, and audit regression tests. Active inventory requires a photo and accessible image description; seeded sample components remain inactive until organizers add and verify those images. See [DEPLOYMENT.md](DEPLOYMENT.md) for production database and event-window configuration.
+
+### Full catalog descriptions and provisional images
+
+The local 2026 inventory preview can be enriched after the catalog has been imported into the checkout database. Set the checkout API URL and an admin account, then run:
+
+```powershell
+$env:CHECKOUT_BASE_URL="http://127.0.0.1:4173"
+$env:CHECKOUT_ADMIN_USERNAME="admin"
+$env:CHECKOUT_ADMIN_PASSWORD="your-local-admin-password"
+npm run checkout:enrich-descriptions
+npm run checkout:download-images
+```
+
+`scripts/checkout-component-sources.json` records the product hyperlinks extracted from `MakeCU Hardware List 2026.xlsx`. The image command downloads only supported raster images exposed by those linked pages, writes them under `images/checkout/components/`, records provenance and failures in `download-manifest.json`, and updates matching catalog records through the normal audited admin API. Treat every downloaded supplier image as provisional: confirm the exact component revision and permission to publish it before production.
 
 ## Edit Content
 

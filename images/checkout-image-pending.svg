@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-labelledby="title description">
+  <title id="title">Hardware image pending review</title>
+  <desc id="description">A generic circuit board illustration used until the component photo is verified.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101827"/>
+      <stop offset="1" stop-color="#202b3d"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="520" rx="36" fill="url(#background)"/>
+  <g fill="none" stroke="#5eead4" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="224" y="112" width="352" height="240" rx="28"/>
+    <path d="M288 112V68M368 112V68M448 112V68M528 112V68M288 352v44M368 352v44M448 352v44M528 352v44M224 176h-48M224 248h-48M224 320h-48M576 176h48M576 248h48M576 320h48"/>
+    <circle cx="320" cy="212" r="30"/>
+    <path d="M392 192h112M392 232h80M296 284h208"/>
+  </g>
+  <text x="400" y="456" fill="#f8fafc" font-family="Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle">PHOTO PENDING REVIEW</text>
+</svg>

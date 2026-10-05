@@ -1,9 +1,71 @@
+const crypto = require("node:crypto");
 const { getDatabase } = require("./_lib/checkout-db");
 const { sessionUser, requireUser, createSession, destroySession } = require("./_lib/checkout-auth");
 const { liveStatus } = require("./_lib/checkout-live");
 const { verifyPassword } = require("./_lib/checkout-security");
 const { cleanString, httpError } = require("./_lib/checkout-validation");
 const service = require("./_lib/checkout-service");
+
+function canonicalJson(value) {
+  if (Array.isArray(value)) {
+    return value.map(canonicalJson);
+  }
+
+  if (value && typeof value === "object") {
+    return Object.keys(value).sort().reduce(function (result, key) {
+      if (key !== "action" && key !== "idempotencyKey") {
+        result[key] = canonicalJson(value[key]);
+      }
+      return result;
+    }, {});
+  }
+
+  return value;
+}
+
+async function runIdempotent(database, actor, action, body, operation) {
+  const key = cleanString(body.idempotencyKey, "Idempotency key", { max: 160 });
+  const requestHash = crypto.createHash("sha256").update(JSON.stringify(canonicalJson(body))).digest("hex");
+
+  return database.transaction(async function (transaction) {
+    const inserted = await transaction.query(
+      `INSERT INTO checkout_idempotency_requests (actor_user_id, action, idempotency_key, request_hash)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (actor_user_id, action, idempotency_key) DO NOTHING
+       RETURNING actor_user_id`,
+      [actor.id, action, key, requestHash]
+    );
+    const existing = await transaction.query(
+      `SELECT request_hash, response_json FROM checkout_idempotency_requests
+        WHERE actor_user_id = $1 AND action = $2 AND idempotency_key = $3
+        FOR UPDATE`,
+      [actor.id, action, key]
+    );
+    const existingRow = existing.rows[0];
+    const stored = existingRow && existingRow.response_json;
+
+    if (!existingRow) {
+      throw new Error("The idempotency record could not be loaded.");
+    }
+
+    if (!inserted.rows.length && existingRow.request_hash && existingRow.request_hash !== requestHash) {
+      throw httpError(409, "This idempotency key was already used for a different request.");
+    }
+
+    if (!inserted.rows.length && stored != null) {
+      return typeof stored === "string" ? JSON.parse(stored) : stored;
+    }
+
+    const result = await operation(transaction);
+
+    await transaction.query(
+      `UPDATE checkout_idempotency_requests SET response_json = $4
+        WHERE actor_user_id = $1 AND action = $2 AND idempotency_key = $3`,
+      [actor.id, action, key, JSON.stringify(result)]
+    );
+    return result;
+  });
+}
 
 function send(response, status, payload) {
   response.statusCode = status;
@@ -90,6 +152,14 @@ async function handler(request, response) {
       throw httpError(423, "Hardware checkout is available only while the MakeCU hackathon is live.", { status });
     }
 
+    if (action === "submit-order" && !status.orderingOpen) {
+      throw httpError(423, "New hardware orders are closed. Volunteers can still process returns.", { status });
+    }
+
+    if (action === "process-return" && !status.returnsOpen) {
+      throw httpError(423, "The hardware return period is closed.", { status });
+    }
+
     const database = await getDatabase();
 
     if (action === "login") {
@@ -138,7 +208,11 @@ async function handler(request, response) {
     }
 
     if (action === "submit-order") {
-      send(response, 201, { order: await service.submitOrder(database, body, requireUser(user, "team")) });
+      const team = requireUser(user, "team");
+      const result = await runIdempotent(database, team, action, body, async function (transaction) {
+        return { order: await service.submitOrder(transaction, body, team) };
+      });
+      send(response, 201, result);
       return;
     }
 
@@ -150,33 +224,62 @@ async function handler(request, response) {
     }
 
     const admin = requireUser(user, "admin");
+    const mutate = function (operation) {
+      return runIdempotent(database, admin, action, body, operation);
+    };
 
     if (action === "admin-overview") {
       send(response, 200, await service.adminOverview(database));
     } else if (action === "admin-orders") {
       send(response, 200, { orders: await service.adminOrders(database) });
     } else if (action === "claim-order") {
-      send(response, 200, { order: await service.claimOrder(database, body, admin) });
+      send(response, 200, await mutate(async function (transaction) {
+        return { order: await service.claimOrder(transaction, body, admin) };
+      }));
+    } else if (action === "release-claim") {
+      send(response, 200, await mutate(async function (transaction) {
+        return { order: await service.releaseClaim(transaction, body, admin) };
+      }));
     } else if (action === "adjust-order") {
-      send(response, 200, { order: await service.adjustOrder(database, body, admin) });
+      send(response, 200, await mutate(async function (transaction) {
+        return { order: await service.adjustOrder(transaction, body, admin) };
+      }));
+    } else if (action === "accept-order") {
+      send(response, 200, await mutate(async function (transaction) {
+        return { order: await service.transitionOrder(transaction, body, admin, "accept") };
+      }));
     } else if (action === "mark-ready") {
-      send(response, 200, { order: await service.transitionOrder(database, body, admin, "ready") });
+      send(response, 200, await mutate(async function (transaction) {
+        return { order: await service.transitionOrder(transaction, body, admin, "ready") };
+      }));
     } else if (action === "confirm-pickup") {
-      send(response, 200, { order: await service.transitionOrder(database, body, admin, "pickup") });
+      send(response, 200, await mutate(async function (transaction) {
+        return { order: await service.transitionOrder(transaction, body, admin, "pickup") };
+      }));
     } else if (action === "cancel-order") {
-      send(response, 200, { order: await service.transitionOrder(database, body, admin, "cancel") });
+      send(response, 200, await mutate(async function (transaction) {
+        return { order: await service.transitionOrder(transaction, body, admin, "cancel") };
+      }));
     } else if (action === "teams") {
       send(response, 200, { teams: await service.teamsList(database, body.search) });
     } else if (action === "team-detail") {
       send(response, 200, await service.teamAdminDetail(database, body.teamId));
     } else if (action === "create-team") {
-      send(response, 201, await service.createTeam(database, body, admin));
+      send(response, 201, await mutate(function (transaction) {
+        return service.createTeam(transaction, body, admin);
+      }));
     } else if (action === "reset-team-password") {
-      send(response, 200, await service.resetTeamPassword(database, body, admin));
+      send(response, 200, await mutate(function (transaction) {
+        return service.resetTeamPassword(transaction, body, admin);
+      }));
     } else if (action === "process-return") {
-      send(response, 201, await service.processReturn(database, body, admin));
+      send(response, 201, await mutate(function (transaction) {
+        return service.processReturn(transaction, body, admin);
+      }));
     } else if (action === "save-component") {
-      send(response, body.id ? 200 : 201, { component: await service.saveComponent(database, body, admin) });
+      send(response, body.id ? 200 : 201, await mutate(async function (transaction) {
+        return { component: await service.saveComponent(transaction, body, admin) };
+      }));
     } else if (action === "activity") {
       send(response, 200, { activity: await service.activity(database) });
     } else {

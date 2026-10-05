@@ -1,0 +1,1146 @@
+{
+  "generatedAt": "2026-10-05T06:48:08.355Z",
+  "sourceWorkbook": "MakeCU Hardware List 2026.xlsx",
+  "sourceSheet": "Full Inventory Check 10-4-26",
+  "summary": {
+    "linkedComponents": 111,
+    "downloaded": 58,
+    "failed": 52,
+    "skipped": 1,
+    "catalogUpdated": 0,
+    "catalogSkipped": 58,
+    "catalogCurrent": 58
+  },
+  "items": [
+    {
+      "name": "Adafruit Microphone Breakout",
+      "sourceRow": 2,
+      "productUrl": "https://www.amazon.com/dp/B06XNL2GBW",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B06XNL2GBW",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/adafruit-microphone-breakout-35aee45abc.jpg",
+      "bytes": 79657,
+      "sha256": "35aee45abc37616406fc5bb103aed5ca7f11e0423acf4aad04238d4bbeb3fd0b",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Audio Amplifier",
+      "sourceRow": 3,
+      "productUrl": "https://www.amazon.com/dp/B0BG2F3LMP",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0BG2F3LMP",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/audio-amplifier-0b288614dc.jpg",
+      "bytes": 132027,
+      "sha256": "0b288614dc6dbb13baf65189f5596c6e1dcdf0464df57950cc1031439dd9c4b4",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Dweii Mini Speaker",
+      "sourceRow": 4,
+      "productUrl": "https://www.amazon.com/dp/B0B4D1BN4F",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0B4D1BN4F",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/dweii-mini-speaker-088b32d022.jpg",
+      "bytes": 193017,
+      "sha256": "088b32d022e3172e1a8756a4ec4df884e168e0a706bdc7b59a1dc36c54bd2078",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Electret Condenser Microphone Pickup (2 Pins, 9×7mm)",
+      "sourceRow": 5,
+      "productUrl": "https://www.amazon.com/dp/B01N0VMN9P",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B01N0VMN9P",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/electret-condenser-microphone-pickup-2-pins-9-7mm-dc961f6a9c.jpg",
+      "bytes": 30004,
+      "sha256": "dc961f6a9c85e614664ab920c6024412da4ad024be50082aaf80ad6e16cbade3",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "OCR 180Pcs Tactile Push Button Switch 10 Values 6x6mm Micro Momentary Tact Button Switches Assortment Kit",
+      "sourceRow": 6,
+      "productUrl": "https://www.amazon.com/dp/B01MRP025V",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B01MRP025V",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/ocr-180pcs-tactile-push-button-switch-10-values-6x6mm-micro-momentary-tact-butto-b17186cf0c.jpg",
+      "bytes": 152478,
+      "sha256": "b17186cf0cec4f6b374cf5805557a229c3e47b0ffce28666b180d767803432f3",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "240 Pcs 24 Value Micro Momentary Tactile Switch Assortment Kit",
+      "sourceRow": 7,
+      "productUrl": "https://www.amazon.com/dp/B0BFWK5N8V",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0BFWK5N8V",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/240-pcs-24-value-micro-momentary-tactile-switch-assortment-kit-40a2c27505.jpg",
+      "bytes": 231324,
+      "sha256": "40a2c2750589cc3f5e5ee706eeeed6061358a74353465596c2a913ea6350d2a0",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Push Buttons",
+      "sourceRow": 8,
+      "productUrl": "https://www.amazon.com/dp/B0BFWK5N8V",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0BFWK5N8V",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/push-buttons-40a2c27505.jpg",
+      "bytes": 231324,
+      "sha256": "40a2c2750589cc3f5e5ee706eeeed6061358a74353465596c2a913ea6350d2a0",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Rocker Switch",
+      "sourceRow": 9,
+      "productUrl": "https://www.digikey.com/en/products/detail/adam-tech/SW-R3-1A-A-1-2/15284445",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Touch Button",
+      "sourceRow": 10,
+      "productUrl": "https://www.amazon.com/dp/B0BJDJP1ZR",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0BJDJP1ZR",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/touch-button-cbee73a0b9.jpg",
+      "bytes": 319644,
+      "sha256": "cbee73a0b97e60679dedf102d6a8c6efb80d1a2a95ec95ee53d4c1b8d80c5d98",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Arducam 5MP Camera",
+      "sourceRow": 11,
+      "productUrl": "https://www.amazon.com/dp/B012V1HEP4",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B012V1HEP4",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/arducam-5mp-camera-943309f5b0.jpg",
+      "bytes": 58903,
+      "sha256": "943309f5b0c88f44654890f77cf2645a71c84c0c56a3e390e7559ce9c4918e23",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "ESP (Wifi + Bluetooth) with Camera",
+      "sourceRow": 12,
+      "productUrl": "https://www.amazon.com/dp/B09TB1GJ7P",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B09TB1GJ7P",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/esp-wifi-bluetooth-with-camera-64644159d2.jpg",
+      "bytes": 112696,
+      "sha256": "64644159d2b8b63e92d25af1d6fb18fe9904af4725bd9024a16a410b72113e5d",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "USB Cameras",
+      "sourceRow": 13,
+      "productUrl": "https://www.amazon.com/dp/B0CLRJZG8D",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0CLRJZG8D",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/usb-cameras-f2b2ff9234.jpg",
+      "bytes": 129947,
+      "sha256": "f2b2ff92341dff53564ed6133f62fa00c211a005ae4d87a89ac95d64ec9328ed",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Pseudo-LiDAR Sensor",
+      "sourceRow": 14,
+      "productUrl": "https://www.amazon.com/dp/B088NVX2L7",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B088NVX2L7",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/pseudo-lidar-sensor-59bd5673cf.jpg",
+      "bytes": 83236,
+      "sha256": "59bd5673cf48f579eb41df05d1a5dda95140f4841a48fdd7f3ee7b54642188a9",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Ultrasonic Sensor",
+      "sourceRow": 15,
+      "productUrl": "https://www.amazon.com/dp/B0B1MJJLJP",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0B1MJJLJP",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/ultrasonic-sensor-3b04496e58.jpg",
+      "bytes": 229505,
+      "sha256": "3b04496e585db1545975b33c38fc2063b21d445dea9552deb1fd88e05f61d129",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "5V 650nm 5mW Red Dot Laser",
+      "sourceRow": 21,
+      "productUrl": "https://www.amazon.com/dp/B071FT9HSV",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B071FT9HSV",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/5v-650nm-5mw-red-dot-laser-f5aa19241c.jpg",
+      "bytes": 92066,
+      "sha256": "f5aa19241c43f9cdec2c1c3493da304c5491312aa5f6e0e4d4ce3e3730ba13ec",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "50Pcs Potentiometer Kit",
+      "sourceRow": 22,
+      "productUrl": "https://www.amazon.com/dp/B0D72XYPYD",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0D72XYPYD",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/50pcs-potentiometer-kit-13de19a5a6.jpg",
+      "bytes": 341711,
+      "sha256": "13de19a5a63ea26996051b47cc8ccc608c49f3c8b2edd895031e47a3c0f774a0",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "DC 5V Relay Module",
+      "sourceRow": 31,
+      "productUrl": "https://www.amazon.com/dp/B0BHLDW9G5",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0BHLDW9G5",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/dc-5v-relay-module-8fc21de642.jpg",
+      "bytes": 354054,
+      "sha256": "8fc21de642a5eabdab2b2f1ded900d7c718c29b31589079678d6be68380ad630",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "DC5V Black Mini Active Piezo Buzzers",
+      "sourceRow": 33,
+      "productUrl": "https://www.amazon.com/dp/B07VK1GJ9X",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B07VK1GJ9X",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/dc5v-black-mini-active-piezo-buzzers-a16e9d58e8.jpg",
+      "bytes": 113257,
+      "sha256": "a16e9d58e8c5057a23c2bef9b73d11edbca9c85dff79e4da712d4553b3fd267b",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Ethernet Breakout",
+      "sourceRow": 35,
+      "productUrl": "https://www.sparkfun.com/sparkfun-rj45-magjack-breakout.html",
+      "status": "downloaded",
+      "sourcePage": "https://www.sparkfun.com/sparkfun-rj45-magjack-breakout.html",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/ethernet-breakout-3c3f804dd6.webp",
+      "bytes": 8836,
+      "sha256": "3c3f804dd6561ea1ef1b5ed66a95cf55da2623399f94f6a2f90604015c4c7205",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "JST Headers 4 pin female",
+      "sourceRow": 40,
+      "productUrl": "https://www.digikey.com/en/products/detail/jst-sales-america-inc/04JQ-BT/4918835",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "JST Headers 8 pin male",
+      "sourceRow": 41,
+      "productUrl": "https://www.digikey.com/en/products/detail/jst-sales-america-inc/B4B-XH-A/1651047",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "JST Headers 4 pin male",
+      "sourceRow": 42,
+      "productUrl": "https://www.digikey.com/en/products/detail/jst-sales-america-inc/B4B-PH-SM4-TB/926643",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "LCD Display",
+      "sourceRow": 44,
+      "productUrl": "https://www.openhacks.com/uploadsproductos/eone-1602a1.pdf",
+      "status": "skipped",
+      "error": "The source link is a PDF datasheet, not a product page with a photo."
+    },
+    {
+      "name": "Pluggable Terminal Blocks",
+      "sourceRow": 53,
+      "productUrl": "https://www.digikey.com/en/products/detail/adam-tech/EBWA-02-A/9830631",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Solderless Breadboard",
+      "sourceRow": 63,
+      "productUrl": "https://us.elegoo.com/products/elegoo-3pcs-breadboard-830-point-solderless-prototype-pcb-board-kit",
+      "status": "downloaded",
+      "sourcePage": "https://us.elegoo.com/products/elegoo-3pcs-breadboard-830-point-solderless-prototype-pcb-board-kit",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/solderless-breadboard-9f19f1a7aa.webp",
+      "bytes": 220474,
+      "sha256": "9f19f1a7aa746509a8987345143273432c45ed1b1141cc109cf780bb9d91f67d",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Toggle Switch SPDT Panel Mount",
+      "sourceRow": 72,
+      "productUrl": "https://www.digikey.com/en/products/detail/c-k/E101SYZQE/484035",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Wireless Transmitter",
+      "sourceRow": 77,
+      "productUrl": "https://www.amazon.com/dp/B0BLTSSMXH",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0BLTSSMXH",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/wireless-transmitter-6bc3329a17.jpg",
+      "bytes": 263802,
+      "sha256": "6bc3329a17954fe78fb5c639ff18b3230a3dcbeebd35165c0671eb49fe7ea7fa",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "XBee 3 PCB Antenna",
+      "sourceRow": 80,
+      "productUrl": "https://www.sparkfun.com/xbee-3-module-pcb-antenna.html",
+      "status": "downloaded",
+      "sourcePage": "https://www.sparkfun.com/xbee-3-module-pcb-antenna.html",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/xbee-3-pcb-antenna-6468615ee3.webp",
+      "bytes": 6278,
+      "sha256": "6468615ee351a8a4cb9a8f73bf944dc79c537ba6e9cd52833542f35397247e6c",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Elegoo Kit",
+      "sourceRow": 82,
+      "productUrl": "https://www.amazon.com/dp/B01D8KOZF4",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B01D8KOZF4",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/elegoo-kit-ad63d27dcb.jpg",
+      "bytes": 356819,
+      "sha256": "ad63d27dcb3d512e4a9c298291d0ac02b16d2aded41cbd407be7d271adec17fe",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Raspberry Pi 4 (1GB)",
+      "sourceRow": 83,
+      "productUrl": "https://www.adafruit.com/product/4295",
+      "status": "downloaded",
+      "sourcePage": "https://www.adafruit.com/product/4295",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/raspberry-pi-4-1gb-1071788d0f.jpg",
+      "bytes": 24138,
+      "sha256": "1071788d0ff938566131b637fb1f3fcc4d67c6ceb371d7a72a86ab0221ec320a",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Raspberry Pi 5 (2GB)",
+      "sourceRow": 84,
+      "productUrl": "https://www.raspberrypi.com/products/raspberry-pi-5/",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Raspberry Pi 5 (4GB)",
+      "sourceRow": 85,
+      "productUrl": "https://www.raspberrypi.com/products/raspberry-pi-5/",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "2000 Series Dual Mode servo",
+      "sourceRow": 86,
+      "productUrl": "https://www.gobilda.com/2000-series-dual-mode-servo-25-2-torque/",
+      "status": "downloaded",
+      "sourcePage": "https://www.gobilda.com/2000-series-dual-mode-servo-25-2-torque/",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/2000-series-dual-mode-servo-53dd980af7.jpg",
+      "bytes": 33766,
+      "sha256": "53dd980af7e0b6318a6af3e433c04613eb582b957afa0bdef9f208fc98444fe8",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "550 Titan 12-Turn",
+      "sourceRow": 89,
+      "productUrl": "https://www.rcsuperstore.com/traxxas-550-titan-12-turn-motor/",
+      "status": "downloaded",
+      "sourcePage": "https://www.rcsuperstore.com/traxxas-550-titan-12-turn-motor/",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/550-titan-12-turn-71cc81dc3b.jpg",
+      "bytes": 23055,
+      "sha256": "71cc81dc3b9cec2e82f1ccda838c2e4a141caa27a83f8f9826bacde7296ccff0",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "M200 Motor",
+      "sourceRow": 93,
+      "productUrl": "https://bluerobotics.com/store/thrusters/t100-t200-thrusters/m200-motor/",
+      "status": "downloaded",
+      "sourcePage": "https://bluerobotics.com/store/thrusters/t100-t200-thrusters/m200-motor/",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/m200-motor-cacfb86b67.webp",
+      "bytes": 68322,
+      "sha256": "cacfb86b6747687cc30f745a793653996daffb7ccfd44ae6872701247f4b9081",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "MG90S",
+      "sourceRow": 94,
+      "productUrl": "https://www.amazon.com/dp/B07L6FZVT1",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B07L6FZVT1",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/mg90s-ca2c80be85.jpg",
+      "bytes": 154198,
+      "sha256": "ca2c80be85995e0d8df56360c27fef682e59da08c54ab605050a9700f9df11d9",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "S3004 servo",
+      "sourceRow": 97,
+      "productUrl": "https://www.amazon.com/dp/B001KAPMG6",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B001KAPMG6",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/s3004-servo-0c0cc2418d.jpg",
+      "bytes": 44218,
+      "sha256": "0c0cc2418dbb6fa8ad44dd2f1015c844c6f0618edd2a1b15555e07fe9e84acbd",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Type 130",
+      "sourceRow": 101,
+      "productUrl": "https://gikfun.com/products/gikfun-1-5v-6v-type-130-miniature-dc-motors-for-arduino-hobby-projects-diy-case-pack-of-6pcs",
+      "status": "downloaded",
+      "sourcePage": "https://gikfun.com/products/gikfun-1-5v-6v-type-130-miniature-dc-motors-for-arduino-hobby-projects-diy-case-pack-of-6pcs",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/type-130-bd84ef9ef3.webp",
+      "bytes": 65558,
+      "sha256": "bd84ef9ef3d7e96a6779253a3f1589ace14acbf55e992c2039c0fb7062b81bff",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Buck convertor (lipos to PIs)",
+      "sourceRow": 103,
+      "productUrl": "https://www.amazon.com/dp/B0CDWL97P3",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0CDWL97P3",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/buck-convertor-lipos-to-pis-004150b944.jpg",
+      "bytes": 45186,
+      "sha256": "004150b944bb86118ae486b096bfe8bc74cec95e6adba3c6574c3516723468d8",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "DC Barrel Jack to Female Thing",
+      "sourceRow": 104,
+      "productUrl": "https://www.amazon.com/dp/B079RCNNCK",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B079RCNNCK",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/dc-barrel-jack-to-female-thing-3a7f25dbbd.jpg",
+      "bytes": 183651,
+      "sha256": "3a7f25dbbd474760152dd95d5ff6e8eba61234170e6b5196176d8010e01417fb",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "DC Motors",
+      "sourceRow": 105,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/11696/6163657",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "L298N motor driver",
+      "sourceRow": 106,
+      "productUrl": "https://www.amazon.com/dp/B0C5JCF5RS",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0C5JCF5RS",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/l298n-motor-driver-9d4caaf959.jpg",
+      "bytes": 199863,
+      "sha256": "9d4caaf959f371fc76464bb2ca649ed028fc91e87596267d5edf97c58fb89d99",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Pump",
+      "sourceRow": 109,
+      "productUrl": "https://www.amazon.com/dp/B00HIX2PEG",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B00HIX2PEG",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/pump-ec48374e4c.jpg",
+      "bytes": 57050,
+      "sha256": "ec48374e4cf3ee28f68bc94ca5c50b0f2526f43ed1cbedc9951be8ad6b0e3735",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Vibration Motors",
+      "sourceRow": 110,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/316040004/5487673",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Ethernet Cable (1ft, 10GB)",
+      "sourceRow": 112,
+      "productUrl": "https://www.amazon.com/dp/B00C4U030G",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B00C4U030G",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/ethernet-cable-1ft-10gb-c45b23f17e.jpg",
+      "bytes": 86917,
+      "sha256": "c45b23f17ef40b9224644e20fd90b412920cde751b71afba3514f344b48527d2",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "SD Cards (16GB)",
+      "sourceRow": 113,
+      "productUrl": "https://www.amazon.com/dp/B07XJVFVSJ",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B07XJVFVSJ",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/sd-cards-16gb-7b04c914da.jpg",
+      "bytes": 166437,
+      "sha256": "7b04c914dafdbffcf65407c637950c69af0751c17aafbfe08e4e9fafb0919a2c",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "XBee Dongle",
+      "sourceRow": 114,
+      "productUrl": "https://www.sparkfun.com/sparkfun-xbee-explorer-dongle.html",
+      "status": "downloaded",
+      "sourcePage": "https://www.sparkfun.com/sparkfun-xbee-explorer-dongle.html",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/xbee-dongle-f021831e67.webp",
+      "bytes": 12140,
+      "sha256": "f021831e674a334044f66b6533b13a7099f3ad50ae22731b6f685f1e057a75e1",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "3S Lipo Battery",
+      "sourceRow": 115,
+      "productUrl": "https://www.amazon.com/dp/B09CTSCWYM",
+      "status": "failed",
+      "error": "product page HTTP 404"
+    },
+    {
+      "name": "Battery Bank",
+      "sourceRow": 116,
+      "productUrl": "https://www.amazon.com/dp/B08T8TDS8S",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B08T8TDS8S",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/battery-bank-f4fecd4b1b.jpg",
+      "bytes": 114830,
+      "sha256": "f4fecd4b1b6891898153477704c4f0c3a1e254065f1fc8f5d9616e7163d50b77",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Wall power supply",
+      "sourceRow": 117,
+      "productUrl": "https://www.amazon.com/dp/B083GG2H6R",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B083GG2H6R",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/wall-power-supply-cbdbf49bb3.jpg",
+      "bytes": 154605,
+      "sha256": "cbdbf49bb3c466b22ac42dc4e6f28fc28d2d36784050856ace2701771b08acee",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "10Pcs Pressure Resistance Strain Gauge",
+      "sourceRow": 118,
+      "productUrl": "https://www.amazon.com/dp/B07X87CJD8",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B07X87CJD8",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/10pcs-pressure-resistance-strain-gauge-c552a0d623.jpg",
+      "bytes": 108427,
+      "sha256": "c552a0d623ee202dbd285f88615fe30d514ae99faec8898d443096f8a299ee48",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "3MM Photodiode",
+      "sourceRow": 120,
+      "productUrl": "https://www.amazon.com/dp/B07VNSX74J",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B07VNSX74J",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/3mm-photodiode-ee69df6e45.jpg",
+      "bytes": 29038,
+      "sha256": "ee69df6e45f3988969803e4bb720ecdf9e75c71036047ddaa2a4cd33b4695dd2",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "41mm Piezo Disc",
+      "sourceRow": 121,
+      "productUrl": "https://www.amazon.com/dp/B0B2QSQNB2",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0B2QSQNB2",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/41mm-piezo-disc-4ea0af1606.jpg",
+      "bytes": 129439,
+      "sha256": "4ea0af1606fc04fb0938f6f6af3fec51d7e931146b9b2638dc84e0f50f6314cd",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "50kg Load Cell",
+      "sourceRow": 123,
+      "productUrl": "https://www.amazon.com/dp/B07B4DNJ2L",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B07B4DNJ2L",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/50kg-load-cell-463ca96d2d.jpg",
+      "bytes": 89207,
+      "sha256": "463ca96d2d01d8263542790311302185931ff8948842cb7df8a28fcd7616c79c",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "5MM Phototransistor",
+      "sourceRow": 124,
+      "productUrl": "https://www.amazon.com/dp/B00M1PMHO4",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B00M1PMHO4",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/5mm-phototransistor-4b24f42062.jpg",
+      "bytes": 43074,
+      "sha256": "4b24f42062954eecab81e9f3e902dda344dc6bef15249f8da580440909efd59a",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Encoder Sensor - slotted optical interrupter",
+      "sourceRow": 126,
+      "productUrl": "https://components101.com/sensors/moc7811-encoder-sensor-pinout-specification-working-application-datasheet",
+      "status": "downloaded",
+      "sourcePage": "https://components101.com/sensors/moc7811-encoder-sensor-pinout-specification-working-application-datasheet",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/encoder-sensor-slotted-optical-interrupter-99bdfec7d9.jpg",
+      "bytes": 61100,
+      "sha256": "99bdfec7d984aa923dd4d1d63f10455899fd8ec4352e865c352c21204ac6b918",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Gesture Sensor",
+      "sourceRow": 127,
+      "productUrl": "https://www.amazon.com/dp/B083KNC1LF",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B083KNC1LF",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/gesture-sensor-fcc81be590.jpg",
+      "bytes": 147011,
+      "sha256": "fcc81be59039817c879f71e288960f98b1871b680fc8275e56613ffa759328af",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "GPS Module",
+      "sourceRow": 128,
+      "productUrl": "https://www.amazon.com/dp/B0B31NRSD2",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0B31NRSD2",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/gps-module-6b5efbd326.jpg",
+      "bytes": 216484,
+      "sha256": "6b5efbd3261a64a01f66ceb111e410561bcd6fc70b983c35dff9e3a1739d0566",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Heart Rate Sensor",
+      "sourceRow": 129,
+      "productUrl": "https://www.amazon.com/dp/B07ZQNC8XP",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B07ZQNC8XP",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/heart-rate-sensor-f4f5247f2b.jpg",
+      "bytes": 55278,
+      "sha256": "f4f5247f2b651a9b2757ae543d579d845c63a83000292f4f8c40cc63e2c85285",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "IMU",
+      "sourceRow": 130,
+      "productUrl": "https://www.amazon.com/dp/B00LP25V1A",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B00LP25V1A",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/imu-2ec4382c97.jpg",
+      "bytes": 82101,
+      "sha256": "2ec4382c9747fe5ae2eef1c21f2768740d6fcdc8d4d522d41b7f68020b86d484",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Light Dependent Resistor",
+      "sourceRow": 132,
+      "productUrl": "https://www.amazon.com/dp/B00N1ZJUN4",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B00N1ZJUN4",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/light-dependent-resistor-b02ad257f9.jpg",
+      "bytes": 43722,
+      "sha256": "b02ad257f9f450a515d7f1ee5defb75626792af67ae78dc3fb07b8dc2bf16ba9",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Moisture sensor",
+      "sourceRow": 133,
+      "productUrl": "https://www.amazon.com/dp/B01DKISKLO",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B01DKISKLO",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/moisture-sensor-2cd6b101b1.jpg",
+      "bytes": 125137,
+      "sha256": "2cd6b101b120ec6fcffcbfdf58279a45b193f5e7b526965e4f7998029f4393b5",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "MP503 Gas Sensor",
+      "sourceRow": 134,
+      "productUrl": "https://www.amazon.com/dp/B0D8KTLT8D",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0D8KTLT8D",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/mp503-gas-sensor-09bc627285.jpg",
+      "bytes": 102424,
+      "sha256": "09bc62728525fce5c6459302c4d433a183f2da5114e94033406dca38622f400e",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Muscle Sensor",
+      "sourceRow": 135,
+      "productUrl": "https://myoware.com/products/muscle-sensor/",
+      "status": "downloaded",
+      "sourcePage": "https://myoware.com/products/muscle-sensor/",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/muscle-sensor-816b60a273.jpg",
+      "bytes": 49057,
+      "sha256": "816b60a27319037744f50e23adb6b3c9111469276e6b58fdf1635d04883a4028",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Passive Infrared Sensor",
+      "sourceRow": 136,
+      "productUrl": "https://www.amazon.com/dp/B07KZW86YR",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B07KZW86YR",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/passive-infrared-sensor-c3a062ef66.jpg",
+      "bytes": 43015,
+      "sha256": "c3a062ef66b922b6cedfedead674beb5810ea3407dbe9fd08ff5dd5ab5bafd73",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "RFID Kit",
+      "sourceRow": 140,
+      "productUrl": "https://www.amazon.com/dp/B07VLDSYRW",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B07VLDSYRW",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/rfid-kit-6d8da4a11c.jpg",
+      "bytes": 59730,
+      "sha256": "6d8da4a11c3fa14fd85388e2966ef86e8203bef012d464568aa1ca86c09fcee1",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Temperature Sensor",
+      "sourceRow": 141,
+      "productUrl": "https://www.amazon.com/dp/B0D11B8BXR",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B0D11B8BXR",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/temperature-sensor-4eb3fbdfb7.jpg",
+      "bytes": 203314,
+      "sha256": "4eb3fbdfb797390f14fa997f8b40a4fa83abe0de8caa260378be6c0d5a01d5d3",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Thin Film Pressure Sensor",
+      "sourceRow": 142,
+      "productUrl": "https://www.amazon.com/dp/B074QLDCXQ",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B074QLDCXQ",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/thin-film-pressure-sensor-407654e9d8.jpg",
+      "bytes": 45279,
+      "sha256": "407654e9d82df16269f8f3273e7cbb9e7dfd18618aef55d4049a31ac1e12b435",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Tilt Switches",
+      "sourceRow": 143,
+      "productUrl": "https://www.digikey.com/en/products/detail/nkk-switches/DSBA1P/1014883",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grove Button",
+      "sourceRow": 146,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020003/5487963",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grove Touch Sensor",
+      "sourceRow": 147,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020014/5482603",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Logitech Webcam",
+      "sourceRow": 150,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/16299/17829508",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Mini Spy Camera 1528-1799-ND",
+      "sourceRow": 152,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/3202/6560939",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Echo DOT",
+      "sourceRow": 153,
+      "productUrl": "https://www.amazon.com/dp/B09B8V1LZ3",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B09B8V1LZ3",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/echo-dot-ad6cd5b555.jpg",
+      "bytes": 79259,
+      "sha256": "ad6cd5b5557a9528d35b43c01e84db4fa74dfb6192b2dacbd9a2b0480669e23d",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Echo Show",
+      "sourceRow": 154,
+      "productUrl": "https://www.amazon.com/dp/B09B2SBHQK",
+      "status": "downloaded",
+      "sourcePage": "https://www.amazon.com/dp/B09B2SBHQK",
+      "sourceImage": null,
+      "localImage": "/images/checkout/components/echo-show-809687c221.jpg",
+      "bytes": 181337,
+      "sha256": "809687c2216bcdbc3b66f6a6416452bc79607bf0c01de28c7f7b2125f8cdb570",
+      "candidateReason": "recovered-from-previous-download",
+      "catalogStatus": "already-current"
+    },
+    {
+      "name": "Google Home Mini",
+      "sourceRow": 155,
+      "productUrl": "https://www.bestbuy.com/site/home-mini-1st-generation-smart-speaker-with-google-assistant-chalk/6082194.p",
+      "status": "failed",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "name": "Ultrasonic Distance Module",
+      "sourceRow": 156,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/13959/6193598",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "10k Trimmer",
+      "sourceRow": 157,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/09806/7319606",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "1N5817 Diode",
+      "sourceRow": 158,
+      "productUrl": "https://www.digikey.com/en/products/detail/onsemi/1N5817/977004",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "23904 Transistor",
+      "sourceRow": 159,
+      "productUrl": "https://www.digikey.com/en/products/detail/onsemi/2N3904BU/1413",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "7 Segment Serial Display",
+      "sourceRow": 160,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/11441/5800412",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Breadboards",
+      "sourceRow": 161,
+      "productUrl": "https://www.digikey.com/en/products/detail/parallax-inc/700-00012/1774444",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Ceramic Capacitors",
+      "sourceRow": 162,
+      "productUrl": "https://www.digikey.com/en/products/detail/vishay-beyschlag-draloric-bc-components/HOTC-KIT-KH/5983098",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Display",
+      "sourceRow": 163,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/1694/5356810",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grove LCD",
+      "sourceRow": 165,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/104030001/5487814",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grove Wire",
+      "sourceRow": 167,
+      "productUrl": "https://www.digikey.com/en/products/detail/m5stack-technology-co-ltd/A096/16679751",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Joystick",
+      "sourceRow": 168,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/2765/6193582",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Load Cell Amplifier",
+      "sourceRow": 169,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/13879/6202732",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Resistor Kit",
+      "sourceRow": 173,
+      "productUrl": "https://www.digikey.com/en/products/detail/yageo/RS125/7108",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "SparkFun Snappable protoboard",
+      "sourceRow": 175,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/13268/5623212",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Through Hole Mosfet",
+      "sourceRow": 176,
+      "productUrl": "https://www.digikey.com/en/products/detail/infineon-technologies/IRFZ44NPBF/811772",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "DC Gearbox",
+      "sourceRow": 181,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/3777/8687221",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grover Stepper Motor",
+      "sourceRow": 182,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/10551/5766908",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grove Buzzer",
+      "sourceRow": 183,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/107020000/5487964",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Wire Spool",
+      "sourceRow": 184,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/11375/5956252",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Air Quality Sensor",
+      "sourceRow": 185,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/14193/7066452",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Barometer Sense Board",
+      "sourceRow": 186,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/1893/4990783",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grove - Piezo Vibration Sensor",
+      "sourceRow": 187,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020031/5488092",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grove 3 Axis Digital",
+      "sourceRow": 188,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/114020121/12090841",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grove Light Sensor",
+      "sourceRow": 189,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020132/6558656",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grove Rotary Angle Sensor",
+      "sourceRow": 190,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020017/5482577",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Grove Sound Sensor",
+      "sourceRow": 191,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020023/5482608",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "IR Break Beam Sensor",
+      "sourceRow": 193,
+      "productUrl": "https://www.digikey.com/en/products/detail/dfrobot/SEN0503/15283061",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "IR Break Beam Sensor 1528-2526-ND",
+      "sourceRow": 194,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/2168/8258463",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "RGB Color Sensor with IR Filter",
+      "sourceRow": 196,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/1334/5629426",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "SEN-14585 (fingerprint)",
+      "sourceRow": 197,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/14585/8556288",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Curved Tweezers EROP7SA-ND",
+      "sourceRow": 198,
+      "productUrl": "https://www.digikey.com/en/products/detail/apex-tool-group/EROP7SA/114194",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Flush Cutters 170MN-ND",
+      "sourceRow": 200,
+      "productUrl": "https://www.digikey.com/en/products/detail/klein-tools-inc/D275-5/6596969",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Needle Nose Pliers 243-1215-ND",
+      "sourceRow": 202,
+      "productUrl": "https://www.digikey.com/en/products/detail/aven-tools/10314/1992427",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Pointed Tweezers EROPAASA-ND",
+      "sourceRow": 204,
+      "productUrl": "https://www.digikey.com/en/products/detail/apex-tool-group/EROPAASA/114196",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    },
+    {
+      "name": "Wire Strippers K604-ND",
+      "sourceRow": 205,
+      "productUrl": "https://www.digikey.com/en/products/detail/jonard-tools/JIC-2030/2308356",
+      "status": "failed",
+      "error": "product page HTTP 403"
+    }
+  ],
+  "catalog": {
+    "updated": 0,
+    "skipped": 58,
+    "baseUrl": "http://127.0.0.1:4173"
+  }
+}

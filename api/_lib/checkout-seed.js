@@ -35,8 +35,8 @@ async function seedCheckout(database, options) {
     for (const component of SAMPLE_COMPONENTS) {
       await database.query(
         `INSERT INTO checkout_components
-          (name, description, category, compatibility, total_quantity, max_active_per_team)
-         SELECT $1, $2, $3, $4, $5, $6
+          (name, description, category, compatibility, total_quantity, max_active_per_team, active)
+         SELECT $1, $2, $3, $4, $5, $6, FALSE
           WHERE NOT EXISTS (SELECT 1 FROM checkout_components WHERE LOWER(name) = LOWER($1))`,
         component
       );

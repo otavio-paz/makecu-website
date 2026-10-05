@@ -13,6 +13,8 @@
     adminOrders: [],
     teams: [],
     selectedTeamId: null,
+    activeAdminTab: "overview",
+    mutationKeys: {},
     pollTimer: null,
     toastTimer: null
   };
@@ -29,6 +31,20 @@
   var confirmDialog = document.querySelector("[data-confirm-dialog]");
   var teamCreateDialog = document.querySelector("[data-team-create-dialog]");
   var componentDialog = document.querySelector("[data-component-dialog]");
+
+  try {
+    state.mutationKeys = JSON.parse(window.sessionStorage.getItem("makecu-checkout-idempotency") || "{}");
+  } catch (error) {
+    state.mutationKeys = {};
+  }
+
+  var saveMutationKeys = function () {
+    try {
+      window.sessionStorage.setItem("makecu-checkout-idempotency", JSON.stringify(state.mutationKeys));
+    } catch (error) {
+      // Idempotency still works for the current page when browser storage is unavailable.
+    }
+  };
 
   var escapeHtml = function (value) {
     return String(value == null ? "" : value)
@@ -52,9 +68,11 @@
     return {
       submitted: "Submitted",
       reviewing: "Reviewing",
+      accepted: "Accepted",
       ready: "Ready for Pickup",
       picked_up: "Picked Up",
-      cancelled: "Cancelled"
+      cancelled: "Cancelled",
+      expired: "Expired"
     }[status] || status;
   };
 
@@ -75,6 +93,36 @@
     }
 
     return result;
+  };
+
+  var newIdempotencyKey = function () {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return window.crypto.randomUUID();
+    }
+
+    return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2) + "-" + Math.random().toString(36).slice(2);
+  };
+
+  var mutate = async function (action, payload) {
+    var data = payload || {};
+    var signature = action + ":" + JSON.stringify(data);
+    var key = state.mutationKeys[signature] || newIdempotencyKey();
+
+    state.mutationKeys[signature] = key;
+    saveMutationKeys();
+
+    try {
+      var result = await api(action, Object.assign({}, data, { idempotencyKey: key }));
+      delete state.mutationKeys[signature];
+      saveMutationKeys();
+      return result;
+    } catch (error) {
+      if (error.status && error.status < 500) {
+        delete state.mutationKeys[signature];
+        saveMutationKeys();
+      }
+      throw error;
+    }
   };
 
   var showOnly = function (element) {
@@ -120,7 +168,7 @@
 
   var imageMarkup = function (component) {
     if (component.imageUrl) {
-      return '<img src="' + escapeHtml(component.imageUrl) + '" alt="' + escapeHtml(component.name) + '">';
+      return '<img src="' + escapeHtml(component.imageUrl) + '" alt="' + escapeHtml(component.imageAlt || component.name) + '">';
     }
 
     return '<span class="checkout-component-placeholder" aria-hidden="true">' + escapeHtml(component.name.slice(0, 2).toUpperCase()) + "</span>";
@@ -163,7 +211,7 @@
 
   var itemImageMarkup = function (item) {
     if (item.imageUrl) {
-      return '<img src="' + escapeHtml(item.imageUrl) + '" alt="">';
+      return '<img src="' + escapeHtml(item.imageUrl) + '" alt="' + escapeHtml(item.imageAlt || "") + '">';
     }
 
     return '<span aria-hidden="true">' + escapeHtml(item.name.slice(0, 2).toUpperCase()) + "</span>";
@@ -180,7 +228,7 @@
   };
 
   var componentMaximum = function (component) {
-    var stockMaximum = component.availableQuantity;
+    var stockMaximum = component.teamAvailableQuantity;
 
     if (component.maxActivePerTeam == null) {
       return stockMaximum;
@@ -213,8 +261,10 @@
       var quantity = state.cart[component.id] || 0;
       var stockClass = maximum === 0 ? " checkout-stock-out" : maximum <= 3 ? " checkout-stock-low" : "";
       var stockLabel = maximum === 0
-        ? (component.availableQuantity === 0 ? "Out of Stock" : "Limit Reached")
-        : "Available: " + component.availableQuantity;
+        ? (component.availableQuantity > 0 && component.teamAvailableQuantity === 0
+          ? "Protected stock only"
+          : component.availableQuantity === 0 ? "Out of Stock" : "Limit Reached")
+        : "Available: " + component.teamAvailableQuantity;
       var limit = component.maxActivePerTeam == null
         ? ""
         : '<p class="checkout-limit">Maximum ' + component.maxActivePerTeam + " active per team" +
@@ -225,6 +275,7 @@
         '<div class="checkout-component-body"><h2>' + escapeHtml(component.name) + "</h2>" +
         '<div class="checkout-tags">' + tagMarkup(component.category) + tagMarkup(component.compatibility) + "</div>" +
         '<p class="checkout-component-description">' + escapeHtml(component.description) + "</p>" +
+        (component.technicalSpecs ? '<p class="checkout-form-note">' + escapeHtml(component.technicalSpecs) + "</p>" : "") +
         '<p class="checkout-stock' + stockClass + '">' + stockLabel + "</p>" + limit +
         '<div class="checkout-quantity-row"><button type="button" data-quantity-change="-1" aria-label="Remove one ' + escapeHtml(component.name) + '"' + (quantity === 0 ? " disabled" : "") + '>−</button><output aria-live="polite">' + quantity + '</output><button type="button" data-quantity-change="1" aria-label="Add one ' + escapeHtml(component.name) + '"' + (quantity >= maximum ? " disabled" : "") + ">+</button></div>" +
         "</div></article>";
@@ -269,19 +320,23 @@
         ? '<div class="checkout-order-item-image">' + itemImageMarkup(item) + "</div>"
         : "";
       var category = showImages ? '<div class="checkout-order-item-tags">' + tagMarkup(item.category) + "</div>" : "";
+      var location = showImages && item.binLocation ? '<small>Location: ' + escapeHtml(item.binLocation) + "</small>" : "";
 
-      return '<div class="checkout-order-item' + (showImages ? " checkout-order-item-with-image" : "") + '">' + image + '<span><strong>' + escapeHtml(item.name) + "</strong>" + category + adjustment + '</span><span class="checkout-order-item-quantity">× ' + item.approvedQuantity + "</span>" + controls + "</div>";
+      return '<div class="checkout-order-item' + (showImages ? " checkout-order-item-with-image" : "") + '">' + image + '<span><strong>' + escapeHtml(item.name) + "</strong>" + category + location + adjustment + '</span><span class="checkout-order-item-quantity">× ' + item.approvedQuantity + "</span>" + controls + "</div>";
     }).join("") + "</div>";
   };
 
   var openOrderReceipt = function (order) {
-    var title = order.status === "ready" ? "READY FOR PICKUP" : "Order #" + order.id;
+    var title = order.status === "ready" ? "READY FOR PICKUP" : (order.receiptCode || "Order #" + order.id);
     var heroClass = order.status === "ready" ? " checkout-receipt-ready" : "";
+    var events = order.events && order.events.length ? '<ol class="checkout-activity-list">' + order.events.map(function (event) {
+      return '<li><time datetime="' + escapeHtml(event.createdAt) + '">' + formatDate(event.createdAt) + '</time><span>' + escapeHtml(event.type.replace(/_/g, " ")) + (event.actorName ? " · " + escapeHtml(event.actorName) : "") + "</span></li>";
+    }).join("") + "</ol>" : "";
     orderDialog.querySelector("[data-order-dialog-title]").textContent = title;
     orderDialog.querySelector("[data-order-dialog-body]").innerHTML =
-      '<div class="checkout-receipt-hero' + heroClass + '"><span>' + escapeHtml(statusLabel(order.status).toUpperCase()) + '</span><strong>#' + order.id + "</strong><span>" + escapeHtml(order.teamName) + " · " + formatDate(order.createdAt) + "</span></div>" +
+      '<div class="checkout-receipt-hero' + heroClass + '"><span>' + escapeHtml(statusLabel(order.status).toUpperCase()) + '</span><strong>' + escapeHtml(order.receiptCode || "#" + order.id) + "</strong><span>" + escapeHtml(order.teamName) + " · " + formatDate(order.createdAt) + "</span></div>" +
       orderItemsMarkup(order, false) +
-      (order.status === "ready" ? "<p><strong>Please bring this screen to the hardware desk.</strong></p>" : "");
+      (order.status === "ready" ? "<p><strong>Please bring this screen to the hardware desk.</strong></p>" : "") + events;
     orderDialog.showModal();
   };
 
@@ -294,7 +349,7 @@
     }
 
     list.innerHTML = state.dashboard.orders.map(function (order) {
-      return '<article class="checkout-order-card"><div class="checkout-order-card-header"><div><h2>Order #' + order.id + '</h2><p class="checkout-order-card-meta">' + formatDate(order.createdAt) + '</p></div><span class="checkout-status checkout-status-' + order.status + '">' + escapeHtml(statusLabel(order.status)) + "</span></div>" +
+      return '<article class="checkout-order-card"><div class="checkout-order-card-header"><div><h2>' + escapeHtml(order.receiptCode || "Order #" + order.id) + '</h2><p class="checkout-order-card-meta">' + formatDate(order.createdAt) + '</p></div><span class="checkout-status checkout-status-' + order.status + '">' + escapeHtml(statusLabel(order.status)) + "</span></div>" +
         orderItemsMarkup(order, false) + '<div class="checkout-order-actions"><button class="checkout-button checkout-button-secondary" type="button" data-view-order="' + order.id + '">Open receipt</button></div></article>';
     }).join("");
   };
@@ -359,7 +414,7 @@
   var renderOverview = function (overview) {
     var orderCounts = overview.orders || {};
     document.querySelector("[data-admin-overview]").innerHTML =
-      '<article class="checkout-metric-card"><h2>Orders</h2><dl class="checkout-metric-list"><div><dt>Submitted</dt><dd>' + (orderCounts.submitted || 0) + '</dd></div><div><dt>Reviewing</dt><dd>' + (orderCounts.reviewing || 0) + '</dd></div><div><dt>Ready</dt><dd>' + (orderCounts.ready || 0) + "</dd></div></dl></article>" +
+      '<article class="checkout-metric-card"><h2>Orders</h2><dl class="checkout-metric-list"><div><dt>Submitted</dt><dd>' + (orderCounts.submitted || 0) + '</dd></div><div><dt>Reviewing</dt><dd>' + (orderCounts.reviewing || 0) + '</dd></div><div><dt>Accepted</dt><dd>' + (orderCounts.accepted || 0) + '</dd></div><div><dt>Ready</dt><dd>' + (orderCounts.ready || 0) + "</dd></div></dl></article>" +
       '<article class="checkout-metric-card"><h2>Inventory</h2><dl class="checkout-metric-list"><div><dt>Available</dt><dd>' + overview.inventory.available + '</dd></div><div><dt>Reserved</dt><dd>' + overview.inventory.reserved + '</dd></div><div><dt>Checked Out</dt><dd>' + overview.inventory.checked_out + '</dd></div><div><dt>Unavailable</dt><dd>' + overview.inventory.unavailable + "</dd></div></dl></article>" +
       '<article class="checkout-metric-card"><h2>Returns</h2><dl class="checkout-metric-list"><div><dt>Teams holding hardware</dt><dd>' + overview.teamsHoldingHardware + "</dd></div></dl></article>";
   };
@@ -369,8 +424,18 @@
       return '<button class="checkout-button checkout-button-primary" type="button" data-claim-order="' + order.id + '">Review Order</button>';
     }
 
+    var claimExpired = order.status === "reviewing" && order.claimExpiresAt && new Date(order.claimExpiresAt) <= new Date();
+
+    if (claimExpired) {
+      return '<button class="checkout-button checkout-button-primary" type="button" data-claim-order="' + order.id + '">Take Over Expired Claim</button>';
+    }
+
     if (order.status === "reviewing" && order.reviewedBy === state.user.id) {
-      return '<button class="checkout-button checkout-button-secondary" type="button" data-save-adjustments="' + order.id + '">Save Adjustments</button><button class="checkout-button checkout-button-primary" type="button" data-mark-ready="' + order.id + '">Mark Ready for Pickup</button><button class="checkout-button checkout-button-danger" type="button" data-cancel-order="' + order.id + '">Cancel Order</button>';
+      return '<button class="checkout-button checkout-button-secondary" type="button" data-save-adjustments="' + order.id + '">Save Adjustments</button><button class="checkout-button checkout-button-primary" type="button" data-accept-order="' + order.id + '">Accept Order</button><button class="checkout-button checkout-button-secondary" type="button" data-release-claim="' + order.id + '">Release Claim</button><button class="checkout-button checkout-button-danger" type="button" data-cancel-order="' + order.id + '">Cancel Order</button>';
+    }
+
+    if (order.status === "accepted" && order.acceptedBy === state.user.id) {
+      return '<button class="checkout-button checkout-button-primary" type="button" data-mark-ready="' + order.id + '">Mark Ready for Pickup</button><button class="checkout-button checkout-button-danger" type="button" data-cancel-order="' + order.id + '">Cancel Order</button>';
     }
 
     if (order.status === "ready") {
@@ -385,16 +450,19 @@
     var stages = [
       { status: "submitted", label: "Submitted" },
       { status: "reviewing", label: "Reviewing" },
+      { status: "accepted", label: "Accepted" },
       { status: "ready", label: "Ready for pickup" },
       { status: "picked_up", label: "Picked up" },
-      { status: "cancelled", label: "Cancelled" }
+      { status: "cancelled", label: "Cancelled" },
+      { status: "expired", label: "Expired" }
     ];
 
     list.innerHTML = stages.map(function (stage) {
       var orders = state.adminOrders.filter(function (order) { return order.status === stage.status; });
       var cards = orders.length ? orders.map(function (order) {
         var adjustable = order.status === "reviewing" && order.reviewedBy === state.user.id;
-        return '<article class="checkout-order-card checkout-order-board-card" data-admin-order="' + order.id + '"><div class="checkout-order-card-header"><div><h2>#' + order.id + " — " + escapeHtml(order.teamName) + '</h2><p class="checkout-order-card-meta">Submitted ' + formatDate(order.createdAt) + (order.reviewerName ? " · " + escapeHtml(order.reviewerName) : "") + "</p></div></div>" +
+        var claimMeta = order.status === "reviewing" && order.claimExpiresAt ? " · claim until " + formatDate(order.claimExpiresAt) : "";
+        return '<article class="checkout-order-card checkout-order-board-card" data-admin-order="' + order.id + '"><div class="checkout-order-card-header"><div><h2>' + escapeHtml(order.receiptCode || "#" + order.id) + " — " + escapeHtml(order.teamName) + '</h2><p class="checkout-order-card-meta">Submitted ' + formatDate(order.createdAt) + (order.reviewerName ? " · " + escapeHtml(order.reviewerName) : "") + claimMeta + "</p></div></div>" +
           orderItemsMarkup(order, adjustable, true) + '<div class="checkout-order-actions">' + adminOrderActions(order) + "</div></article>";
       }).join("") : '<p class="checkout-stage-empty">No ' + stage.label.toLowerCase() + " orders.</p>";
 
@@ -436,7 +504,7 @@
       return '<div class="checkout-return-row" data-return-component="' + item.componentId + '"><strong>' + escapeHtml(item.name) + '<span>Currently holding ' + item.checkedOutQuantity + '</span></strong><label>Return now<input type="number" min="0" max="' + item.checkedOutQuantity + '" value="0" data-return-quantity></label><label>Condition<select data-return-condition><option value="good">Good</option><option value="damaged">Damaged</option><option value="missing">Missing</option></select></label><label>Note<input maxlength="1000" placeholder="Required if damaged/missing" data-return-note></label></div>';
     }).join("") + '<div class="checkout-order-actions"><button class="checkout-button checkout-button-primary" type="button" data-process-return="' + detail.team.id + '">Process Return</button></div>' : '<p class="checkout-empty">This team has returned all checked-out hardware.</p>';
     var receipts = detail.returns.length ? detail.returns.map(function (receipt) {
-      return '<article class="checkout-receipt"><strong>Return #R-' + receipt.id + '</strong><p>' + formatDate(receipt.createdAt) + " · " + escapeHtml(receipt.processedBy) + '</p><p>' + receipt.items.map(function (item) { return item.quantity + " × " + escapeHtml(item.name) + " — " + escapeHtml(item.condition); }).join("<br>") + "</p></article>";
+      return '<article class="checkout-receipt"><strong>' + escapeHtml(receipt.receiptCode || "R-" + receipt.id) + '</strong><p>' + formatDate(receipt.createdAt) + " · " + escapeHtml(receipt.processedBy) + '</p><p>' + receipt.items.map(function (item) { return item.quantity + " × " + escapeHtml(item.name) + " — " + escapeHtml(item.condition); }).join("<br>") + "</p></article>";
     }).join("") : '<p class="checkout-empty">No return receipts yet.</p>';
     var orders = detail.orders.length ? detail.orders.map(function (order) {
       return '<button class="checkout-team-button" type="button" data-view-admin-order="' + order.id + '"><strong>Order #' + order.id + '</strong><small>' + escapeHtml(statusLabel(order.status)) + " · " + formatDate(order.createdAt) + "</small></button>";
@@ -470,6 +538,7 @@
   };
 
   var adminTab = async function (name) {
+    state.activeAdminTab = name;
     document.querySelectorAll("[data-admin-tab]").forEach(function (button) {
       button.classList.toggle("is-active", button.dataset.adminTab === name);
     });
@@ -523,6 +592,18 @@
         loadTeamData(true);
       } else if (state.user && state.user.role === "admin") {
         loadAdminOverview().catch(function () {});
+        if (state.activeAdminTab === "orders") {
+          loadAdminOrders().catch(function () {});
+        } else if (state.activeAdminTab === "teams") {
+          loadTeams().catch(function () {});
+          if (state.selectedTeamId) {
+            loadTeamDetail(state.selectedTeamId).catch(function () {});
+          }
+        } else if (state.activeAdminTab === "inventory") {
+          loadInventory().catch(function () {});
+        } else if (state.activeAdminTab === "activity") {
+          loadActivity().catch(function () {});
+        }
       }
     }, 5000);
   };
@@ -652,7 +733,7 @@
     setBusy(button, true, "Reserving…");
 
     try {
-      var result = await api("submit-order", { items: items });
+      var result = await mutate("submit-order", { items: items });
       state.cart = {};
       updateCartCounts();
       cartDialog.close();
@@ -685,19 +766,19 @@
   });
   document.querySelector("[data-refresh-orders]").addEventListener("click", loadAdminOrders);
   document.querySelector("[data-admin-orders]").addEventListener("click", async function (event) {
-    var actionButton = event.target.closest("button[data-claim-order], button[data-save-adjustments], button[data-mark-ready], button[data-confirm-pickup], button[data-cancel-order]");
+    var actionButton = event.target.closest("button[data-claim-order], button[data-save-adjustments], button[data-accept-order], button[data-release-claim], button[data-mark-ready], button[data-confirm-pickup], button[data-cancel-order]");
 
     if (!actionButton) {
       return;
     }
 
-    var orderId = Number(actionButton.dataset.claimOrder || actionButton.dataset.saveAdjustments || actionButton.dataset.markReady || actionButton.dataset.confirmPickup || actionButton.dataset.cancelOrder);
+    var orderId = Number(actionButton.dataset.claimOrder || actionButton.dataset.saveAdjustments || actionButton.dataset.acceptOrder || actionButton.dataset.releaseClaim || actionButton.dataset.markReady || actionButton.dataset.confirmPickup || actionButton.dataset.cancelOrder);
     var order = state.adminOrders.find(function (item) { return item.id === orderId; });
 
     try {
       if (actionButton.hasAttribute("data-claim-order")) {
         setBusy(actionButton, true, "Claiming…");
-        await api("claim-order", { orderId: orderId });
+        await mutate("claim-order", { orderId: orderId });
         notify("Order #" + orderId + " is assigned to you.");
       } else if (actionButton.hasAttribute("data-save-adjustments")) {
         var card = actionButton.closest("[data-admin-order]");
@@ -710,26 +791,35 @@
           };
         });
         setBusy(actionButton, true, "Saving…");
-        await api("adjust-order", { orderId: orderId, items: items });
+        await mutate("adjust-order", { orderId: orderId, items: items });
         notify("Approved quantities saved.");
+      } else if (actionButton.hasAttribute("data-accept-order")) {
+        if (!(await confirmAction("Accept Order #" + orderId + "?", "Approved quantities will be finalized. Mark the order ready only after gathering every approved component.", "Accept Order"))) {
+          return;
+        }
+        await mutate("accept-order", { orderId: orderId });
+        notify("Order #" + orderId + " was accepted.");
+      } else if (actionButton.hasAttribute("data-release-claim")) {
+        await mutate("release-claim", { orderId: orderId });
+        notify("Order #" + orderId + " is available for another volunteer.");
       } else if (actionButton.hasAttribute("data-mark-ready")) {
         if (!(await confirmAction("Mark Order #" + orderId + " ready?", "Confirm that every approved component has been physically prepared. Inventory remains reserved until pickup.", "Mark Ready"))) {
           return;
         }
-        await api("mark-ready", { orderId: orderId });
+        await mutate("mark-ready", { orderId: orderId });
         notify("Order #" + orderId + " is ready for pickup.");
       } else if (actionButton.hasAttribute("data-confirm-pickup")) {
         var total = order.items.reduce(function (sum, item) { return sum + item.approvedQuantity; }, 0);
         if (!(await confirmAction("Confirm pickup for Order #" + orderId + "?", "You are handing " + total + " component" + (total === 1 ? "" : "s") + " to " + order.teamName + ". This moves inventory from reserved to checked out.", "Confirm Pickup"))) {
           return;
         }
-        await api("confirm-pickup", { orderId: orderId });
+        await mutate("confirm-pickup", { orderId: orderId });
         notify("Pickup recorded for Order #" + orderId + ".");
       } else if (actionButton.hasAttribute("data-cancel-order")) {
         if (!(await confirmAction("Cancel Order #" + orderId + "?", "All reserved quantities in this order will be released back to available inventory.", "Cancel Order"))) {
           return;
         }
-        await api("cancel-order", { orderId: orderId });
+        await mutate("cancel-order", { orderId: orderId });
         notify("Order #" + orderId + " was cancelled.");
       }
 
@@ -781,7 +871,7 @@
         }
 
         setBusy(returnButton, true, "Processing…");
-        var detail = await api("process-return", { teamId: Number(returnButton.dataset.processReturn), items: items });
+        var detail = await mutate("process-return", { teamId: Number(returnButton.dataset.processReturn), items: items });
         renderTeamDetail(detail);
         await loadTeams();
         notify("Return receipt created.");
@@ -792,7 +882,7 @@
           return;
         }
 
-        await api("reset-team-password", { teamId: Number(resetButton.dataset.resetPassword), password: password });
+        await mutate("reset-team-password", { teamId: Number(resetButton.dataset.resetPassword), password: password });
         notify("Team password reset. Existing team sessions were signed out.");
       } else if (orderButton) {
         var result = await api("order", { orderId: Number(orderButton.dataset.viewAdminOrder) });
@@ -817,7 +907,7 @@
     setBusy(button, true, "Creating…");
 
     try {
-      await api("create-team", { name: form.name.value, identifier: form.identifier.value, username: form.username.value, password: form.password.value });
+      await mutate("create-team", { name: form.name.value, identifier: form.identifier.value, username: form.username.value, password: form.password.value });
       form.reset();
       teamCreateDialog.close();
       await loadTeams();
@@ -834,15 +924,21 @@
     var form = document.querySelector("[data-component-form]");
     form.reset();
     form.id.value = component ? component.id : "";
+    form.expectedVersion.value = component ? component.version : "";
     form.name.value = component ? component.name : "";
     form.description.value = component ? component.description : "";
     form.imageUrl.value = component ? component.imageUrl : "";
+    form.imageAlt.value = component ? component.imageAlt : "";
     form.category.value = component ? component.category : categories[0];
     form.compatibility.value = component ? component.compatibility : "Arduino + Raspberry Pi";
+    form.binLocation.value = component ? component.binLocation : "";
+    form.technicalSpecs.value = component ? component.technicalSpecs : "";
     form.totalQuantity.value = component ? component.totalQuantity : 0;
     form.unavailableQuantity.value = component ? component.unavailableQuantity : 0;
+    form.protectedStock.value = component ? component.protectedStock : 0;
     form.maxActivePerTeam.value = component && component.maxActivePerTeam != null ? component.maxActivePerTeam : "";
     form.adminNotes.value = component ? component.adminNotes : "";
+    form.changeReason.value = "";
     form.active.checked = component ? component.active : true;
     form.querySelector("[data-component-form-title]").textContent = component ? "Edit " + component.name : "Add component";
     form.querySelector("[data-component-error]").hidden = true;
@@ -864,15 +960,21 @@
     var errorElement = form.querySelector("[data-component-error]");
     var payload = {
       id: form.id.value ? Number(form.id.value) : null,
+      expectedVersion: form.expectedVersion.value ? Number(form.expectedVersion.value) : null,
       name: form.name.value,
       description: form.description.value,
       imageUrl: form.imageUrl.value,
+      imageAlt: form.imageAlt.value,
       category: form.category.value,
       compatibility: form.compatibility.value,
+      binLocation: form.binLocation.value,
+      technicalSpecs: form.technicalSpecs.value,
       totalQuantity: Number(form.totalQuantity.value),
       unavailableQuantity: Number(form.unavailableQuantity.value),
+      protectedStock: Number(form.protectedStock.value),
       maxActivePerTeam: form.maxActivePerTeam.value ? Number(form.maxActivePerTeam.value) : null,
       adminNotes: form.adminNotes.value,
+      changeReason: form.changeReason.value,
       active: form.active.checked
     };
     errorElement.hidden = true;
@@ -883,7 +985,7 @@
         return;
       }
 
-      await api("save-component", payload);
+      await mutate("save-component", payload);
       componentDialog.close();
       await loadInventory();
       notify(payload.id ? "Component updated." : "Component added.");

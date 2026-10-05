@@ -9,28 +9,36 @@ const mimeTypes = {
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
   ".ico": "image/x-icon",
+  ".gif": "image/gif",
   ".jpeg": "image/jpeg",
   ".jpg": "image/jpeg",
   ".js": "text/javascript; charset=utf-8",
   ".png": "image/png",
-  ".svg": "image/svg+xml"
+  ".svg": "image/svg+xml",
+  ".webp": "image/webp"
 };
 
 function staticPath(urlPath) {
   const clean = decodeURIComponent(urlPath.split("?")[0]);
   const relative = clean.endsWith("/") ? `${clean}index.html` : clean;
-  const resolved = path.resolve(siteDirectory, `.${relative}`);
+  const roots = [siteDirectory];
 
-  if (!resolved.startsWith(siteDirectory)) {
-    return null;
-  }
+  // Jekyll copies images into _site for deployment. During catalog work, serve
+  // newly downloaded source images immediately so a full Ruby build is not
+  // required after every asset review.
+  if (clean.startsWith("/images/")) roots.push(process.cwd());
 
-  if (fs.existsSync(resolved) && fs.statSync(resolved).isFile()) {
-    return resolved;
-  }
+  for (const root of roots) {
+    const resolved = path.resolve(root, `.${relative}`);
+    if (resolved !== root && !resolved.startsWith(`${root}${path.sep}`)) continue;
 
-  if (!path.extname(resolved) && fs.existsSync(`${resolved}.html`)) {
-    return `${resolved}.html`;
+    if (fs.existsSync(resolved) && fs.statSync(resolved).isFile()) {
+      return resolved;
+    }
+
+    if (!path.extname(resolved) && fs.existsSync(`${resolved}.html`)) {
+      return `${resolved}.html`;
+    }
   }
 
   return null;

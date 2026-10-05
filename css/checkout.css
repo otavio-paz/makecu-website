@@ -449,9 +449,11 @@
 
 .checkout-status-submitted { background: #e8e9eb; color: #3b4750; }
 .checkout-status-reviewing { background: #dcecff; color: #125795; }
+.checkout-status-accepted { background: #fff2b9; color: #6b5200; }
 .checkout-status-ready { background: #d9f8e3; color: #12642f; }
 .checkout-status-picked_up { background: #e9e0ff; color: #553299; }
 .checkout-status-cancelled { background: #ffe0dc; color: #8b271d; }
+.checkout-status-expired { background: #eee; color: #626262; }
 
 .checkout-stock {
   font-weight: 800;
@@ -501,7 +503,7 @@
 .checkout-order-board {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(5, calc((100% - 32px) / 3));
+  grid-template-columns: repeat(7, calc((100% - 32px) / 3));
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   padding: 2px 2px 18px;
