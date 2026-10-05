@@ -427,12 +427,17 @@ async function resetTeamPassword(database, body, actor) {
 
 async function saveComponent(database, body, actor) {
   const input = componentInput(body);
-  const relationships = (Array.isArray(body.relationships) ? body.relationships : []).map(relationshipInput);
+  const shouldReplaceRelationships = Object.prototype.hasOwnProperty.call(body, "relationships");
+  const relationships = shouldReplaceRelationships
+    ? (Array.isArray(body.relationships) ? body.relationships : []).map(relationshipInput)
+    : null;
   const componentId = body.id == null ? null : positiveInteger(body.id, "Component ID");
   const changeReason = cleanString(body.changeReason, "Inventory change reason", { optional: !componentId, max: 500 });
 
   return database.transaction(async function (transaction) {
     async function replaceRelationships(sourceComponentId) {
+      if (!shouldReplaceRelationships) return;
+
       const seen = new Set();
       const targetIds = [];
 

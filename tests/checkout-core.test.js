@@ -528,6 +528,31 @@ test("structured relationships drive cart advice and block missing required hard
   assert.equal(motor.status, 201);
   assert.equal(motor.body.component.relationships[0].quantityRatio, 2);
 
+  const metadataOnlyUpdate = await request("save-component", {
+    id: motor.body.component.id,
+    expectedVersion: motor.body.component.version,
+    name: motor.body.component.name,
+    description: `${motor.body.component.description} Updated without a relationships field.`,
+    imageUrl: motor.body.component.imageUrl,
+    imageAlt: motor.body.component.imageAlt,
+    category: motor.body.component.category,
+    compatibility: motor.body.component.compatibility,
+    arduinoGuidance: motor.body.component.arduinoGuidance,
+    raspberryPiGuidance: motor.body.component.raspberryPiGuidance,
+    binLocation: motor.body.component.binLocation,
+    technicalSpecs: motor.body.component.technicalSpecs,
+    totalQuantity: motor.body.component.totalQuantity,
+    unavailableQuantity: motor.body.component.unavailableQuantity,
+    protectedStock: motor.body.component.protectedStock,
+    maxActivePerTeam: motor.body.component.maxActivePerTeam,
+    active: motor.body.component.active,
+    adminNotes: motor.body.component.adminNotes,
+    changeReason: "Verify metadata-only updates preserve relationships."
+  }, adminCookie);
+  assert.equal(metadataOnlyUpdate.status, 200);
+  assert.equal(metadataOnlyUpdate.body.component.relationships.length, 1);
+  assert.equal(metadataOnlyUpdate.body.component.relationships[0].targetComponentId, driver.body.component.id);
+
   const teamCookie = await login("relationship-test-team", "relationship-test-2026");
   const advice = await request("cart-advice", {
     items: [{ componentId: motor.body.component.id, quantity: 3 }]
