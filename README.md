@@ -50,7 +50,10 @@ After importing the full inventory, seed the curated motor, servo, driver, and c
 ```powershell
 $env:CHECKOUT_PGLITE_PATH="./checkout-catalog-preview-data" # local preview only
 npm run checkout:seed-relationships
+npm run checkout:seed-package-quantities
 ```
+
+The package-quantity seed converts clearly documented multipacks into individual checkout units while leaving functional kits and ambiguous duplicates unchanged. Review `CHECKOUT_INVENTORY_QUANTITY_AUDIT.md` before approving any catalog merges.
 
 For PostgreSQL, set `DATABASE_URL` instead. The operation is idempotent: it preserves non-empty platform guidance and updates the curated relationship ratios/messages.
 

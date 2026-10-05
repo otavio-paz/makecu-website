@@ -252,7 +252,7 @@ Team catalog, order, holding, and cooldown data refresh every five seconds. Admi
 
 ## Verification performed
 
-`npm test` currently passes 17 tests with zero failures. The suite covers:
+`npm test` currently passes 18 tests with zero failures. The suite covers:
 
 - live-window enforcement;
 - salted password hashing;
@@ -272,6 +272,7 @@ Team catalog, order, holding, and cooldown data refresh every five seconds. Admi
 - protected-stock exception orders;
 - append-only return corrections;
 - end-of-event reconciliation and mismatch detection.
+- idempotent package-to-piece inventory quantity corrections.
 
 `npm run test:checkout:postgres` creates an isolated temporary schema and uses independent pooled PostgreSQL connections to test final-item races, same-team serialization, and three-admin claims. Without `CHECKOUT_POSTGRES_TEST_URL`, it skips safely rather than guessing at a database.
 
