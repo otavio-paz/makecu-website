@@ -556,7 +556,7 @@
 
   var renderInventory = function () {
     document.querySelector("[data-inventory-table]").innerHTML = state.components.map(function (component) {
-      return '<tr><td><strong>' + escapeHtml(component.name) + '</strong><br><small>' + escapeHtml(component.category) + (component.active ? "" : " · Disabled") + '</small></td><td>' + component.availableQuantity + '</td><td>' + component.reservedQuantity + '</td><td>' + component.checkedOutQuantity + '</td><td>' + component.unavailableQuantity + '</td><td>' + component.totalQuantity + '</td><td><button class="checkout-button checkout-button-secondary" type="button" data-edit-component="' + component.id + '">Edit</button></td></tr>';
+      return '<tr><td><div class="checkout-inventory-component"><div class="checkout-inventory-thumbnail">' + imageMarkup(component) + '</div><span><strong>' + escapeHtml(component.name) + '</strong><small>' + escapeHtml(component.category) + (component.active ? "" : " · Disabled") + '</small></span></div></td><td>' + component.availableQuantity + '</td><td>' + component.reservedQuantity + '</td><td>' + component.checkedOutQuantity + '</td><td>' + component.unavailableQuantity + '</td><td>' + component.totalQuantity + '</td><td><button class="checkout-button checkout-button-secondary" type="button" data-edit-component="' + component.id + '">Edit</button></td></tr>';
     }).join("");
   };
 

@@ -973,6 +973,49 @@
   padding: 5px 10px;
 }
 
+.checkout-inventory-component {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  min-width: 280px;
+}
+
+.checkout-inventory-component > span {
+  min-width: 0;
+}
+
+.checkout-inventory-component strong,
+.checkout-inventory-component small {
+  display: block;
+}
+
+.checkout-inventory-component small {
+  color: #607688;
+  margin-top: 3px;
+}
+
+.checkout-inventory-thumbnail {
+  align-items: center;
+  background: #dbe5eb;
+  border: 1px solid #c7d5de;
+  border-radius: 7px;
+  display: flex;
+  flex: 0 0 58px;
+  height: 58px;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.checkout-inventory-thumbnail img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.checkout-inventory-thumbnail .checkout-component-placeholder {
+  font-size: 16px;
+}
+
 .checkout-activity-list {
   background: #f1f5f7;
   border-radius: 10px;
