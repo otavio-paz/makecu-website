@@ -45,6 +45,15 @@ npm run checkout:download-images
 
 `scripts/checkout-component-sources.json` records the product hyperlinks extracted from `MakeCU Hardware List 2026.xlsx`. The image command downloads only supported raster images exposed by those linked pages, writes them under `images/checkout/components/`, records provenance and failures in `download-manifest.json`, and updates matching catalog records through the normal audited admin API. Treat every downloaded supplier image as provisional: confirm the exact component revision and permission to publish it before production.
 
+After importing the full inventory, seed the curated motor, servo, driver, and controller relationships plus platform-specific safety guidance:
+
+```powershell
+$env:CHECKOUT_PGLITE_PATH="./checkout-catalog-preview-data" # local preview only
+npm run checkout:seed-relationships
+```
+
+For PostgreSQL, set `DATABASE_URL` instead. The operation is idempotent: it preserves non-empty platform guidance and updates the curated relationship ratios/messages.
+
 ## Edit Content
 
 Most event copy lives in `_config.yml`.
