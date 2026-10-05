@@ -1,7 +1,20 @@
 const { hashPassword } = require("./checkout-security");
-const { componentInput, cleanString, httpError, positiveInteger, returnInput } = require("./checkout-validation");
+const { componentInput, cleanString, httpError, positiveInteger, relationshipInput, returnInput } = require("./checkout-validation");
 
-function componentView(row) {
+function relationshipView(row) {
+  return {
+    id: Number(row.id),
+    sourceComponentId: Number(row.source_component_id),
+    targetComponentId: Number(row.target_component_id),
+    targetName: row.target_name,
+    relationType: row.relation_type,
+    quantityRatio: Number(row.quantity_ratio),
+    minimumSourceQuantity: Number(row.minimum_source_quantity),
+    message: row.message
+  };
+}
+
+function componentView(row, relationships) {
   const total = Number(row.total_quantity);
   const reserved = Number(row.reserved_quantity);
   const checkedOut = Number(row.checked_out_quantity);
@@ -15,6 +28,8 @@ function componentView(row) {
     imageAlt: row.image_alt,
     category: row.category,
     compatibility: row.compatibility,
+    arduinoGuidance: row.arduino_guidance || "",
+    raspberryPiGuidance: row.raspberry_pi_guidance || "",
     binLocation: row.bin_location,
     technicalSpecs: row.technical_specs,
     totalQuantity: total,
@@ -29,8 +44,44 @@ function componentView(row) {
     active: row.active,
     adminNotes: row.admin_notes,
     version: Number(row.version || 1),
-    updatedAt: row.updated_at
+    updatedAt: row.updated_at,
+    relationships: relationships || []
   };
+}
+
+async function relationshipsFor(database, componentIds) {
+  const grouped = new Map();
+
+  if (!componentIds.length) {
+    return grouped;
+  }
+
+  const result = await database.query(
+    `SELECT relationships.*, targets.name AS target_name
+       FROM checkout_component_relationships relationships
+       JOIN checkout_components targets ON targets.id = relationships.target_component_id
+      WHERE relationships.source_component_id = ANY($1::bigint[])
+      ORDER BY relationships.source_component_id, relationships.id`,
+    [componentIds]
+  );
+
+  result.rows.forEach(function (row) {
+    const sourceId = Number(row.source_component_id);
+
+    if (!grouped.has(sourceId)) {
+      grouped.set(sourceId, []);
+    }
+
+    grouped.get(sourceId).push(relationshipView(row));
+  });
+  return grouped;
+}
+
+async function componentsView(database, rows) {
+  const grouped = await relationshipsFor(database, rows.map(function (row) { return Number(row.id); }));
+  return rows.map(function (row) {
+    return componentView(row, grouped.get(Number(row.id)) || []);
+  });
 }
 
 function orderView(row, items) {
@@ -195,7 +246,111 @@ async function catalog(database, user, includeInactive) {
     [teamId, Boolean(includeInactive)]
   );
 
-  return result.rows.map(componentView);
+  return componentsView(database, result.rows);
+}
+
+function normalizedOrderItems(rawItems) {
+  const normalized = new Map();
+
+  (Array.isArray(rawItems) ? rawItems : []).forEach(function (item) {
+    const componentId = positiveInteger(item.componentId, "Component ID");
+    const quantity = positiveInteger(item.quantity, "Requested quantity");
+    normalized.set(componentId, (normalized.get(componentId) || 0) + quantity);
+  });
+  return normalized;
+}
+
+async function cartAdvice(database, actor, rawItems) {
+  const cart = normalizedOrderItems(rawItems);
+
+  if (!cart.size) {
+    return [];
+  }
+
+  const sourceIds = Array.from(cart.keys());
+  const relationshipsResult = await database.query(
+    `SELECT relationships.*, sources.name AS source_name, targets.name AS target_name,
+            targets.active AS target_active, targets.total_quantity, targets.reserved_quantity,
+            targets.checked_out_quantity, targets.unavailable_quantity, targets.protected_stock,
+            targets.max_active_per_team
+       FROM checkout_component_relationships relationships
+       JOIN checkout_components sources ON sources.id = relationships.source_component_id
+       JOIN checkout_components targets ON targets.id = relationships.target_component_id
+      WHERE relationships.source_component_id = ANY($1::bigint[])
+      ORDER BY relationships.source_component_id, relationships.id`,
+    [sourceIds]
+  );
+
+  if (!relationshipsResult.rows.length) {
+    return [];
+  }
+
+  const relatedIds = new Set(sourceIds);
+  relationshipsResult.rows.forEach(function (row) { relatedIds.add(Number(row.target_component_id)); });
+  const activeResult = await database.query(
+    `SELECT components.id,
+            COALESCE(inventory.checked_out_quantity, 0) + COALESCE(reservations.quantity, 0) AS active_quantity
+       FROM checkout_components components
+       LEFT JOIN checkout_team_inventory inventory
+         ON inventory.component_id = components.id AND inventory.team_id = $1
+       LEFT JOIN (
+         SELECT items.component_id, SUM(items.approved_quantity) AS quantity
+           FROM checkout_order_items items
+           JOIN checkout_orders orders ON orders.id = items.order_id
+          WHERE orders.team_id = $1 AND orders.status IN ('submitted', 'reviewing', 'accepted', 'ready')
+          GROUP BY items.component_id
+       ) reservations ON reservations.component_id = components.id
+      WHERE components.id = ANY($2::bigint[])`,
+    [actor.team_id, Array.from(relatedIds)]
+  );
+  const active = new Map(activeResult.rows.map(function (row) {
+    return [Number(row.id), Number(row.active_quantity)];
+  }));
+
+  return relationshipsResult.rows.map(function (row) {
+    const sourceId = Number(row.source_component_id);
+    const targetId = Number(row.target_component_id);
+    const sourceQuantity = (active.get(sourceId) || 0) + (cart.get(sourceId) || 0);
+    const targetQuantity = (active.get(targetId) || 0) + (cart.get(targetId) || 0);
+    const threshold = Number(row.minimum_source_quantity);
+
+    if (sourceQuantity < threshold) {
+      return null;
+    }
+
+    const requiredQuantity = Math.ceil(sourceQuantity / Number(row.quantity_ratio));
+    const missingQuantity = Math.max(0, requiredQuantity - targetQuantity);
+
+    if (!missingQuantity) {
+      return null;
+    }
+
+    const teamAvailable = Math.max(0, Number(row.total_quantity) - Number(row.reserved_quantity) -
+      Number(row.checked_out_quantity) - Number(row.unavailable_quantity) - Number(row.protected_stock));
+    const teamLimitRemaining = row.max_active_per_team == null
+      ? teamAvailable
+      : Math.max(0, Number(row.max_active_per_team) - targetQuantity);
+    const severity = row.relation_type === "requires" || row.relation_type === "compatible_driver"
+      ? "required"
+      : row.relation_type === "compatible_power_supply" ? "warning" : "recommendation";
+    const fallback = severity === "required"
+      ? `${row.source_name} requires ${row.target_name}.`
+      : `${row.target_name} is recommended with ${row.source_name}.`;
+
+    return {
+      sourceComponentId: sourceId,
+      sourceName: row.source_name,
+      targetComponentId: targetId,
+      targetName: row.target_name,
+      relationType: row.relation_type,
+      severity,
+      requiredQuantity,
+      currentQuantity: targetQuantity,
+      missingQuantity,
+      canAddQuantity: row.target_active ? Math.min(missingQuantity, teamAvailable, teamLimitRemaining) : 0,
+      message: row.message || fallback
+    };
+  }).filter(Boolean);
 }
 
 async function createTeam(database, body, actor) {
@@ -269,10 +424,54 @@ async function resetTeamPassword(database, body, actor) {
 
 async function saveComponent(database, body, actor) {
   const input = componentInput(body);
+  const relationships = (Array.isArray(body.relationships) ? body.relationships : []).map(relationshipInput);
   const componentId = body.id == null ? null : positiveInteger(body.id, "Component ID");
   const changeReason = cleanString(body.changeReason, "Inventory change reason", { optional: !componentId, max: 500 });
 
   return database.transaction(async function (transaction) {
+    async function replaceRelationships(sourceComponentId) {
+      const seen = new Set();
+      const targetIds = [];
+
+      relationships.forEach(function (relationship) {
+        if (relationship.targetComponentId === Number(sourceComponentId)) {
+          throw httpError(400, "A component cannot require or recommend itself.");
+        }
+
+        const key = `${relationship.targetComponentId}:${relationship.relationType}`;
+
+        if (seen.has(key)) {
+          throw httpError(400, "Each related component and relationship type may be listed only once.");
+        }
+
+        seen.add(key);
+        targetIds.push(relationship.targetComponentId);
+      });
+
+      if (targetIds.length) {
+        const targets = await transaction.query(
+          "SELECT id FROM checkout_components WHERE id = ANY($1::bigint[])",
+          [Array.from(new Set(targetIds))]
+        );
+
+        if (targets.rows.length !== new Set(targetIds).size) {
+          throw httpError(400, "One or more related components no longer exist.");
+        }
+      }
+
+      await transaction.query("DELETE FROM checkout_component_relationships WHERE source_component_id = $1", [sourceComponentId]);
+
+      for (const relationship of relationships) {
+        await transaction.query(
+          `INSERT INTO checkout_component_relationships
+            (source_component_id, target_component_id, relation_type, quantity_ratio, minimum_source_quantity, message)
+           VALUES ($1, $2, $3, $4, $5, $6)`,
+          [sourceComponentId, relationship.targetComponentId, relationship.relationType,
+            relationship.quantityRatio, relationship.minimumSourceQuantity, relationship.message]
+        );
+      }
+    }
+
     if (!componentId) {
       if (input.unavailableQuantity + input.protectedStock > input.totalQuantity) {
         throw httpError(409, "Unavailable quantity and protected stock cannot exceed total inventory.");
@@ -280,17 +479,20 @@ async function saveComponent(database, body, actor) {
 
       const created = await transaction.query(
         `INSERT INTO checkout_components
-          (name, description, image_url, image_alt, category, compatibility, bin_location,
+          (name, description, image_url, image_alt, category, compatibility,
+           arduino_guidance, raspberry_pi_guidance, bin_location,
            technical_specs, total_quantity, unavailable_quantity, protected_stock,
            max_active_per_team, active, admin_notes)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
          RETURNING *`,
         [input.name, input.description, input.imageUrl, input.imageAlt, input.category,
-          input.compatibility, input.binLocation, input.technicalSpecs, input.totalQuantity,
+          input.compatibility, input.arduinoGuidance, input.raspberryPiGuidance,
+          input.binLocation, input.technicalSpecs, input.totalQuantity,
           input.unavailableQuantity, input.protectedStock, input.maxActivePerTeam,
           input.active, input.adminNotes]
       );
       const component = created.rows[0];
+      await replaceRelationships(component.id);
 
       await transaction.query(
         `INSERT INTO checkout_inventory_transactions
@@ -303,7 +505,7 @@ async function saveComponent(database, body, actor) {
          VALUES ($1, $2)`,
         [actor.id, `Added ${input.name} to inventory.`]
       );
-      return componentView(component);
+      return (await componentsView(transaction, [component]))[0];
     }
 
     const currentResult = await transaction.query(
@@ -337,18 +539,21 @@ async function saveComponent(database, body, actor) {
     const updatedResult = await transaction.query(
       `UPDATE checkout_components
           SET name = $2, description = $3, image_url = $4, image_alt = $5, category = $6,
-              compatibility = $7, bin_location = $8, technical_specs = $9,
-              total_quantity = $10, unavailable_quantity = $11, protected_stock = $12,
-              max_active_per_team = $13, active = $14, admin_notes = $15,
+               compatibility = $7, arduino_guidance = $8, raspberry_pi_guidance = $9,
+               bin_location = $10, technical_specs = $11,
+               total_quantity = $12, unavailable_quantity = $13, protected_stock = $14,
+               max_active_per_team = $15, active = $16, admin_notes = $17,
               version = version + 1, updated_at = NOW()
         WHERE id = $1
         RETURNING *`,
       [componentId, input.name, input.description, input.imageUrl, input.imageAlt, input.category,
-        input.compatibility, input.binLocation, input.technicalSpecs, input.totalQuantity,
+        input.compatibility, input.arduinoGuidance, input.raspberryPiGuidance,
+        input.binLocation, input.technicalSpecs, input.totalQuantity,
         input.unavailableQuantity, input.protectedStock, input.maxActivePerTeam,
         input.active, input.adminNotes]
     );
     const updated = updatedResult.rows[0];
+    await replaceRelationships(componentId);
 
     await transaction.query(
       `INSERT INTO checkout_inventory_transactions
@@ -362,19 +567,12 @@ async function saveComponent(database, body, actor) {
        VALUES ($1, $2)`,
       [actor.id, `Updated inventory settings for ${input.name}.`]
     );
-    return componentView(updated);
+    return (await componentsView(transaction, [updated]))[0];
   });
 }
 
 async function submitOrder(database, body, actor) {
-  const rawItems = Array.isArray(body.items) ? body.items : [];
-  const normalized = new Map();
-
-  rawItems.forEach(function (item) {
-    const componentId = positiveInteger(item.componentId, "Component ID");
-    const quantity = positiveInteger(item.quantity, "Requested quantity");
-    normalized.set(componentId, (normalized.get(componentId) || 0) + quantity);
-  });
+  const normalized = normalizedOrderItems(body.items);
 
   if (!normalized.size) {
     throw httpError(400, "Add at least one component before submitting your order.");
@@ -465,6 +663,15 @@ async function submitOrder(database, body, actor) {
 
     if (errors.length) {
       throw httpError(409, "Your order could not be reserved. Adjust the highlighted items and try again.", { items: errors });
+    }
+
+    const advice = await cartAdvice(transaction, actor, Array.from(normalized, function (entry) {
+      return { componentId: entry[0], quantity: entry[1] };
+    }));
+    const blockers = advice.filter(function (item) { return item.severity === "required"; });
+
+    if (blockers.length) {
+      throw httpError(409, "Your order is missing required supporting hardware.", { advice: blockers });
     }
 
     const orderResult = await transaction.query(
@@ -1256,6 +1463,7 @@ async function activity(database) {
 
 module.exports = {
   catalog,
+  cartAdvice,
   createTeam,
   resetTeamPassword,
   saveComponent,

@@ -476,3 +476,77 @@ test("expired orders release their reservation and keep a receipt", async functi
   assert.equal(stored.reservedQuantity, 0);
   assert.equal(stored.availableQuantity, 2);
 });
+
+test("structured relationships drive cart advice and block missing required hardware", async function () {
+  const team = await request("create-team", {
+    name: "Relationship Test Team",
+    identifier: "relationship-test-team",
+    username: "relationship-test-team",
+    password: "relationship-test-2026"
+  }, adminCookie);
+  const driver = await request("save-component", {
+    name: "Relationship Test Driver",
+    description: "Dual motor driver used by the relationship test.",
+    imageUrl: "/images/checkout-image-pending.svg",
+    imageAlt: "Placeholder for the relationship test driver",
+    category: "Motor Related",
+    compatibility: "Arduino + Raspberry Pi",
+    arduinoGuidance: "Connect logic inputs to Arduino GPIO and use separate motor power.",
+    raspberryPiGuidance: "Use 3.3 V-compatible logic and a common ground.",
+    technicalSpecs: "Controls two motors.",
+    totalQuantity: 10,
+    unavailableQuantity: 0,
+    protectedStock: 0,
+    maxActivePerTeam: 4,
+    active: true
+  }, adminCookie);
+  const motor = await request("save-component", {
+    name: "Relationship Test Motor",
+    description: "DC motor used by the relationship test.",
+    imageUrl: "/images/checkout-image-pending.svg",
+    imageAlt: "Placeholder for the relationship test motor",
+    category: "Motor",
+    compatibility: "Arduino + Raspberry Pi",
+    arduinoGuidance: "Requires a motor driver; never connect directly to a GPIO pin.",
+    raspberryPiGuidance: "Requires a motor driver and external motor power.",
+    technicalSpecs: "Brushed DC motor.",
+    totalQuantity: 10,
+    unavailableQuantity: 0,
+    protectedStock: 0,
+    maxActivePerTeam: 6,
+    active: true,
+    relationships: [{
+      targetComponentId: driver.body.component.id,
+      relationType: "compatible_driver",
+      quantityRatio: 2,
+      minimumSourceQuantity: 1,
+      message: "Use one test driver for every two test motors."
+    }]
+  }, adminCookie);
+  assert.equal(team.status, 201);
+  assert.equal(driver.status, 201);
+  assert.equal(motor.status, 201);
+  assert.equal(motor.body.component.relationships[0].quantityRatio, 2);
+
+  const teamCookie = await login("relationship-test-team", "relationship-test-2026");
+  const advice = await request("cart-advice", {
+    items: [{ componentId: motor.body.component.id, quantity: 3 }]
+  }, teamCookie);
+  assert.equal(advice.status, 200);
+  assert.equal(advice.body.advice[0].severity, "required");
+  assert.equal(advice.body.advice[0].missingQuantity, 2);
+
+  const blocked = await request("submit-order", {
+    items: [{ componentId: motor.body.component.id, quantity: 3 }]
+  }, teamCookie);
+  assert.equal(blocked.status, 409);
+  assert.match(blocked.body.error, /missing required supporting hardware/i);
+
+  const submitted = await request("submit-order", {
+    items: [
+      { componentId: motor.body.component.id, quantity: 3 },
+      { componentId: driver.body.component.id, quantity: 2 }
+    ]
+  }, teamCookie);
+  assert.equal(submitted.status, 201);
+});

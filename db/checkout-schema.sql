@@ -32,6 +32,8 @@ CREATE TABLE IF NOT EXISTS checkout_components (
   image_alt TEXT NOT NULL DEFAULT '',
   category TEXT NOT NULL,
   compatibility TEXT NOT NULL CHECK (compatibility IN ('Arduino', 'Raspberry Pi', 'Arduino + Raspberry Pi', 'N/A')),
+  arduino_guidance TEXT NOT NULL DEFAULT '',
+  raspberry_pi_guidance TEXT NOT NULL DEFAULT '',
   bin_location TEXT NOT NULL DEFAULT '',
   technical_specs TEXT NOT NULL DEFAULT '',
   total_quantity INTEGER NOT NULL CHECK (total_quantity >= 0),
@@ -90,6 +92,19 @@ CREATE TABLE IF NOT EXISTS checkout_team_inventory (
   component_id BIGINT NOT NULL REFERENCES checkout_components(id),
   checked_out_quantity INTEGER NOT NULL DEFAULT 0 CHECK (checked_out_quantity >= 0),
   PRIMARY KEY (team_id, component_id)
+);
+
+CREATE TABLE IF NOT EXISTS checkout_component_relationships (
+  id BIGSERIAL PRIMARY KEY,
+  source_component_id BIGINT NOT NULL REFERENCES checkout_components(id) ON DELETE CASCADE,
+  target_component_id BIGINT NOT NULL REFERENCES checkout_components(id),
+  relation_type TEXT NOT NULL CHECK (relation_type IN ('requires', 'recommends', 'compatible_driver', 'compatible_power_supply')),
+  quantity_ratio NUMERIC(10, 3) NOT NULL DEFAULT 1 CHECK (quantity_ratio > 0),
+  minimum_source_quantity INTEGER NOT NULL DEFAULT 1 CHECK (minimum_source_quantity > 0),
+  message TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (source_component_id <> target_component_id),
+  UNIQUE (source_component_id, target_component_id, relation_type)
 );
 
 CREATE TABLE IF NOT EXISTS checkout_return_receipts (
@@ -159,12 +174,16 @@ CREATE INDEX IF NOT EXISTS checkout_orders_status_created_idx ON checkout_orders
 CREATE INDEX IF NOT EXISTS checkout_activity_created_idx ON checkout_activity(created_at DESC);
 CREATE INDEX IF NOT EXISTS checkout_transactions_created_idx ON checkout_inventory_transactions(created_at DESC);
 CREATE INDEX IF NOT EXISTS checkout_order_events_order_created_idx ON checkout_order_events(order_id, created_at);
+CREATE INDEX IF NOT EXISTS checkout_relationships_source_idx ON checkout_component_relationships(source_component_id);
+CREATE INDEX IF NOT EXISTS checkout_relationships_target_idx ON checkout_component_relationships(target_component_id);
 
 ALTER TABLE checkout_components ADD COLUMN IF NOT EXISTS image_alt TEXT NOT NULL DEFAULT '';
 ALTER TABLE checkout_components ADD COLUMN IF NOT EXISTS bin_location TEXT NOT NULL DEFAULT '';
 ALTER TABLE checkout_components ADD COLUMN IF NOT EXISTS technical_specs TEXT NOT NULL DEFAULT '';
 ALTER TABLE checkout_components ADD COLUMN IF NOT EXISTS protected_stock INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE checkout_components ADD COLUMN IF NOT EXISTS version INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE checkout_components ADD COLUMN IF NOT EXISTS arduino_guidance TEXT NOT NULL DEFAULT '';
+ALTER TABLE checkout_components ADD COLUMN IF NOT EXISTS raspberry_pi_guidance TEXT NOT NULL DEFAULT '';
 
 ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS receipt_code TEXT UNIQUE;
 ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS accepted_by BIGINT REFERENCES checkout_users(id);

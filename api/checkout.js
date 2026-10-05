@@ -207,6 +207,12 @@ async function handler(request, response) {
       return;
     }
 
+    if (action === "cart-advice") {
+      const team = requireUser(user, "team");
+      send(response, 200, { advice: await service.cartAdvice(database, team, body.items) });
+      return;
+    }
+
     if (action === "submit-order") {
       const team = requireUser(user, "team");
       const result = await runIdempotent(database, team, action, body, async function (transaction) {

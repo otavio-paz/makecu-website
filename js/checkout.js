@@ -9,6 +9,7 @@
     user: null,
     components: [],
     cart: {},
+    cartAdvice: [],
     dashboard: { orders: [], inventory: [], cooldownSeconds: 0 },
     adminOrders: [],
     teams: [],
@@ -275,6 +276,8 @@
         '<div class="checkout-component-body"><h2>' + escapeHtml(component.name) + "</h2>" +
         '<div class="checkout-tags">' + tagMarkup(component.category) + tagMarkup(component.compatibility) + "</div>" +
         '<p class="checkout-component-description">' + escapeHtml(component.description) + "</p>" +
+        (component.arduinoGuidance ? '<p class="checkout-compatibility-note"><strong>Arduino:</strong> ' + escapeHtml(component.arduinoGuidance) + "</p>" : "") +
+        (component.raspberryPiGuidance ? '<p class="checkout-compatibility-note"><strong>Raspberry Pi:</strong> ' + escapeHtml(component.raspberryPiGuidance) + "</p>" : "") +
         (component.technicalSpecs ? '<p class="checkout-form-note">' + escapeHtml(component.technicalSpecs) + "</p>" : "") +
         '<p class="checkout-stock' + stockClass + '">' + stockLabel + "</p>" + limit +
         '<div class="checkout-quantity-row"><button type="button" data-quantity-change="-1" aria-label="Remove one ' + escapeHtml(component.name) + '"' + (quantity === 0 ? " disabled" : "") + '>−</button><output aria-live="polite">' + quantity + '</output><button type="button" data-quantity-change="1" aria-label="Add one ' + escapeHtml(component.name) + '"' + (quantity >= maximum ? " disabled" : "") + ">+</button></div>" +
@@ -396,10 +399,26 @@
       return;
     }
 
-    submit.disabled = state.dashboard.cooldownSeconds > 0;
-    container.innerHTML = items.map(function (component) {
+    var requiredAdvice = state.cartAdvice.some(function (item) { return item.severity === "required"; });
+    submit.disabled = state.dashboard.cooldownSeconds > 0 || requiredAdvice;
+    var rows = items.map(function (component) {
       return '<div class="checkout-cart-row"><strong>' + escapeHtml(component.name) + '</strong><span>× ' + state.cart[component.id] + '</span><button type="button" data-cart-remove="' + component.id + '">Remove</button></div>';
     }).join("");
+    var advice = state.cartAdvice.length ? '<section class="checkout-cart-advice"><h3>Compatibility check</h3>' + state.cartAdvice.map(function (item) {
+      var action = item.canAddQuantity > 0
+        ? '<button class="checkout-button checkout-button-secondary" type="button" data-add-related="' + item.targetComponentId + '" data-add-related-quantity="' + item.canAddQuantity + '">Add ' + item.canAddQuantity + "</button>"
+        : "";
+      return '<article class="checkout-advice checkout-advice-' + item.severity + '"><strong>' + escapeHtml(item.severity.toUpperCase()) + '</strong><p>' + escapeHtml(item.message) + '</p><small>You have/reserved ' + item.currentQuantity + '; calculated need: ' + item.requiredQuantity + ".</small>" + action + "</article>";
+    }).join("") + "</section>" : "";
+    container.innerHTML = rows + advice;
+  };
+
+  var loadCartAdvice = async function () {
+    var items = Object.keys(state.cart).map(function (componentId) {
+      return { componentId: Number(componentId), quantity: state.cart[componentId] };
+    });
+    state.cartAdvice = items.length ? (await api("cart-advice", { items: items })).advice : [];
+    renderCart();
   };
 
   var teamTab = function (name) {
@@ -708,19 +727,31 @@
   });
 
   document.querySelector("[data-open-cart]").addEventListener("click", function () {
+    state.cartAdvice = [];
     renderCart();
     document.querySelector("[data-cart-error]").hidden = true;
     cartDialog.showModal();
+    loadCartAdvice().catch(function (error) { notify(error.message); });
   });
   document.querySelector("[data-cart-close]").addEventListener("click", function () { cartDialog.close(); });
   document.querySelector("[data-cart-items]").addEventListener("click", function (event) {
     var button = event.target.closest("[data-cart-remove]");
+    var relatedButton = event.target.closest("[data-add-related]");
 
     if (button) {
       delete state.cart[button.dataset.cartRemove];
       updateCartCounts();
       renderCart();
       renderCatalog();
+      loadCartAdvice().catch(function (error) { notify(error.message); });
+    } else if (relatedButton) {
+      var componentId = Number(relatedButton.dataset.addRelated);
+      var component = state.components.find(function (item) { return item.id === componentId; });
+      var next = (state.cart[componentId] || 0) + Number(relatedButton.dataset.addRelatedQuantity);
+      state.cart[componentId] = Math.min(componentMaximum(component), next);
+      updateCartCounts();
+      renderCatalog();
+      loadCartAdvice().catch(function (error) { notify(error.message); });
     }
   });
   document.querySelector("[data-submit-order]").addEventListener("click", async function (event) {
@@ -920,6 +951,28 @@
     }
   });
 
+  var relationshipRowMarkup = function (relationship, componentId) {
+    var targets = state.components.filter(function (item) { return item.id !== componentId; }).map(function (item) {
+      return '<option value="' + item.id + '"' + (relationship && relationship.targetComponentId === item.id ? " selected" : "") + '>' + escapeHtml(item.name) + "</option>";
+    }).join("");
+    var types = [
+      ["requires", "Requires (blocks checkout)"],
+      ["compatible_driver", "Compatible driver (blocks checkout)"],
+      ["compatible_power_supply", "Compatible power supply (warning)"],
+      ["recommends", "Recommends"]
+    ].map(function (type) {
+      return '<option value="' + type[0] + '"' + (relationship && relationship.relationType === type[0] ? " selected" : "") + '>' + type[1] + "</option>";
+    }).join("");
+
+    return '<div class="checkout-relationship-row"><label>Related component<select data-relationship-target>' + targets + '</select></label><label>Relationship<select data-relationship-type>' + types + '</select></label><label>Capacity<input data-relationship-ratio type="number" min="0.001" max="10000" step="0.001" value="' + escapeHtml(relationship ? relationship.quantityRatio : 1) + '"></label><label>Starts at quantity<input data-relationship-threshold type="number" min="1" value="' + escapeHtml(relationship ? relationship.minimumSourceQuantity : 1) + '"></label><label class="checkout-relationship-message">Participant message<input data-relationship-message maxlength="1000" value="' + escapeHtml(relationship ? relationship.message : "") + '" placeholder="Explain why this driver or supply is needed"></label><button class="checkout-icon-button" type="button" data-remove-relationship aria-label="Remove relationship">×</button></div>';
+  };
+
+  var renderRelationshipRows = function (relationships, componentId) {
+    document.querySelector("[data-relationship-rows]").innerHTML = relationships.map(function (relationship) {
+      return relationshipRowMarkup(relationship, componentId);
+    }).join("");
+  };
+
   var openComponentForm = function (component) {
     var form = document.querySelector("[data-component-form]");
     form.reset();
@@ -931,6 +984,8 @@
     form.imageAlt.value = component ? component.imageAlt : "";
     form.category.value = component ? component.category : categories[0];
     form.compatibility.value = component ? component.compatibility : "Arduino + Raspberry Pi";
+    form.arduinoGuidance.value = component ? component.arduinoGuidance : "";
+    form.raspberryPiGuidance.value = component ? component.raspberryPiGuidance : "";
     form.binLocation.value = component ? component.binLocation : "";
     form.technicalSpecs.value = component ? component.technicalSpecs : "";
     form.totalQuantity.value = component ? component.totalQuantity : 0;
@@ -942,8 +997,19 @@
     form.active.checked = component ? component.active : true;
     form.querySelector("[data-component-form-title]").textContent = component ? "Edit " + component.name : "Add component";
     form.querySelector("[data-component-error]").hidden = true;
+    renderRelationshipRows(component ? component.relationships : [], component ? component.id : null);
     componentDialog.showModal();
   };
+
+  document.querySelector("[data-add-relationship]").addEventListener("click", function () {
+    var form = document.querySelector("[data-component-form]");
+    var componentId = form.id.value ? Number(form.id.value) : null;
+    document.querySelector("[data-relationship-rows]").insertAdjacentHTML("beforeend", relationshipRowMarkup(null, componentId));
+  });
+  document.querySelector("[data-relationship-rows]").addEventListener("click", function (event) {
+    var button = event.target.closest("[data-remove-relationship]");
+    if (button) button.closest(".checkout-relationship-row").remove();
+  });
 
   document.querySelector("[data-new-component]").addEventListener("click", function () { openComponentForm(null); });
   document.querySelector("[data-inventory-table]").addEventListener("click", function (event) {
@@ -967,6 +1033,8 @@
       imageAlt: form.imageAlt.value,
       category: form.category.value,
       compatibility: form.compatibility.value,
+      arduinoGuidance: form.arduinoGuidance.value,
+      raspberryPiGuidance: form.raspberryPiGuidance.value,
       binLocation: form.binLocation.value,
       technicalSpecs: form.technicalSpecs.value,
       totalQuantity: Number(form.totalQuantity.value),
@@ -975,7 +1043,16 @@
       maxActivePerTeam: form.maxActivePerTeam.value ? Number(form.maxActivePerTeam.value) : null,
       adminNotes: form.adminNotes.value,
       changeReason: form.changeReason.value,
-      active: form.active.checked
+      active: form.active.checked,
+      relationships: Array.prototype.slice.call(form.querySelectorAll(".checkout-relationship-row")).map(function (row) {
+        return {
+          targetComponentId: Number(row.querySelector("[data-relationship-target]").value),
+          relationType: row.querySelector("[data-relationship-type]").value,
+          quantityRatio: Number(row.querySelector("[data-relationship-ratio]").value),
+          minimumSourceQuantity: Number(row.querySelector("[data-relationship-threshold]").value),
+          message: row.querySelector("[data-relationship-message]").value
+        };
+      })
     };
     errorElement.hidden = true;
     setBusy(button, true, "Saving…");

@@ -1,4 +1,4 @@
-const { CATEGORIES, COMPATIBILITY, RETURN_CONDITIONS } = require("./checkout-constants");
+const { CATEGORIES, COMPATIBILITY, RETURN_CONDITIONS, RELATIONSHIP_TYPES } = require("./checkout-constants");
 
 function cleanString(value, name, options) {
   const settings = options || {};
@@ -57,6 +57,8 @@ function componentInput(body) {
     imageAlt,
     category: oneOf(body.category, CATEGORIES, "Category"),
     compatibility: oneOf(body.compatibility, COMPATIBILITY, "Compatibility"),
+    arduinoGuidance: cleanString(body.arduinoGuidance, "Arduino guidance", { max: 2000, optional: true }),
+    raspberryPiGuidance: cleanString(body.raspberryPiGuidance, "Raspberry Pi guidance", { max: 2000, optional: true }),
     binLocation: cleanString(body.binLocation, "Bin location", { max: 240, optional: true }),
     technicalSpecs: cleanString(body.technicalSpecs, "Technical guidance", { max: 4000, optional: true }),
     totalQuantity: positiveInteger(body.totalQuantity, "Total quantity", true),
@@ -65,6 +67,22 @@ function componentInput(body) {
     maxActivePerTeam: max,
     active,
     adminNotes: cleanString(body.adminNotes, "Admin notes", { max: 2000, optional: true })
+  };
+}
+
+function relationshipInput(item) {
+  const ratio = Number(item.quantityRatio == null || item.quantityRatio === "" ? 1 : item.quantityRatio);
+
+  if (!Number.isFinite(ratio) || ratio <= 0 || ratio > 10000) {
+    throw httpError(400, "Relationship capacity ratio must be a number greater than zero.");
+  }
+
+  return {
+    targetComponentId: positiveInteger(item.targetComponentId, "Related component"),
+    relationType: oneOf(item.relationType, RELATIONSHIP_TYPES, "Relationship type"),
+    quantityRatio: ratio,
+    minimumSourceQuantity: positiveInteger(item.minimumSourceQuantity == null || item.minimumSourceQuantity === "" ? 1 : item.minimumSourceQuantity, "Relationship threshold"),
+    message: cleanString(item.message, "Relationship message", { max: 1000, optional: true })
   };
 }
 
@@ -91,4 +109,4 @@ function httpError(status, message, details) {
   return error;
 }
 
-module.exports = { cleanString, positiveInteger, oneOf, componentInput, returnInput, httpError };
+module.exports = { cleanString, positiveInteger, oneOf, componentInput, relationshipInput, returnInput, httpError };
