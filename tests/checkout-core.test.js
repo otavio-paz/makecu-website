@@ -599,3 +599,64 @@ test("admins can create a reason-required protected-stock exception order", asyn
     return item.message.indexOf("using protected stock") >= 0;
   }));
 });
+
+test("return mistakes are corrected with append-only correction receipts", async function () {
+  const team = await request("create-team", {
+    name: "Return Correction Team",
+    identifier: "return-correction-team",
+    username: "return-correction-team",
+    password: "correction-test-2026"
+  }, adminCookie);
+  const component = await request("save-component", {
+    name: "Correction Test Sensor",
+    description: "Sensor used to verify append-only return corrections.",
+    imageUrl: "/images/checkout-image-pending.svg",
+    imageAlt: "Placeholder for the correction test sensor",
+    category: "Sensor",
+    compatibility: "Arduino",
+    totalQuantity: 2,
+    unavailableQuantity: 0,
+    protectedStock: 0,
+    maxActivePerTeam: 2,
+    active: true
+  }, adminCookie);
+  const teamCookie = await login("return-correction-team", "correction-test-2026");
+  const submitted = await request("submit-order", {
+    items: [{ componentId: component.body.component.id, quantity: 1 }]
+  }, teamCookie);
+  const orderId = submitted.body.order.id;
+  await request("claim-order", { orderId }, adminCookie);
+  await request("accept-order", { orderId }, adminCookie);
+  await request("mark-ready", { orderId }, adminCookie);
+  await request("confirm-pickup", { orderId }, adminCookie);
+
+  const returned = await request("process-return", {
+    teamId: team.body.team.id,
+    items: [{ componentId: component.body.component.id, quantity: 1, condition: "good", note: "" }]
+  }, adminCookie);
+  assert.equal(returned.body.inventory.length, 0);
+  const returnReceipt = returned.body.returns[0];
+
+  const corrected = await request("correct-return", {
+    returnReceiptId: returnReceipt.id,
+    reason: "Volunteer selected returned instead of still with team.",
+    items: [{
+      originalReturnItemId: returnReceipt.items[0].id,
+      quantity: 1,
+      correctedCondition: "still_held",
+      note: "Team confirmed the sensor is still installed in its project."
+    }]
+  }, adminCookie);
+  assert.equal(corrected.status, 201);
+  assert.equal(corrected.body.inventory[0].checkedOutQuantity, 1);
+  assert.equal(corrected.body.returns[0].items[0].correctableQuantity, 0);
+  assert.equal(corrected.body.returnCorrections[0].items[0].correctedCondition, "still_held");
+  assert.match(corrected.body.returnCorrections[0].receiptCode, /^C-/);
+
+  const catalog = await request("catalog", {}, adminCookie);
+  const correctedComponent = catalog.body.components.find(function (item) {
+    return item.id === component.body.component.id;
+  });
+  assert.equal(correctedComponent.checkedOutQuantity, 1);
+  assert.equal(correctedComponent.availableQuantity, 1);
+});

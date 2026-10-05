@@ -128,6 +128,28 @@ CREATE TABLE IF NOT EXISTS checkout_return_items (
   component_name_snapshot TEXT NOT NULL DEFAULT ''
 );
 
+CREATE TABLE IF NOT EXISTS checkout_return_corrections (
+  id BIGSERIAL PRIMARY KEY,
+  receipt_code TEXT UNIQUE,
+  original_return_receipt_id BIGINT NOT NULL REFERENCES checkout_return_receipts(id),
+  team_id BIGINT NOT NULL REFERENCES checkout_teams(id),
+  processed_by BIGINT NOT NULL REFERENCES checkout_users(id),
+  reason TEXT NOT NULL CHECK (reason <> ''),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS checkout_return_correction_items (
+  id BIGSERIAL PRIMARY KEY,
+  correction_receipt_id BIGINT NOT NULL REFERENCES checkout_return_corrections(id) ON DELETE CASCADE,
+  original_return_item_id BIGINT NOT NULL REFERENCES checkout_return_items(id),
+  component_id BIGINT NOT NULL REFERENCES checkout_components(id),
+  quantity INTEGER NOT NULL CHECK (quantity > 0),
+  original_condition TEXT NOT NULL CHECK (original_condition IN ('good', 'damaged', 'missing')),
+  corrected_condition TEXT NOT NULL CHECK (corrected_condition IN ('still_held', 'good', 'damaged', 'missing')),
+  note TEXT NOT NULL DEFAULT '',
+  component_name_snapshot TEXT NOT NULL DEFAULT ''
+);
+
 CREATE TABLE IF NOT EXISTS checkout_order_events (
   id BIGSERIAL PRIMARY KEY,
   order_id BIGINT NOT NULL REFERENCES checkout_orders(id) ON DELETE CASCADE,
@@ -179,6 +201,8 @@ CREATE INDEX IF NOT EXISTS checkout_transactions_created_idx ON checkout_invento
 CREATE INDEX IF NOT EXISTS checkout_order_events_order_created_idx ON checkout_order_events(order_id, created_at);
 CREATE INDEX IF NOT EXISTS checkout_relationships_source_idx ON checkout_component_relationships(source_component_id);
 CREATE INDEX IF NOT EXISTS checkout_relationships_target_idx ON checkout_component_relationships(target_component_id);
+CREATE INDEX IF NOT EXISTS checkout_return_corrections_original_idx ON checkout_return_corrections(original_return_receipt_id);
+CREATE INDEX IF NOT EXISTS checkout_return_correction_items_original_idx ON checkout_return_correction_items(original_return_item_id);
 
 ALTER TABLE checkout_components ADD COLUMN IF NOT EXISTS image_alt TEXT NOT NULL DEFAULT '';
 ALTER TABLE checkout_components ADD COLUMN IF NOT EXISTS bin_location TEXT NOT NULL DEFAULT '';

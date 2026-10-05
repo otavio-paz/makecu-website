@@ -525,8 +525,17 @@
       return '<div class="checkout-return-row" data-return-component="' + item.componentId + '"><strong>' + escapeHtml(item.name) + '<span>Currently holding ' + item.checkedOutQuantity + '</span></strong><label>Return now<input type="number" min="0" max="' + item.checkedOutQuantity + '" value="0" data-return-quantity></label><label>Condition<select data-return-condition><option value="good">Good</option><option value="damaged">Damaged</option><option value="missing">Missing</option></select></label><label>Note<input maxlength="1000" placeholder="Required if damaged/missing" data-return-note></label></div>';
     }).join("") + '<div class="checkout-order-actions"><button class="checkout-button checkout-button-primary" type="button" data-process-return="' + detail.team.id + '">Process Return</button></div>' : '<p class="checkout-empty">This team has returned all checked-out hardware.</p>';
     var receipts = detail.returns.length ? detail.returns.map(function (receipt) {
-      return '<article class="checkout-receipt"><strong>' + escapeHtml(receipt.receiptCode || "R-" + receipt.id) + '</strong><p>' + formatDate(receipt.createdAt) + " · " + escapeHtml(receipt.processedBy) + '</p><p>' + receipt.items.map(function (item) { return item.quantity + " × " + escapeHtml(item.name) + " — " + escapeHtml(item.condition); }).join("<br>") + "</p></article>";
+      var correctableItems = receipt.items.filter(function (item) { return item.correctableQuantity > 0; });
+      var correctionForm = correctableItems.length ? '<details class="checkout-return-correction" data-correction-receipt="' + receipt.id + '"><summary>Correct this receipt</summary><p class="checkout-form-note">This adds a correction receipt; the original remains unchanged.</p>' + correctableItems.map(function (item) {
+        return '<div class="checkout-correction-row" data-correction-item="' + item.id + '"><strong>' + escapeHtml(item.name) + '<span>Original: ' + escapeHtml(item.condition) + ' · up to ' + item.correctableQuantity + '</span></strong><label>Quantity<input type="number" min="0" max="' + item.correctableQuantity + '" value="0" data-correction-quantity></label><label>Correct outcome<select data-correction-condition><option value="still_held">Still held by team</option><option value="good">Returned good</option><option value="damaged">Returned damaged</option><option value="missing">Missing</option></select></label><label>Item note<input maxlength="1000" data-correction-note placeholder="Required for damaged/missing"></label></div>';
+      }).join("") + '<label>Required correction reason<textarea rows="2" maxlength="500" data-correction-reason placeholder="What was entered incorrectly?"></textarea></label><div class="checkout-order-actions"><button class="checkout-button checkout-button-danger" type="button" data-correct-return="' + receipt.id + '">Record correction</button></div></details>' : "";
+      return '<article class="checkout-receipt"><strong>' + escapeHtml(receipt.receiptCode || "R-" + receipt.id) + '</strong><p>' + formatDate(receipt.createdAt) + " · " + escapeHtml(receipt.processedBy) + '</p><p>' + receipt.items.map(function (item) { return item.quantity + " × " + escapeHtml(item.name) + " — " + escapeHtml(item.condition) + (item.note ? " · " + escapeHtml(item.note) : ""); }).join("<br>") + "</p>" + correctionForm + "</article>";
     }).join("") : '<p class="checkout-empty">No return receipts yet.</p>';
+    var corrections = detail.returnCorrections && detail.returnCorrections.length ? detail.returnCorrections.map(function (correction) {
+      return '<article class="checkout-receipt checkout-correction-receipt"><strong>' + escapeHtml(correction.receiptCode) + '</strong><p>' + formatDate(correction.createdAt) + " · " + escapeHtml(correction.processedBy) + '</p><p><strong>Reason:</strong> ' + escapeHtml(correction.reason) + '</p><p>' + correction.items.map(function (item) {
+        return item.quantity + " × " + escapeHtml(item.name) + ": " + escapeHtml(item.originalCondition) + " → " + escapeHtml(item.correctedCondition.replace("_", " ")) + (item.note ? " · " + escapeHtml(item.note) : "");
+      }).join("<br>") + "</p></article>";
+    }).join("") : "";
     var orders = detail.orders.length ? detail.orders.map(function (order) {
       return '<button class="checkout-team-button" type="button" data-view-admin-order="' + order.id + '"><strong>Order #' + order.id + '</strong><small>' + escapeHtml(statusLabel(order.status)) + " · " + formatDate(order.createdAt) + "</small></button>";
     }).join("") : '<p class="checkout-empty">No orders yet.</p>';
@@ -536,7 +545,7 @@
       }).join("") + '<label>Required override reason<textarea maxlength="500" rows="2" data-override-reason placeholder="Why should protected stock be released for this team?"></textarea></label><div class="checkout-order-actions"><button class="checkout-button checkout-button-danger" type="button" data-create-protected-order="' + detail.team.id + '">Create exception order</button></div></details>'
       : "";
 
-    container.innerHTML = '<div class="checkout-order-card-header"><div><span class="checkout-kicker">TEAM</span><h2>' + escapeHtml(detail.team.name) + '</h2><p class="checkout-order-card-meta">' + escapeHtml(detail.team.identifier) + '</p></div><button class="checkout-button checkout-button-secondary" type="button" data-reset-password="' + detail.team.id + '">Reset password</button></div><h3 class="checkout-section-title">Currently Holding</h3>' + holding + protectedOrder + '<h3 class="checkout-section-title">Orders & Pickup History</h3>' + orders + '<h3 class="checkout-section-title">Return History</h3>' + receipts;
+    container.innerHTML = '<div class="checkout-order-card-header"><div><span class="checkout-kicker">TEAM</span><h2>' + escapeHtml(detail.team.name) + '</h2><p class="checkout-order-card-meta">' + escapeHtml(detail.team.identifier) + '</p></div><button class="checkout-button checkout-button-secondary" type="button" data-reset-password="' + detail.team.id + '">Reset password</button></div><h3 class="checkout-section-title">Currently Holding</h3>' + holding + protectedOrder + '<h3 class="checkout-section-title">Orders & Pickup History</h3>' + orders + '<h3 class="checkout-section-title">Return History</h3>' + receipts + corrections;
   };
 
   var loadTeamDetail = async function (teamId) {
@@ -887,6 +896,7 @@
     var resetButton = event.target.closest("[data-reset-password]");
     var orderButton = event.target.closest("[data-view-admin-order]");
     var protectedButton = event.target.closest("[data-create-protected-order]");
+    var correctionButton = event.target.closest("[data-correct-return]");
 
     try {
       if (returnButton) {
@@ -949,6 +959,35 @@
         });
         await Promise.all([loadTeamDetail(state.selectedTeamId), loadAdminOverview()]);
         notify("Protected-stock exception order created and assigned to you.");
+      } else if (correctionButton) {
+        var correctionContainer = correctionButton.closest("[data-correction-receipt]");
+        var correctionItems = Array.prototype.slice.call(correctionContainer.querySelectorAll("[data-correction-item]")).map(function (row) {
+          return {
+            originalReturnItemId: Number(row.dataset.correctionItem),
+            quantity: Number(row.querySelector("[data-correction-quantity]").value),
+            correctedCondition: row.querySelector("[data-correction-condition]").value,
+            note: row.querySelector("[data-correction-note]").value
+          };
+        }).filter(function (item) { return item.quantity > 0; });
+        var correctionReason = correctionContainer.querySelector("[data-correction-reason]").value.trim();
+
+        if (!correctionItems.length || !correctionReason) {
+          notify("Choose at least one item and enter the required correction reason.");
+          return;
+        }
+        if (!(await confirmAction("Record a return correction?", "The original receipt will remain unchanged. A new append-only correction receipt will update inventory and the team’s holdings.", "Record Correction"))) {
+          return;
+        }
+
+        setBusy(correctionButton, true, "Correcting…");
+        var correctedDetail = await mutate("correct-return", {
+          returnReceiptId: Number(correctionButton.dataset.correctReturn),
+          reason: correctionReason,
+          items: correctionItems
+        });
+        renderTeamDetail(correctedDetail);
+        await Promise.all([loadTeams(), loadAdminOverview()]);
+        notify("Append-only return correction recorded.");
       } else if (orderButton) {
         var result = await api("order", { orderId: Number(orderButton.dataset.viewAdminOrder) });
         openOrderReceipt(result.order);
@@ -961,6 +1000,9 @@
       }
       if (protectedButton) {
         setBusy(protectedButton, false);
+      }
+      if (correctionButton) {
+        setBusy(correctionButton, false);
       }
     }
   });

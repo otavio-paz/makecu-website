@@ -156,7 +156,7 @@ async function handler(request, response) {
       throw httpError(423, "New hardware orders are closed. Volunteers can still process returns.", { status });
     }
 
-    if (action === "process-return" && !status.returnsOpen) {
+    if ((action === "process-return" || action === "correct-return") && !status.returnsOpen) {
       throw httpError(423, "The hardware return period is closed.", { status });
     }
 
@@ -281,6 +281,10 @@ async function handler(request, response) {
     } else if (action === "process-return") {
       send(response, 201, await mutate(function (transaction) {
         return service.processReturn(transaction, body, admin);
+      }));
+    } else if (action === "correct-return") {
+      send(response, 201, await mutate(function (transaction) {
+        return service.correctReturn(transaction, body, admin);
       }));
     } else if (action === "create-protected-stock-order") {
       send(response, 201, await mutate(async function (transaction) {

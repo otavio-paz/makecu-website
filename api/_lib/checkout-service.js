@@ -1459,7 +1459,12 @@ async function teamAdminDetail(database, teamIdInput) {
   const items = await orderItems(database, orderIds);
   const returns = await database.query(
     `SELECT receipts.id, receipts.receipt_code, receipts.created_at, users.display_name AS processed_by,
-            items.component_id, items.quantity, items.condition, items.note,
+            items.id AS return_item_id, items.component_id, items.quantity, items.condition, items.note,
+            items.quantity - COALESCE((
+              SELECT SUM(correction_items.quantity)
+                FROM checkout_return_correction_items correction_items
+               WHERE correction_items.original_return_item_id = items.id
+            ), 0) AS correctable_quantity,
             COALESCE(NULLIF(items.component_name_snapshot, ''), components.name) AS name
        FROM checkout_return_receipts receipts
        JOIN checkout_users users ON users.id = receipts.processed_by
@@ -1484,10 +1489,48 @@ async function teamAdminDetail(database, teamIdInput) {
     }
 
     receiptMap.get(id).items.push({
+      id: Number(row.return_item_id),
       componentId: Number(row.component_id),
       name: row.name,
       quantity: Number(row.quantity),
       condition: row.condition,
+      note: row.note,
+      correctableQuantity: Number(row.correctable_quantity)
+    });
+  });
+  const corrections = await database.query(
+    `SELECT corrections.id, corrections.receipt_code, corrections.original_return_receipt_id,
+            corrections.reason, corrections.created_at, users.display_name AS processed_by,
+            items.quantity, items.original_condition, items.corrected_condition, items.note,
+            COALESCE(NULLIF(items.component_name_snapshot, ''), components.name) AS name
+       FROM checkout_return_corrections corrections
+       JOIN checkout_users users ON users.id = corrections.processed_by
+       JOIN checkout_return_correction_items items ON items.correction_receipt_id = corrections.id
+       JOIN checkout_components components ON components.id = items.component_id
+      WHERE corrections.team_id = $1
+      ORDER BY corrections.created_at DESC, items.id`,
+    [teamId]
+  );
+  const correctionMap = new Map();
+
+  corrections.rows.forEach(function (row) {
+    const id = Number(row.id);
+    if (!correctionMap.has(id)) {
+      correctionMap.set(id, {
+        id,
+        receiptCode: row.receipt_code || `C-${String(id).padStart(5, "0")}`,
+        originalReturnReceiptId: Number(row.original_return_receipt_id),
+        reason: row.reason,
+        createdAt: row.created_at,
+        processedBy: row.processed_by,
+        items: []
+      });
+    }
+    correctionMap.get(id).items.push({
+      name: row.name,
+      quantity: Number(row.quantity),
+      originalCondition: row.original_condition,
+      correctedCondition: row.corrected_condition,
       note: row.note
     });
   });
@@ -1520,7 +1563,8 @@ async function teamAdminDetail(database, teamIdInput) {
     orders: ordersResult.rows.map(function (order) {
       return orderView(order, items.get(Number(order.id)) || []);
     }),
-    returns: Array.from(receiptMap.values())
+    returns: Array.from(receiptMap.values()),
+    returnCorrections: Array.from(correctionMap.values())
   };
 }
 
@@ -1602,6 +1646,143 @@ async function processReturn(database, body, actor) {
   });
 }
 
+async function correctReturn(database, body, actor) {
+  const returnReceiptId = positiveInteger(body.returnReceiptId, "Return receipt ID");
+  const reason = cleanString(body.reason, "Correction reason", { max: 500 });
+  const items = (Array.isArray(body.items) ? body.items : []).map(function (item) {
+    const correctedCondition = String(item.correctedCondition || "");
+    const note = cleanString(item.note, "Correction note", { optional: true, max: 1000 });
+
+    if (!["still_held", "good", "damaged", "missing"].includes(correctedCondition)) {
+      throw httpError(400, "Corrected return condition is invalid.");
+    }
+    if ((correctedCondition === "damaged" || correctedCondition === "missing") && !note) {
+      throw httpError(400, `A note is required when corrected hardware is ${correctedCondition}.`);
+    }
+
+    return {
+      originalReturnItemId: positiveInteger(item.originalReturnItemId, "Original return item ID"),
+      quantity: positiveInteger(item.quantity, "Correction quantity"),
+      correctedCondition,
+      note
+    };
+  });
+
+  if (!items.length) {
+    throw httpError(400, "Choose at least one return item to correct.");
+  }
+
+  return database.transaction(async function (transaction) {
+    const receiptResult = await transaction.query(
+      "SELECT * FROM checkout_return_receipts WHERE id = $1 FOR UPDATE",
+      [returnReceiptId]
+    );
+    const originalReceipt = receiptResult.rows[0];
+
+    if (!originalReceipt) {
+      throw httpError(404, "Original return receipt not found.");
+    }
+
+    const correctionResult = await transaction.query(
+      `INSERT INTO checkout_return_corrections
+        (original_return_receipt_id, team_id, processed_by, reason)
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [returnReceiptId, originalReceipt.team_id, actor.id, reason]
+    );
+    const correction = correctionResult.rows[0];
+    const correctionCode = `C-${String(correction.id).padStart(5, "0")}`;
+    await transaction.query("UPDATE checkout_return_corrections SET receipt_code = $2 WHERE id = $1", [correction.id, correctionCode]);
+
+    for (const item of items.sort(function (a, b) { return a.originalReturnItemId - b.originalReturnItemId; })) {
+      const originalResult = await transaction.query(
+        `SELECT return_items.*, components.*,
+                return_items.id AS original_return_item_id,
+                return_items.quantity AS original_quantity,
+                return_items.condition AS original_condition,
+                COALESCE(NULLIF(return_items.component_name_snapshot, ''), components.name) AS snapshot_name
+           FROM checkout_return_items return_items
+           JOIN checkout_components components ON components.id = return_items.component_id
+          WHERE return_items.id = $1 AND return_items.return_receipt_id = $2
+          FOR UPDATE OF return_items, components`,
+        [item.originalReturnItemId, returnReceiptId]
+      );
+      const original = originalResult.rows[0];
+
+      if (!original) {
+        throw httpError(404, "An original return item was not found on this receipt.");
+      }
+      if (original.original_condition === item.correctedCondition) {
+        throw httpError(400, `${original.snapshot_name}: choose a condition different from the original return.`);
+      }
+
+      const correctedResult = await transaction.query(
+        `SELECT COALESCE(SUM(quantity), 0) AS quantity
+           FROM checkout_return_correction_items
+          WHERE original_return_item_id = $1`,
+        [item.originalReturnItemId]
+      );
+      const correctable = Number(original.original_quantity) - Number(correctedResult.rows[0].quantity);
+
+      if (item.quantity > correctable) {
+        throw httpError(409, `${original.snapshot_name}: only ${correctable} item(s) remain correctable on the original receipt.`);
+      }
+
+      const originalUnavailable = original.original_condition === "good" ? 0 : item.quantity;
+      const correctedUnavailable = item.correctedCondition === "damaged" || item.correctedCondition === "missing" ? item.quantity : 0;
+      const unavailableDelta = correctedUnavailable - originalUnavailable;
+      const checkedOutDelta = item.correctedCondition === "still_held" ? item.quantity : 0;
+      const physicalAvailable = Number(original.total_quantity) - Number(original.reserved_quantity) -
+        Number(original.checked_out_quantity) - Number(original.unavailable_quantity);
+
+      if (unavailableDelta + checkedOutDelta > physicalAvailable) {
+        throw httpError(409, `${original.snapshot_name}: inventory has since been allocated, so this correction cannot be applied safely.`);
+      }
+
+      await transaction.query(
+        `UPDATE checkout_components
+            SET checked_out_quantity = checked_out_quantity + $2,
+                unavailable_quantity = unavailable_quantity + $3,
+                updated_at = NOW()
+          WHERE id = $1`,
+        [original.component_id, checkedOutDelta, unavailableDelta]
+      );
+
+      if (checkedOutDelta) {
+        await transaction.query(
+          `INSERT INTO checkout_team_inventory (team_id, component_id, checked_out_quantity)
+           VALUES ($1, $2, $3)
+           ON CONFLICT (team_id, component_id) DO UPDATE
+             SET checked_out_quantity = checkout_team_inventory.checked_out_quantity + EXCLUDED.checked_out_quantity`,
+          [originalReceipt.team_id, original.component_id, checkedOutDelta]
+        );
+      }
+
+      await transaction.query(
+        `INSERT INTO checkout_return_correction_items
+          (correction_receipt_id, original_return_item_id, component_id, quantity,
+           original_condition, corrected_condition, note, component_name_snapshot)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [correction.id, item.originalReturnItemId, original.component_id, item.quantity,
+          original.original_condition, item.correctedCondition, item.note, original.snapshot_name]
+      );
+      await transaction.query(
+        `INSERT INTO checkout_inventory_transactions
+          (component_id, team_id, admin_id, actor_user_id, transaction_type, quantity, note)
+         VALUES ($1, $2, $3, $3, 'RETURN_CORRECTION', $4, $5)`,
+        [original.component_id, originalReceipt.team_id, actor.id, item.quantity,
+          `${correctionCode}: ${original.original_condition} -> ${item.correctedCondition}. ${reason}${item.note ? ` ${item.note}` : ""}`]
+      );
+    }
+
+    await transaction.query(
+      `INSERT INTO checkout_activity (actor_user_id, team_id, message)
+       VALUES ($1, $2, $3)`,
+      [actor.id, originalReceipt.team_id, `${actor.display_name} recorded ${correctionCode} correcting ${originalReceipt.receipt_code || `Return #${returnReceiptId}`}.`]
+    );
+    return teamAdminDetail(transaction, originalReceipt.team_id);
+  });
+}
+
 async function activity(database) {
   const result = await database.query(
     `SELECT activity.*, users.display_name AS actor_name, teams.name AS team_name
@@ -1642,5 +1823,6 @@ module.exports = {
   teamsList,
   teamAdminDetail,
   processReturn,
+  correctReturn,
   activity
 };
