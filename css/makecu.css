@@ -2040,6 +2040,14 @@ a {
   text-align: center;
 }
 
+.judge-recruitment-status {
+  color: var(--silver);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  margin: -18px 0 24px;
+  text-align: center;
+}
+
 .sponsor-tier {
   padding: 28px;
   text-align: center;
