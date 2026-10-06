@@ -281,6 +281,9 @@ layout: default
             {% endif %}
             <h3>{{ judge.name }}</h3>
             <p class="dialog-role">{{ judge.role }}</p>
+            {% if judge.email and judge.email != "" %}
+              <p class="judge-email"><a href="mailto:{{ judge.email }}">{{ judge.email }}</a></p>
+            {% endif %}
             <p class="judge-bio">{{ judge.bio }}</p>
           </div>
         </dialog>
