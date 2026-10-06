@@ -20,7 +20,7 @@ event:
   name: "MakeCU"
   year: 2026
   description: "Columbia University Robotics Club's 24-hour hardware hackathon for students who want to design, prototype, and demo real hardware projects."
-  past_event_photo: "/images/makecu-2025.png"
+  past_event_photo: "/images/makecu-2025.webp"
   past_projects_url: "https://makecu25.devpost.com/project-gallery"
   date: "November 7-8, 2026"
   countdown_target: "2026-11-07T09:00:00-05:00"
@@ -163,12 +163,12 @@ event:
         Aniket is a Robotics Engineer at Clarapath, focusing on controls and software development. Having participated in numerous hackathons during his own studies, he is passionate about hardware-software integration and is thrilled to mentor students through the rapid prototyping process.
     - name: "Ali Al-Bustami"
       role: "Robotics Research Lead at Midcentury Labs"
-      photo: "/images/judges/Ali-Al-Bustami.png"
+      photo: "/images/judges/Ali-Al-Bustami.webp"
       bio: >-
         Ali Al-Bustami is Robotics Research Lead at Midcentury Labs, where he leads the team's post-training and evaluation work for robot policies. His research sits at the intersection of computer vision, robotics, and foundation models, focused on egocentric perception, vision-language-action (VLA) models, and the benchmarks that make policy performance measurable.
     - name: "Brandon Samaroo"
       role: "Head of Research at Midcentury Labs"
-      photo: "/images/judges/Brandon-Samaroo.png"
+      photo: "/images/judges/Brandon-Samaroo.webp"
       bio: >-
         Brandon Samaroo is the Head of Research at Midcentury Labs, where he leads the company's world model program and a research team spanning robotics and simulation. His work spans world model training on large-scale egocentric manipulation data, neural rendering for sim-to-real transfer, and evaluation methodology for physical world models. His current focus is autoregressive neural rendering with diffusion models, training them to convert a simulator's geometry and material buffers into photorealistic video to better model the real world. His longer-term goal is to close the sim-to-real gap by replacing the hand-built parts of simulation with learned systems: neural renderers in place of rasterization and path tracing, and learned dynamics in place of physics solvers.
 
@@ -197,14 +197,14 @@ event:
     - tier: "Silver"
       sponsors:
         - name: "Clarapath"
-          logo: "/images/logos/Clarapath-Logo.png"
+          logo: "/images/logos/Clarapath-Logo.webp"
           url: "https://clarapath.com/"
           description: |
             **About Clarapath:** Clarapath is a medical robotics company based in Westchester County, NY. Our mission is to transform and modernize laboratory workflows with the goal of improving patient care, decreasing costs, and enhancing the quality and consistency of laboratory processes. SectionStar™ and TrimStar Pro™ by Clarapath are ground-breaking electro-mechanical systems designed to elevate and automate histology workflows and provide pathologists with the tissue samples they need to make the most accurate diagnoses. Through the use of innovative technology, data, and precision analytics, Clarapath is paving the way for a new era of laboratory medicine.
     - tier: "Bronze"
       sponsors:
         - name: "Tutor Intelligence"
-          logo: "/images/logos/Tutor-Intelligence-Logo.png"
+          logo: "/images/logos/Tutor-Intelligence-Logo.webp"
           url: "https://tutorintelligence.com/"
           description: |
             **About Tutor Intelligence:** We believe general-purpose, generally-intelligent robots will be built *in our lifetimes.* Robots will work in our factories, move our goods, walk on our streets and eventually be in our homes. To build that future, research and deployment must work in lockstep: real-world operation must make the technology better and better technology must make deployment easier. We're looking for the thinkers, builders, and researchers who want to be part of that loop.
@@ -222,7 +222,7 @@ event:
       linkedin_url: "https://www.linkedin.com/in/sarrah-kitchell/"
     - name: "Nehal Wadhwani"
       role: "Assistant Organizer"
-      photo: "/images/team/Nehal-Wadhwani.png"
+      photo: "/images/team/Nehal-Wadhwani.webp"
       linkedin_url: "https://www.linkedin.com/in/nehal-wadhwani/"
     - name: "Daniel Ye"
       photo: "/images/team/Daniel-Ye.jpg"
@@ -231,12 +231,12 @@ event:
       linkedin_url: "https://www.linkedin.com/in/danielyye/"
     - name: "Giana Castro"
       role: "Business"
-      photo: "/images/team/Giana-Castro.png"
+      photo: "/images/team/Giana-Castro.webp"
       bio: "Giana is a junior studying Computer Science at Columbia Engineering with a strong passion for STEM and community building. As CURC’s Career Chair and member of MakeCU’s Business Team, she facilitates sponsorship relations and connects with Columbia Engineering alumni to garner financial support for the event and to build greater industry liaisons for CURC"
       linkedin_url: "https://www.linkedin.com/in/gianacastro/"
     - name: "Otavio Paz"
       role: "Webmaster & Hacker Experience"
-      photo: "/images/team/Otavio-Paz.png"
+      photo: "/images/team/Otavio-Paz.webp"
       linkedin_url: "https://www.linkedin.com/in/otavio-paz/"
     - name: "Arnia Goode"
       role: "Hacker Experience"
