@@ -1,0 +1,546 @@
+{
+  "generatedFrom": "MakeCU Hardware List 2026.xlsx",
+  "sheet": "Full Inventory Check 10-4-26",
+  "items": [
+    {
+      "name": "Adafruit Microphone Breakout",
+      "sourceRow": 2,
+      "productUrl": "https://www.amazon.com/dp/B06XNL2GBW"
+    },
+    {
+      "name": "Audio Amplifier",
+      "sourceRow": 3,
+      "productUrl": "https://www.amazon.com/dp/B0BG2F3LMP"
+    },
+    {
+      "name": "Dweii Mini Speaker",
+      "sourceRow": 4,
+      "productUrl": "https://www.amazon.com/dp/B0B4D1BN4F"
+    },
+    {
+      "name": "Electret Condenser Microphone Pickup (2 Pins, 9×7mm)",
+      "sourceRow": 5,
+      "productUrl": "https://www.amazon.com/dp/B01N0VMN9P"
+    },
+    {
+      "name": "Tactile Push Buttons (Assorted)",
+      "sourceRow": 7,
+      "productUrl": "https://www.amazon.com/dp/B0BFWK5N8V"
+    },
+    {
+      "name": "Rocker Switch",
+      "sourceRow": 9,
+      "productUrl": "https://www.digikey.com/en/products/detail/adam-tech/SW-R3-1A-A-1-2/15284445"
+    },
+    {
+      "name": "Touch Button",
+      "sourceRow": 10,
+      "productUrl": "https://www.amazon.com/dp/B0BJDJP1ZR"
+    },
+    {
+      "name": "Arducam 5MP Camera",
+      "sourceRow": 11,
+      "productUrl": "https://www.amazon.com/dp/B012V1HEP4"
+    },
+    {
+      "name": "ESP (Wifi + Bluetooth) with Camera",
+      "sourceRow": 12,
+      "productUrl": "https://www.amazon.com/dp/B09TB1GJ7P"
+    },
+    {
+      "name": "USB Cameras",
+      "sourceRow": 13,
+      "productUrl": "https://www.amazon.com/dp/B0CLRJZG8D"
+    },
+    {
+      "name": "Pseudo-LiDAR Sensor",
+      "sourceRow": 14,
+      "productUrl": "https://www.amazon.com/dp/B088NVX2L7"
+    },
+    {
+      "name": "Ultrasonic Sensors",
+      "sourceRow": 15,
+      "productUrl": "https://www.amazon.com/dp/B0B1MJJLJP"
+    },
+    {
+      "name": "5V 650nm 5mW Red Dot Laser",
+      "sourceRow": 21,
+      "productUrl": "https://www.amazon.com/dp/B071FT9HSV"
+    },
+    {
+      "name": "50Pcs Potentiometer Kit",
+      "sourceRow": 22,
+      "productUrl": "https://www.amazon.com/dp/B0D72XYPYD"
+    },
+    {
+      "name": "DC 5V Relay Module",
+      "sourceRow": 31,
+      "productUrl": "https://www.amazon.com/dp/B0BHLDW9G5"
+    },
+    {
+      "name": "DC5V Black Mini Active Piezo Buzzers",
+      "sourceRow": 33,
+      "productUrl": "https://www.amazon.com/dp/B07VK1GJ9X"
+    },
+    {
+      "name": "Ethernet Breakout",
+      "sourceRow": 35,
+      "productUrl": "https://www.sparkfun.com/sparkfun-rj45-magjack-breakout.html"
+    },
+    {
+      "name": "JST Headers 4 pin female",
+      "sourceRow": 40,
+      "productUrl": "https://www.digikey.com/en/products/detail/jst-sales-america-inc/04JQ-BT/4918835"
+    },
+    {
+      "name": "JST Headers 8 pin male",
+      "sourceRow": 41,
+      "productUrl": "https://www.digikey.com/en/products/detail/jst-sales-america-inc/B4B-XH-A/1651047"
+    },
+    {
+      "name": "JST Headers 4 pin male",
+      "sourceRow": 42,
+      "productUrl": "https://www.digikey.com/en/products/detail/jst-sales-america-inc/B4B-PH-SM4-TB/926643"
+    },
+    {
+      "name": "LCD Display",
+      "sourceRow": 44,
+      "productUrl": "https://www.openhacks.com/uploadsproductos/eone-1602a1.pdf"
+    },
+    {
+      "name": "Pluggable Terminal Blocks",
+      "sourceRow": 53,
+      "productUrl": "https://www.digikey.com/en/products/detail/adam-tech/EBWA-02-A/9830631"
+    },
+    {
+      "name": "Solderless Breadboard",
+      "sourceRow": 63,
+      "productUrl": "https://us.elegoo.com/products/elegoo-3pcs-breadboard-830-point-solderless-prototype-pcb-board-kit"
+    },
+    {
+      "name": "Toggle Switch SPDT Panel Mount",
+      "sourceRow": 72,
+      "productUrl": "https://www.digikey.com/en/products/detail/c-k/E101SYZQE/484035"
+    },
+    {
+      "name": "Wireless Transmitter",
+      "sourceRow": 77,
+      "productUrl": "https://www.amazon.com/dp/B0BLTSSMXH"
+    },
+    {
+      "name": "XBee 3 PCB Antenna",
+      "sourceRow": 80,
+      "productUrl": "https://www.sparkfun.com/xbee-3-module-pcb-antenna.html"
+    },
+    {
+      "name": "Elegoo Kit",
+      "sourceRow": 82,
+      "productUrl": "https://www.amazon.com/dp/B01D8KOZF4"
+    },
+    {
+      "name": "Raspberry Pi 4 (1GB)",
+      "sourceRow": 83,
+      "productUrl": "https://www.adafruit.com/product/4295"
+    },
+    {
+      "name": "Raspberry Pi 5 (2GB)",
+      "sourceRow": 84,
+      "productUrl": "https://www.raspberrypi.com/products/raspberry-pi-5/"
+    },
+    {
+      "name": "Raspberry Pi 5 (4GB)",
+      "sourceRow": 85,
+      "productUrl": "https://www.raspberrypi.com/products/raspberry-pi-5/"
+    },
+    {
+      "name": "2000 Series Dual Mode servo",
+      "sourceRow": 86,
+      "productUrl": "https://www.gobilda.com/2000-series-dual-mode-servo-25-2-torque/"
+    },
+    {
+      "name": "550 Titan 12-Turn",
+      "sourceRow": 89,
+      "productUrl": "https://www.rcsuperstore.com/traxxas-550-titan-12-turn-motor/"
+    },
+    {
+      "name": "M200 Motor",
+      "sourceRow": 93,
+      "productUrl": "https://bluerobotics.com/store/thrusters/t100-t200-thrusters/m200-motor/"
+    },
+    {
+      "name": "MG90S",
+      "sourceRow": 94,
+      "productUrl": "https://www.amazon.com/dp/B07L6FZVT1"
+    },
+    {
+      "name": "S3004 servo",
+      "sourceRow": 97,
+      "productUrl": "https://www.amazon.com/dp/B001KAPMG6"
+    },
+    {
+      "name": "Type 130",
+      "sourceRow": 101,
+      "productUrl": "https://gikfun.com/products/gikfun-1-5v-6v-type-130-miniature-dc-motors-for-arduino-hobby-projects-diy-case-pack-of-6pcs"
+    },
+    {
+      "name": "Buck convertor (lipos to PIs)",
+      "sourceRow": 103,
+      "productUrl": "https://www.amazon.com/dp/B0CDWL97P3"
+    },
+    {
+      "name": "DC Barrel Jack to Female Thing",
+      "sourceRow": 104,
+      "productUrl": "https://www.amazon.com/dp/B079RCNNCK"
+    },
+    {
+      "name": "DC Motors",
+      "sourceRow": 105,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/11696/6163657"
+    },
+    {
+      "name": "L298N motor driver",
+      "sourceRow": 106,
+      "productUrl": "https://www.amazon.com/dp/B0C5JCF5RS"
+    },
+    {
+      "name": "Pump",
+      "sourceRow": 109,
+      "productUrl": "https://www.amazon.com/dp/B00HIX2PEG"
+    },
+    {
+      "name": "Vibration Motors",
+      "sourceRow": 110,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/316040004/5487673"
+    },
+    {
+      "name": "Ethernet Cable (1ft, 10GB)",
+      "sourceRow": 112,
+      "productUrl": "https://www.amazon.com/dp/B00C4U030G"
+    },
+    {
+      "name": "SD Cards (16GB)",
+      "sourceRow": 113,
+      "productUrl": "https://www.amazon.com/dp/B07XJVFVSJ"
+    },
+    {
+      "name": "XBee Dongle",
+      "sourceRow": 114,
+      "productUrl": "https://www.sparkfun.com/sparkfun-xbee-explorer-dongle.html"
+    },
+    {
+      "name": "3S Lipo Battery",
+      "sourceRow": 115,
+      "productUrl": "https://www.amazon.com/dp/B09CTSCWYM"
+    },
+    {
+      "name": "Battery Bank",
+      "sourceRow": 116,
+      "productUrl": "https://www.amazon.com/dp/B08T8TDS8S"
+    },
+    {
+      "name": "Wall power supply",
+      "sourceRow": 117,
+      "productUrl": "https://www.amazon.com/dp/B083GG2H6R"
+    },
+    {
+      "name": "10Pcs Pressure Resistance Strain Gauge",
+      "sourceRow": 118,
+      "productUrl": "https://www.amazon.com/dp/B07X87CJD8"
+    },
+    {
+      "name": "3MM Photodiode",
+      "sourceRow": 120,
+      "productUrl": "https://www.amazon.com/dp/B07VNSX74J"
+    },
+    {
+      "name": "41mm Piezo Disc",
+      "sourceRow": 121,
+      "productUrl": "https://www.amazon.com/dp/B0B2QSQNB2"
+    },
+    {
+      "name": "50kg Load Cell",
+      "sourceRow": 123,
+      "productUrl": "https://www.amazon.com/dp/B07B4DNJ2L"
+    },
+    {
+      "name": "5MM Phototransistor",
+      "sourceRow": 124,
+      "productUrl": "https://www.amazon.com/dp/B00M1PMHO4"
+    },
+    {
+      "name": "Encoder Sensor - slotted optical interrupter",
+      "sourceRow": 126,
+      "productUrl": "https://components101.com/sensors/moc7811-encoder-sensor-pinout-specification-working-application-datasheet"
+    },
+    {
+      "name": "Gesture Sensor",
+      "sourceRow": 127,
+      "productUrl": "https://www.amazon.com/dp/B083KNC1LF"
+    },
+    {
+      "name": "GPS Module",
+      "sourceRow": 128,
+      "productUrl": "https://www.amazon.com/dp/B0B31NRSD2"
+    },
+    {
+      "name": "Heart Rate Sensor",
+      "sourceRow": 129,
+      "productUrl": "https://www.amazon.com/dp/B07ZQNC8XP"
+    },
+    {
+      "name": "IMU",
+      "sourceRow": 130,
+      "productUrl": "https://www.amazon.com/dp/B00LP25V1A"
+    },
+    {
+      "name": "Light Dependent Resistor",
+      "sourceRow": 132,
+      "productUrl": "https://www.amazon.com/dp/B00N1ZJUN4"
+    },
+    {
+      "name": "Moisture sensor",
+      "sourceRow": 133,
+      "productUrl": "https://www.amazon.com/dp/B01DKISKLO"
+    },
+    {
+      "name": "MP503 Gas Sensor",
+      "sourceRow": 134,
+      "productUrl": "https://www.amazon.com/dp/B0D8KTLT8D"
+    },
+    {
+      "name": "Muscle Sensor",
+      "sourceRow": 135,
+      "productUrl": "https://myoware.com/products/muscle-sensor/"
+    },
+    {
+      "name": "Passive Infrared Sensor",
+      "sourceRow": 136,
+      "productUrl": "https://www.amazon.com/dp/B07KZW86YR"
+    },
+    {
+      "name": "RFID Kit",
+      "sourceRow": 140,
+      "productUrl": "https://www.amazon.com/dp/B07VLDSYRW"
+    },
+    {
+      "name": "Temperature Sensor",
+      "sourceRow": 141,
+      "productUrl": "https://www.amazon.com/dp/B0D11B8BXR"
+    },
+    {
+      "name": "Thin Film Pressure Sensor",
+      "sourceRow": 142,
+      "productUrl": "https://www.amazon.com/dp/B074QLDCXQ"
+    },
+    {
+      "name": "Tilt Switches",
+      "sourceRow": 143,
+      "productUrl": "https://www.digikey.com/en/products/detail/nkk-switches/DSBA1P/1014883"
+    },
+    {
+      "name": "Grove Button",
+      "sourceRow": 146,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020003/5487963"
+    },
+    {
+      "name": "Grove Touch Sensor",
+      "sourceRow": 147,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020014/5482603"
+    },
+    {
+      "name": "Logitech Webcams",
+      "sourceRow": 150,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/16299/17829508"
+    },
+    {
+      "name": "Mini Spy Camera 1528-1799-ND",
+      "sourceRow": 152,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/3202/6560939"
+    },
+    {
+      "name": "Echo DOT",
+      "sourceRow": 153,
+      "productUrl": "https://www.amazon.com/dp/B09B8V1LZ3"
+    },
+    {
+      "name": "Echo Show",
+      "sourceRow": 154,
+      "productUrl": "https://www.amazon.com/dp/B09B2SBHQK"
+    },
+    {
+      "name": "Google Home Mini",
+      "sourceRow": 155,
+      "productUrl": "https://www.bestbuy.com/site/home-mini-1st-generation-smart-speaker-with-google-assistant-chalk/6082194.p"
+    },
+    {
+      "name": "10k Trimmer",
+      "sourceRow": 157,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/09806/7319606"
+    },
+    {
+      "name": "1N5817 Diode",
+      "sourceRow": 158,
+      "productUrl": "https://www.digikey.com/en/products/detail/onsemi/1N5817/977004"
+    },
+    {
+      "name": "23904 Transistor",
+      "sourceRow": 159,
+      "productUrl": "https://www.digikey.com/en/products/detail/onsemi/2N3904BU/1413"
+    },
+    {
+      "name": "7 Segment Serial Display",
+      "sourceRow": 160,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/11441/5800412"
+    },
+    {
+      "name": "Breadboards",
+      "sourceRow": 161,
+      "productUrl": "https://www.digikey.com/en/products/detail/parallax-inc/700-00012/1774444"
+    },
+    {
+      "name": "Ceramic Capacitors (Assorted)",
+      "sourceRow": 162,
+      "productUrl": "https://www.digikey.com/en/products/detail/vishay-beyschlag-draloric-bc-components/HOTC-KIT-KH/5983098"
+    },
+    {
+      "name": "Display",
+      "sourceRow": 163,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/1694/5356810"
+    },
+    {
+      "name": "Grove LCD",
+      "sourceRow": 165,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/104030001/5487814"
+    },
+    {
+      "name": "Grove Wire",
+      "sourceRow": 167,
+      "productUrl": "https://www.digikey.com/en/products/detail/m5stack-technology-co-ltd/A096/16679751"
+    },
+    {
+      "name": "Joystick",
+      "sourceRow": 168,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/2765/6193582"
+    },
+    {
+      "name": "Load Cell Amplifier",
+      "sourceRow": 169,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/13879/6202732"
+    },
+    {
+      "name": "Resistor Kit",
+      "sourceRow": 173,
+      "productUrl": "https://www.digikey.com/en/products/detail/yageo/RS125/7108"
+    },
+    {
+      "name": "SparkFun Snappable protoboard",
+      "sourceRow": 175,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/13268/5623212"
+    },
+    {
+      "name": "Through Hole Mosfet",
+      "sourceRow": 176,
+      "productUrl": "https://www.digikey.com/en/products/detail/infineon-technologies/IRFZ44NPBF/811772"
+    },
+    {
+      "name": "DC Gearbox",
+      "sourceRow": 181,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/3777/8687221"
+    },
+    {
+      "name": "Grover Stepper Motor",
+      "sourceRow": 182,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/10551/5766908"
+    },
+    {
+      "name": "Grove Buzzer",
+      "sourceRow": 183,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/107020000/5487964"
+    },
+    {
+      "name": "Wire Spool",
+      "sourceRow": 184,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/11375/5956252"
+    },
+    {
+      "name": "Air Quality Sensor",
+      "sourceRow": 185,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/14193/7066452"
+    },
+    {
+      "name": "Barometer Sense Board",
+      "sourceRow": 186,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/1893/4990783"
+    },
+    {
+      "name": "Grove - Piezo Vibration Sensor",
+      "sourceRow": 187,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020031/5488092"
+    },
+    {
+      "name": "Grove 3 Axis Digital",
+      "sourceRow": 188,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/114020121/12090841"
+    },
+    {
+      "name": "Grove Light Sensor",
+      "sourceRow": 189,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020132/6558656"
+    },
+    {
+      "name": "Grove Rotary Angle Sensor",
+      "sourceRow": 190,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020017/5482577"
+    },
+    {
+      "name": "Grove Sound Sensor",
+      "sourceRow": 191,
+      "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020023/5482608"
+    },
+    {
+      "name": "IR Break Beam Sensor",
+      "sourceRow": 193,
+      "productUrl": "https://www.digikey.com/en/products/detail/dfrobot/SEN0503/15283061"
+    },
+    {
+      "name": "IR Break Beam Sensor 1528-2526-ND",
+      "sourceRow": 194,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/2168/8258463"
+    },
+    {
+      "name": "RGB Color Sensor with IR Filter",
+      "sourceRow": 196,
+      "productUrl": "https://www.digikey.com/en/products/detail/adafruit-industries-llc/1334/5629426"
+    },
+    {
+      "name": "SEN-14585 (fingerprint)",
+      "sourceRow": 197,
+      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/14585/8556288"
+    },
+    {
+      "name": "Curved Tweezers EROP7SA-ND",
+      "sourceRow": 198,
+      "productUrl": "https://www.digikey.com/en/products/detail/apex-tool-group/EROP7SA/114194"
+    },
+    {
+      "name": "Flush Cutters 170MN-ND",
+      "sourceRow": 200,
+      "productUrl": "https://www.digikey.com/en/products/detail/klein-tools-inc/D275-5/6596969"
+    },
+    {
+      "name": "Needle Nose Pliers 243-1215-ND",
+      "sourceRow": 202,
+      "productUrl": "https://www.digikey.com/en/products/detail/aven-tools/10314/1992427"
+    },
+    {
+      "name": "Pointed Tweezers EROPAASA-ND",
+      "sourceRow": 204,
+      "productUrl": "https://www.digikey.com/en/products/detail/apex-tool-group/EROPAASA/114196"
+    },
+    {
+      "name": "Wire Strippers K604-ND",
+      "sourceRow": 205,
+      "productUrl": "https://www.digikey.com/en/products/detail/jonard-tools/JIC-2030/2308356"
+    }
+  ]
+}
