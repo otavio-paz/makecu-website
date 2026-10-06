@@ -148,18 +148,6 @@ async function handler(request, response) {
       return;
     }
 
-    if (!status.live) {
-      throw httpError(423, "Hardware checkout is available only while the MakeCU hackathon is live.", { status });
-    }
-
-    if (action === "submit-order" && !status.orderingOpen) {
-      throw httpError(423, "New hardware orders are closed. Volunteers can still process returns.", { status });
-    }
-
-    if ((action === "process-return" || action === "correct-return") && !status.returnsOpen) {
-      throw httpError(423, "The hardware return period is closed.", { status });
-    }
-
     const database = await getDatabase();
 
     if (action === "login") {
@@ -178,6 +166,10 @@ async function handler(request, response) {
         throw httpError(401, "The username or password is incorrect.");
       }
 
+      if (!status.live && user.role !== "admin") {
+        throw httpError(423, "Team checkout is available only while the MakeCU hackathon is live.", { status });
+      }
+
       await createSession(database, response, user.id);
       send(response, 200, { user: publicUser(user) });
       return;
@@ -194,6 +186,18 @@ async function handler(request, response) {
     if (action === "me") {
       send(response, 200, { user: publicUser(requireUser(user)) });
       return;
+    }
+
+    if (!status.live && (!user || user.role !== "admin")) {
+      throw httpError(423, "Hardware checkout is available only while the MakeCU hackathon is live. Organizers may sign in with an admin account.", { status });
+    }
+
+    if (action === "submit-order" && !status.orderingOpen) {
+      throw httpError(423, "New hardware orders are closed. Volunteers can still process returns.", { status });
+    }
+
+    if ((action === "process-return" || action === "correct-return") && !status.returnsOpen && user.role !== "admin") {
+      throw httpError(423, "The hardware return period is closed.", { status });
     }
 
     if (action === "catalog") {

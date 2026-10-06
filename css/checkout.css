@@ -228,6 +228,13 @@
   font-size: 12px;
 }
 
+.checkout-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
 .checkout-window dd {
   font-weight: 700;
   margin: 4px 0 0;
