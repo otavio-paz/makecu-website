@@ -127,6 +127,9 @@ test("transactional order, pickup, damaged return, audit, and team isolation flo
 
   const firstCookie = await login("byte-builders", "byte-test-2026");
   const secondCookie = await login("robo-cats", "robo-test-2026");
+  const forbiddenAdminAccess = await request("admin-overview", {}, firstCookie);
+  assert.equal(forbiddenAdminAccess.status, 403);
+  assert.match(forbiddenAdminAccess.body.error, /permission/i);
   const componentId = component.body.component.id;
   const submissions = await Promise.all([
     request("submit-order", { items: [{ componentId, quantity: 1 }] }, firstCookie),

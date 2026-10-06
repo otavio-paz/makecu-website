@@ -3,6 +3,13 @@ const path = require("node:path");
 
 let databasePromise;
 
+function secureConnectionString(value) {
+  return String(value || "").replace(
+    /([?&])sslmode=(?:prefer|require|verify-ca)(?=&|$)/i,
+    "$1sslmode=verify-full"
+  );
+}
+
 function normalizeResult(result) {
   return {
     rows: result.rows || [],
@@ -52,8 +59,7 @@ async function createPgliteDatabase() {
 async function createPostgresDatabase() {
   const { Pool } = require("pg");
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : undefined,
+    connectionString: secureConnectionString(process.env.DATABASE_URL),
     max: 5
   });
 
@@ -118,4 +124,4 @@ async function resetDatabaseForTests() {
   databasePromise = undefined;
 }
 
-module.exports = { getDatabase, resetDatabaseForTests };
+module.exports = { getDatabase, resetDatabaseForTests, secureConnectionString };

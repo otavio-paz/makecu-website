@@ -13,6 +13,7 @@
     dashboard: { orders: [], inventory: [], cooldownSeconds: 0 },
     adminOrders: [],
     teams: [],
+    activity: [],
     selectedTeamId: null,
     activeAdminTab: "overview",
     mutationKeys: {},
@@ -32,6 +33,7 @@
   var confirmDialog = document.querySelector("[data-confirm-dialog]");
   var teamCreateDialog = document.querySelector("[data-team-create-dialog]");
   var componentDialog = document.querySelector("[data-component-dialog]");
+  var imageDialog = document.querySelector("[data-image-dialog]");
 
   try {
     state.mutationKeys = JSON.parse(window.sessionStorage.getItem("makecu-checkout-idempotency") || "{}");
@@ -167,12 +169,42 @@
     }
   };
 
+  var thumbnailUrl = function (url) {
+    return String(url || "").replace(
+      /^(\/images\/checkout\/components\/)(?!thumbnails\/)([^/?#]+\.webp)([?#].*)?$/i,
+      "$1thumbnails/$2$3"
+    );
+  };
+
   var imageMarkup = function (component) {
     if (component.imageUrl) {
-      return '<img src="' + escapeHtml(component.imageUrl) + '" alt="' + escapeHtml(component.imageAlt || component.name) + '">';
+      return '<img src="' + escapeHtml(thumbnailUrl(component.imageUrl)) + '" alt="' + escapeHtml(component.imageAlt || component.name) + '" loading="lazy" decoding="async">';
     }
 
     return '<span class="checkout-component-placeholder" aria-hidden="true">' + escapeHtml(component.name.slice(0, 2).toUpperCase()) + "</span>";
+  };
+
+  var inventoryImageMarkup = function (component) {
+    var content = imageMarkup(component);
+    var hasPreviewImage = component.imageUrl && !/\/checkout-image-pending\.svg(?:$|[?#])/.test(component.imageUrl);
+
+    if (!hasPreviewImage) {
+      return '<div class="checkout-inventory-thumbnail">' + content + "</div>";
+    }
+
+    return '<button class="checkout-inventory-thumbnail" type="button" data-preview-component="' + component.id + '" aria-label="View a larger image of ' + escapeHtml(component.name) + '">' + content + "</button>";
+  };
+
+  var openImagePreview = function (component) {
+    if (!component || !component.imageUrl || /\/checkout-image-pending\.svg(?:$|[?#])/.test(component.imageUrl)) {
+      return;
+    }
+
+    imageDialog.querySelector("[data-image-dialog-title]").textContent = component.name;
+    var image = imageDialog.querySelector("[data-image-dialog-image]");
+    image.src = component.imageUrl;
+    image.alt = component.imageAlt || component.name;
+    imageDialog.showModal();
   };
 
   var tagTone = function (value) {
@@ -212,7 +244,7 @@
 
   var itemImageMarkup = function (item) {
     if (item.imageUrl) {
-      return '<img src="' + escapeHtml(item.imageUrl) + '" alt="' + escapeHtml(item.imageAlt || "") + '">';
+      return '<img src="' + escapeHtml(thumbnailUrl(item.imageUrl)) + '" alt="' + escapeHtml(item.imageAlt || "") + '" loading="lazy" decoding="async">';
     }
 
     return '<span aria-hidden="true">' + escapeHtml(item.name.slice(0, 2).toUpperCase()) + "</span>";
@@ -555,9 +587,18 @@
   };
 
   var renderInventory = function () {
-    document.querySelector("[data-inventory-table]").innerHTML = state.components.map(function (component) {
-      return '<tr><td><div class="checkout-inventory-component"><div class="checkout-inventory-thumbnail">' + imageMarkup(component) + '</div><span><strong>' + escapeHtml(component.name) + '</strong><small>' + escapeHtml(component.category) + (component.active ? "" : " · Disabled") + '</small></span></div></td><td>' + component.availableQuantity + '</td><td>' + component.reservedQuantity + '</td><td>' + component.checkedOutQuantity + '</td><td>' + component.unavailableQuantity + '</td><td>' + component.totalQuantity + '</td><td><button class="checkout-button checkout-button-secondary" type="button" data-edit-component="' + component.id + '">Edit</button></td></tr>';
-    }).join("");
+    var search = document.querySelector("[data-inventory-search]").value.trim().toLowerCase();
+    var category = document.querySelector("[data-inventory-category-filter]").value;
+    var compatibility = document.querySelector("[data-inventory-compatibility-filter]").value;
+    var visible = state.components.filter(function (component) {
+      return (!search || component.name.toLowerCase().indexOf(search) >= 0) &&
+        (!category || component.category === category) &&
+        (!compatibility || component.compatibility === compatibility);
+    });
+
+    document.querySelector("[data-inventory-table]").innerHTML = visible.length ? visible.map(function (component) {
+      return '<tr><td><div class="checkout-inventory-component">' + inventoryImageMarkup(component) + '<span><strong>' + escapeHtml(component.name) + '</strong><small>' + escapeHtml(component.category) + ' · ' + escapeHtml(component.compatibility) + (component.active ? "" : " · Disabled") + '</small></span></div></td><td>' + component.availableQuantity + '</td><td>' + component.reservedQuantity + '</td><td>' + component.checkedOutQuantity + '</td><td>' + component.unavailableQuantity + '</td><td>' + component.totalQuantity + '</td><td><button class="checkout-button checkout-button-secondary" type="button" data-edit-component="' + component.id + '">Edit</button></td></tr>';
+    }).join("") : '<tr><td class="checkout-empty" colspan="7">No components match those filters.</td></tr>';
   };
 
   var loadInventory = async function () {
@@ -565,11 +606,21 @@
     renderInventory();
   };
 
-  var loadActivity = async function () {
-    var items = (await api("activity")).activity;
+  var renderActivity = function () {
+    var search = document.querySelector("[data-activity-search]").value.trim().toLowerCase();
+    var items = state.activity.filter(function (item) {
+      var haystack = [item.message, item.actorName, item.teamName, item.orderId == null ? "" : "order " + item.orderId, formatDate(item.createdAt)].join(" ").toLowerCase();
+      return !search || haystack.indexOf(search) >= 0;
+    });
+
     document.querySelector("[data-activity-list]").innerHTML = items.length ? items.map(function (item) {
       return '<li><time datetime="' + escapeHtml(item.createdAt) + '">' + formatDate(item.createdAt) + '</time><span>' + escapeHtml(item.message) + "</span></li>";
-    }).join("") : '<li class="checkout-empty">No activity yet.</li>';
+    }).join("") : '<li class="checkout-empty">' + (search ? "No activity matches that search." : "No activity yet.") + "</li>";
+  };
+
+  var loadActivity = async function () {
+    state.activity = (await api("activity")).activity;
+    renderActivity();
   };
 
   var renderDiscrepancyReport = function (report) {
@@ -911,6 +962,11 @@
     window.clearTimeout(teamSearchTimer);
     teamSearchTimer = window.setTimeout(function () { loadTeams().catch(function (error) { notify(error.message); }); }, 220);
   });
+
+  ["[data-inventory-search]", "[data-inventory-category-filter]", "[data-inventory-compatibility-filter]"].forEach(function (selector) {
+    document.querySelector(selector).addEventListener("input", renderInventory);
+  });
+  document.querySelector("[data-activity-search]").addEventListener("input", renderActivity);
   document.querySelector("[data-team-list]").addEventListener("click", function (event) {
     var button = event.target.closest("[data-select-team]");
 
@@ -1119,9 +1175,12 @@
 
   document.querySelector("[data-new-component]").addEventListener("click", function () { openComponentForm(null); });
   document.querySelector("[data-inventory-table]").addEventListener("click", function (event) {
+    var preview = event.target.closest("[data-preview-component]");
     var button = event.target.closest("[data-edit-component]");
 
-    if (button) {
+    if (preview) {
+      openImagePreview(state.components.find(function (component) { return component.id === Number(preview.dataset.previewComponent); }));
+    } else if (button) {
       openComponentForm(state.components.find(function (component) { return component.id === Number(button.dataset.editComponent); }));
     }
   });
@@ -1183,11 +1242,17 @@
   document.querySelectorAll("[data-dialog-close]").forEach(function (button) {
     button.addEventListener("click", function () { button.closest("dialog").close(); });
   });
+  imageDialog.addEventListener("click", function (event) {
+    if (event.target === imageDialog) {
+      imageDialog.close();
+    }
+  });
 
   var categoryOptions = categories.map(function (category) {
     return '<option value="' + escapeHtml(category) + '">' + escapeHtml(category) + "</option>";
   }).join("");
   document.querySelector("[data-category-filter]").insertAdjacentHTML("beforeend", categoryOptions);
+  document.querySelector("[data-inventory-category-filter]").insertAdjacentHTML("beforeend", categoryOptions);
   document.querySelector("[data-component-form] select[name=category]").innerHTML = categoryOptions;
 
   window.setInterval(function () {

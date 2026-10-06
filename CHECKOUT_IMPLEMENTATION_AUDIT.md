@@ -34,11 +34,11 @@ Production requires durable PostgreSQL through `DATABASE_URL`. Local development
 
 ### Authentication and permissions
 
-Users sign in with a username and password. Passwords use salted scrypt hashes. Successful login creates a random session token; only its SHA-256 hash is stored. The browser receives an HTTP-only, SameSite=Strict cookie lasting 18 hours.
+Four separate volunteer accounts (`admin-1` through `admin-4`) are provisioned with cryptographically random passwords by `npm run checkout:provision-admins`, which also deactivates the legacy generic `admin` login. Plaintext credentials exist only in a Git-ignored and Jekyll-excluded local handoff file; only salted scrypt hashes are stored in the database. Re-running provisioning is idempotent unless the explicit `--rotate` flag is used.
+
+The browser receives a random session token in an `HttpOnly`, `SameSite=Strict` cookie (`Secure` in production), while the database stores only its SHA-256 hash. Roles are enforced on every API route. A team session cannot reach the admin overview, inventory, team-management, activity, reporting, or fulfillment actions even if it constructs a request manually.
 
 Teams can browse active inventory, submit orders, view their receipts, and see current holdings. Admins can manage teams and inventory, claim and process orders, handle returns, and inspect activity.
-
-Each volunteer should have a separate admin account. Run the seed command with a different `CHECKOUT_ADMIN_USERNAME` and password for each volunteer.
 
 ### Event phases
 
@@ -80,23 +80,25 @@ Active components require both a photo and image description. Existing or seeded
 
 The local preview at `http://127.0.0.1:4173/checkout/` is populated from the `Full Inventory Check 10-4-26` sheet in `MakeCU Hardware List 2026.xlsx`:
 
+The admin inventory view supports name search plus category and compatibility tag filters. Desk Activity supports free-text search across messages, teams, volunteers, order numbers, and displayed dates. Page-level duplicate kickers were removed, the header uses the MakeCU robot logo, and the login screen reuses the main site's blue/orange animated circuit visual language.
+
 - 201 spreadsheet rows with a name and positive quantity;
-- 188 checkout items after consolidating case-insensitive duplicate names;
-- 1,453 total physical units;
+- 176 checkout items after approved consolidations, removing loose jumper-wire tracking, and adding Pin Headers;
+- 2,417 total tracked checkoutable units;
 - 13 categories.
 
 This catalog lives only in the ignored `checkout-catalog-preview-data/` PGlite database. It is not a production seed and is not committed to Git.
 
 For this preview, every item is active so the complete participant catalog can be reviewed. Public descriptions explain the component's function, likely project uses, primary interface, and any important connection or safety constraint. They were curated from the workbook's product links where available: 113 source rows contain hyperlinks, including 49 DigiKey listings, 48 Amazon listings, and 16 manufacturer, distributor, or datasheet links. Commodity parts without a link use conservative functional guidance and avoid unverified model-specific specifications. The repeatable description command is `npm run checkout:enrich-descriptions` with `CHECKOUT_BASE_URL`, `CHECKOUT_ADMIN_USERNAME`, and `CHECKOUT_ADMIN_PASSWORD` set. Original spreadsheet notes, usage notes, source/vendor, unit cost, source row numbers, and inventory-confirmation state remain in the admin-only notes field because several spreadsheet notes are informal and have not been approved for participants.
 
-The image importer uses the 111 unique linked component names recorded in `scripts/checkout-component-sources.json`. Running `npm run checkout:download-images` downloads a page's best available Open Graph, Twitter Card, or product-image candidate, rejects non-raster and very small responses, records provenance and failures in `images/checkout/components/download-manifest.json`, and updates matching catalog records through the audited admin API. The first pass produced:
+The image importer uses the 108 consolidated linked component names recorded in `scripts/checkout-component-sources.json`. Running `npm run checkout:download-images` downloads a page's best available Open Graph, Twitter Card, or product-image candidate, rejects non-raster and very small responses, records provenance and failures in `images/checkout/components/download-manifest.json`, and updates matching catalog records through the audited admin API. The first pass, before the approved component merges, produced:
 
-- 58 valid provisional images, all attached to the local catalog;
+- 58 valid provisional downloads; after consolidation and 29 organizer-provided local-image mappings, 85 catalog items currently have a non-placeholder photo;
 - 52 failed linked components: 50 DigiKey pages returned HTTP 403 to automated access, one discontinued Amazon URL returned HTTP 404, and one Best Buy page timed out;
 - one skipped LCD entry whose workbook link is a PDF datasheet rather than a product-photo page;
 - 77 components with no workbook hyperlink, which were not guessed or searched independently.
 
-The 58 files pass raster decoding and range from 265×265 upward. The remaining 130 cards retain `images/checkout-image-pending.svg` with item-specific accessible text. Supplier images are provisional references for organizer review; confirm the depicted revision and permission to publish each image, or replace it with a MakeCU-owned photo before production.
+All 87 retained component-photo assets are WebP and pass raster decoding. Converting the 74 JPEG/PNG sources reduced the component-photo directory from 9,454,886 bytes to 7,442,114 bytes (21.3%) without resizing. The 85 catalog items with a photo reference those optimized assets; the remaining 91 cards retain `images/checkout-image-pending.svg` with item-specific accessible text. Supplier images are provisional references for organizer review; confirm the depicted revision and permission to publish each image, or replace it with a MakeCU-owned photo before production.
 
 Import assumptions used for the preview:
 
@@ -211,7 +213,7 @@ Components have separate Arduino and Raspberry Pi guidance plus structured `requ
 
 The cart calculation counts checked-out hardware, active reservations, and the current cart. Missing required hardware blocks submission server-side; warnings and recommendations remain advisory. Teams can add the calculated missing quantity directly. Admins edit relationships in the inventory form.
 
-The local 188-item catalog has curated guidance on 25 motor, servo, controller, and Pi-related components and 15 driver/recommendation relationships. `npm run checkout:seed-relationships` reapplies this data idempotently after a catalog import.
+The local 176-item catalog has curated guidance on 25 motor, servo, controller, and Pi-related components and 15 driver/recommendation relationships. `npm run checkout:seed-relationships` reapplies this data idempotently after a catalog import. `npm run checkout:merge-components` transactionally reapplies the approved duplicate groups, including tactile buttons and ultrasonic sensors. The removal and local-image commands then drop untracked loose jumper-wire rows, add Pin Headers, and attach organizer-provided photos.
 
 ### Protected-stock exceptions
 
@@ -252,7 +254,7 @@ Team catalog, order, holding, and cooldown data refresh every five seconds. Admi
 
 ## Verification performed
 
-`npm test` currently passes 18 tests with zero failures. The suite covers:
+`npm test` currently passes 21 tests with zero failures. The suite covers:
 
 - live-window enforcement;
 - salted password hashing;
@@ -271,8 +273,11 @@ Team catalog, order, holding, and cooldown data refresh every five seconds. Admi
 - structured driver relationships and required-item blocking;
 - protected-stock exception orders;
 - append-only return corrections;
-- end-of-event reconciliation and mismatch detection.
-- idempotent package-to-piece inventory quantity corrections.
+- end-of-event reconciliation and mismatch detection;
+- idempotent package-to-piece inventory quantity corrections;
+- transactional, idempotent component consolidation without losing team holdings;
+- safe removal of unused loose-jumper inventory while preserving audit transactions;
+- idempotent organizer-photo attachment and Pin Headers creation.
 
 `npm run test:checkout:postgres` creates an isolated temporary schema and uses independent pooled PostgreSQL connections to test final-item races, same-team serialization, and three-admin claims. Without `CHECKOUT_POSTGRES_TEST_URL`, it skips safely rather than guessing at a database.
 
@@ -285,6 +290,8 @@ The local branch and locally known `origin/checkout` ref pointed to `f113f0b` be
 - Production provides durable PostgreSQL with permission to create and alter the checkout tables.
 - Checkout UI and API are served from the same origin over HTTPS.
 - Each volunteer uses a separate admin credential.
+- The source may merge into `gh-pages`, but production must still use Vercel or another same-origin backend host; GitHub Pages alone cannot execute the checkout API.
+- The public homepage intentionally has no navigation button to `/checkout/`; event staff distribute the direct link.
 - Organizers set all three event timestamps with explicit timezone offsets.
 - Final counts, limits, protected stock, bin locations, technical guidance, and images are verified against the physical inventory.
 - An active browser/API request occurs often enough for lazy reservation expiry. Unattended scheduled expiry and expiring-soon warnings were explicitly excluded.

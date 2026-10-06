@@ -295,3 +295,19 @@ exclude:
   - README.md
   - DEPLOYMENT.md
   - CNAME
+  - checkout-dev-data
+  - checkout-preview-data
+  - checkout-catalog-preview-data
+  - checkout-legacy-restore
+  - checkout-legacy-data.zip
+  - checkout-preview.log
+  - checkout-preview-error.log
+  - CHECKOUT_IMPLEMENTATION_AUDIT.md
+  - CHECKOUT_INVENTORY_QUANTITY_AUDIT.md
+  - checkout-admin-credentials.local.json
+  - checkout-admin-credentials.production.local.json
+  - .env.production.local
+  - images/checkout/components/download-manifest.json
+  - images/icons/leaf.psd
+  - images/icons/lightbulb.psd
+  - images/mascots/mascots.psd

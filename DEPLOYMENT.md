@@ -48,7 +48,28 @@ npm run test:checkout:postgres
 
 The suite creates and removes its own isolated schema while exercising simultaneous team reservations, same-team submissions, and three-admin order claims over independent pooled connections.
 
-After configuring the database, seed the first admin and sample catalog from a trusted local terminal:
+After configuring the database, provision the four volunteer accounts from a trusted local terminal:
+
+```powershell
+$env:DATABASE_URL="postgresql://..."
+npm run checkout:provision-admins
+```
+
+This creates `admin-1` through `admin-4` with independent 192-bit random passwords and deactivates the legacy generic `admin` login. Passwords are written only to the ignored and Jekyll-excluded `checkout-admin-credentials.local.json` file on that trusted computer and are never printed. Move the passwords into the club's approved password manager, distribute each account to one volunteer, then remove the local plaintext file after confirming the password-manager copy. Use `npm run checkout:provision-admins -- --rotate` only when all four passwords should change.
+
+The database stores salted scrypt password hashes, and signed-in browsers receive random sessions in `HttpOnly`, `SameSite=Strict`, and production-only `Secure` cookies. Only a SHA-256 hash of each session token is stored. Every volunteer endpoint checks the database role server-side; a team session receives HTTP 403 even if someone manually calls an admin endpoint. Same-origin validation and the strict cookie limit cross-site requests.
+
+For a new production database, import the finalized catalog snapshot once after provisioning the admins:
+
+```powershell
+$env:DATABASE_URL="postgresql://..."
+npm run checkout:import-catalog
+npm run checkout:verify-production
+```
+
+The importer is atomic and refuses to run unless the production component table is empty. The versioned snapshot contains inventory data only; it contains no users, passwords, sessions, or other secrets.
+
+If the sample catalog is needed, seed it separately from a trusted local terminal:
 
 ```powershell
 $env:DATABASE_URL="postgresql://..."
@@ -58,13 +79,15 @@ $env:CHECKOUT_ADMIN_NAME="Volunteer Name"
 npm run checkout:seed
 ```
 
-The API creates missing tables and applies additive checkout migrations idempotently. Running the seed command again updates the named admin's password and leaves existing inventory intact. Run the seed command once per volunteer username to create separate admin accounts. Set `CHECKOUT_SEED_SAMPLES=false` when production inventory should start empty.
+The API creates missing tables and applies additive checkout migrations idempotently. The older single-admin seed remains available for development compatibility, but competition volunteers should use the four separately provisioned accounts. Set `CHECKOUT_SEED_SAMPLES=false` when production inventory should start empty.
 
 Seeded sample components are inactive because active inventory requires a verified photo and image description. Add the final photo, alt text, bin location, stock counts, protected stock, and technical/power guidance in the Inventory screen before activating each item.
 
 Before the event, verify all three production window timestamps from `/api/checkout?action=status`, create unique credentials for every team in **Teams / Returns**, replace sample inventory, and run a rehearsal using at least two team sessions and three volunteer sessions. Test order competition, same-team submission competition, claim competition and takeover, accepted/ready separation, pickup versus cancellation, partial returns, damaged/missing handling, idempotent retries, stale inventory forms, automatic expiry, and the Activity trail.
 
 Vercel's Hobby plan is free for personal and small-scale projects, but Vercel's docs say it is restricted to non-commercial, personal use. If Columbia Robotics wants shared team access or official organization ownership, check whether the club should use a Vercel team or another free host such as GitHub Pages.
+
+The `checkout` branch is mergeable into `gh-pages` as source, and the main website intentionally contains no navigation link to `/checkout/`; organizers share that direct URL. However, GitHub Pages by itself only serves the static Jekyll frontend and cannot run `api/checkout.js` or PostgreSQL authentication. The branch that receives this code must still be deployed through Vercel (or an equivalent same-origin Node/serverless host) for the checkout to function.
 
 ## Connecting `makecu.dev`
 

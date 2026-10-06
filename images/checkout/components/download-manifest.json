@@ -19,11 +19,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B06XNL2GBW",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/adafruit-microphone-breakout-35aee45abc.jpg",
-      "bytes": 79657,
-      "sha256": "35aee45abc37616406fc5bb103aed5ca7f11e0423acf4aad04238d4bbeb3fd0b",
+      "localImage": "/images/checkout/components/adafruit-microphone-breakout-35aee45abc.webp",
+      "bytes": 60836,
+      "sha256": "55befc0a7cb92f0203592ad8a2355afead1ec00a3f7602689db9fffcb04ee8d7",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Audio Amplifier",
@@ -32,11 +33,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0BG2F3LMP",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/audio-amplifier-0b288614dc.jpg",
-      "bytes": 132027,
-      "sha256": "0b288614dc6dbb13baf65189f5596c6e1dcdf0464df57950cc1031439dd9c4b4",
+      "localImage": "/images/checkout/components/audio-amplifier-0b288614dc.webp",
+      "bytes": 116748,
+      "sha256": "246ae39daae55692906a3fb15f96c3f4d43bf7f15836aae491813efb5cc991f3",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Dweii Mini Speaker",
@@ -45,11 +47,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0B4D1BN4F",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/dweii-mini-speaker-088b32d022.jpg",
-      "bytes": 193017,
-      "sha256": "088b32d022e3172e1a8756a4ec4df884e168e0a706bdc7b59a1dc36c54bd2078",
+      "localImage": "/images/checkout/components/dweii-mini-speaker-088b32d022.webp",
+      "bytes": 164584,
+      "sha256": "8574c1447b5f6101749d74ea6f7dfe61c1e36cad938cf117fffbe6cf18b947e8",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Electret Condenser Microphone Pickup (2 Pins, 9×7mm)",
@@ -58,11 +61,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B01N0VMN9P",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/electret-condenser-microphone-pickup-2-pins-9-7mm-dc961f6a9c.jpg",
-      "bytes": 30004,
-      "sha256": "dc961f6a9c85e614664ab920c6024412da4ad024be50082aaf80ad6e16cbade3",
+      "localImage": "/images/checkout/components/electret-condenser-microphone-pickup-2-pins-9-7mm-dc961f6a9c.webp",
+      "bytes": 23302,
+      "sha256": "565e1b0f9a45d6f1e059dbffb7ff6f192402145e1f7390d6860112061f4e5073",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "OCR 180Pcs Tactile Push Button Switch 10 Values 6x6mm Micro Momentary Tact Button Switches Assortment Kit",
@@ -71,11 +75,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B01MRP025V",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/ocr-180pcs-tactile-push-button-switch-10-values-6x6mm-micro-momentary-tact-butto-b17186cf0c.jpg",
-      "bytes": 152478,
-      "sha256": "b17186cf0cec4f6b374cf5805557a229c3e47b0ffce28666b180d767803432f3",
+      "localImage": "/images/checkout/components/ocr-180pcs-tactile-push-button-switch-10-values-6x6mm-micro-momentary-tact-butto-b17186cf0c.webp",
+      "bytes": 114096,
+      "sha256": "c788e4f029f1f65e03e29957593f5c1c4b3f6d263eda83e1a818139e19d3c627",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "240 Pcs 24 Value Micro Momentary Tactile Switch Assortment Kit",
@@ -84,11 +89,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0BFWK5N8V",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/240-pcs-24-value-micro-momentary-tactile-switch-assortment-kit-40a2c27505.jpg",
-      "bytes": 231324,
-      "sha256": "40a2c2750589cc3f5e5ee706eeeed6061358a74353465596c2a913ea6350d2a0",
+      "localImage": "/images/checkout/components/240-pcs-24-value-micro-momentary-tactile-switch-assortment-kit-40a2c27505.webp",
+      "bytes": 197642,
+      "sha256": "0a726bc52332a5161368051decb9915d202acb628eecb2de1d7bb9642bbdfd1a",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Push Buttons",
@@ -97,11 +103,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0BFWK5N8V",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/push-buttons-40a2c27505.jpg",
-      "bytes": 231324,
-      "sha256": "40a2c2750589cc3f5e5ee706eeeed6061358a74353465596c2a913ea6350d2a0",
+      "localImage": "/images/checkout/components/push-buttons-40a2c27505.webp",
+      "bytes": 197642,
+      "sha256": "0a726bc52332a5161368051decb9915d202acb628eecb2de1d7bb9642bbdfd1a",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Rocker Switch",
@@ -117,11 +124,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0BJDJP1ZR",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/touch-button-cbee73a0b9.jpg",
-      "bytes": 319644,
-      "sha256": "cbee73a0b97e60679dedf102d6a8c6efb80d1a2a95ec95ee53d4c1b8d80c5d98",
+      "localImage": "/images/checkout/components/touch-button-cbee73a0b9.webp",
+      "bytes": 279226,
+      "sha256": "a848a3509dfe8351111e1217f805f811fa90118e32322f6024c4cb6e1177fad2",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Arducam 5MP Camera",
@@ -130,11 +138,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B012V1HEP4",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/arducam-5mp-camera-943309f5b0.jpg",
-      "bytes": 58903,
-      "sha256": "943309f5b0c88f44654890f77cf2645a71c84c0c56a3e390e7559ce9c4918e23",
+      "localImage": "/images/checkout/components/arducam-5mp-camera-943309f5b0.webp",
+      "bytes": 52436,
+      "sha256": "01e8404066709b444e0df60b8c61031d2c82a6165ca62c10672ffc727d2c1f5f",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "ESP (Wifi + Bluetooth) with Camera",
@@ -143,11 +152,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B09TB1GJ7P",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/esp-wifi-bluetooth-with-camera-64644159d2.jpg",
-      "bytes": 112696,
-      "sha256": "64644159d2b8b63e92d25af1d6fb18fe9904af4725bd9024a16a410b72113e5d",
+      "localImage": "/images/checkout/components/esp-wifi-bluetooth-with-camera-64644159d2.webp",
+      "bytes": 93560,
+      "sha256": "7ef2c60afc26c76b6eac3800bf2b5be2b9d86003bd0d3c247421313eb39650ae",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "USB Cameras",
@@ -156,11 +166,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0CLRJZG8D",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/usb-cameras-f2b2ff9234.jpg",
-      "bytes": 129947,
-      "sha256": "f2b2ff92341dff53564ed6133f62fa00c211a005ae4d87a89ac95d64ec9328ed",
+      "localImage": "/images/checkout/components/usb-cameras-f2b2ff9234.webp",
+      "bytes": 93788,
+      "sha256": "6df1c8eae06486d49f986c6d0a880e47770c97a40079a977fd332ff527d289d3",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Pseudo-LiDAR Sensor",
@@ -169,11 +180,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B088NVX2L7",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/pseudo-lidar-sensor-59bd5673cf.jpg",
-      "bytes": 83236,
-      "sha256": "59bd5673cf48f579eb41df05d1a5dda95140f4841a48fdd7f3ee7b54642188a9",
+      "localImage": "/images/checkout/components/pseudo-lidar-sensor-59bd5673cf.webp",
+      "bytes": 53960,
+      "sha256": "51b44a86f811082154800d83babcbf10e0a4e6aa0a716ad84fa71351d468a8bd",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Ultrasonic Sensor",
@@ -182,11 +194,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0B1MJJLJP",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/ultrasonic-sensor-3b04496e58.jpg",
-      "bytes": 229505,
-      "sha256": "3b04496e585db1545975b33c38fc2063b21d445dea9552deb1fd88e05f61d129",
+      "localImage": "/images/checkout/components/ultrasonic-sensor-3b04496e58.webp",
+      "bytes": 180254,
+      "sha256": "ca88a6510ab07c2737ce1d2e8d912a72296a772644db61c82bd777fd7fdd0432",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "5V 650nm 5mW Red Dot Laser",
@@ -195,11 +208,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B071FT9HSV",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/5v-650nm-5mw-red-dot-laser-f5aa19241c.jpg",
-      "bytes": 92066,
-      "sha256": "f5aa19241c43f9cdec2c1c3493da304c5491312aa5f6e0e4d4ce3e3730ba13ec",
+      "localImage": "/images/checkout/components/5v-650nm-5mw-red-dot-laser-f5aa19241c.webp",
+      "bytes": 78994,
+      "sha256": "7a769ff39c3e2fea925fe25d327e4a03cc094fe5c8c8fc554ee12bc4d3df55db",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "50Pcs Potentiometer Kit",
@@ -208,11 +222,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0D72XYPYD",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/50pcs-potentiometer-kit-13de19a5a6.jpg",
-      "bytes": 341711,
-      "sha256": "13de19a5a63ea26996051b47cc8ccc608c49f3c8b2edd895031e47a3c0f774a0",
+      "localImage": "/images/checkout/components/50pcs-potentiometer-kit-13de19a5a6.webp",
+      "bytes": 297516,
+      "sha256": "5296d128d9e5825795e5e8eac4e24f42a57f1da6831895faa8bfbbf845f52791",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "DC 5V Relay Module",
@@ -221,11 +236,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0BHLDW9G5",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/dc-5v-relay-module-8fc21de642.jpg",
-      "bytes": 354054,
-      "sha256": "8fc21de642a5eabdab2b2f1ded900d7c718c29b31589079678d6be68380ad630",
+      "localImage": "/images/checkout/components/dc-5v-relay-module-8fc21de642.webp",
+      "bytes": 310456,
+      "sha256": "ec5512b5f4540b0929fd136e3abe31e1f3b070f468d1fe919008fa3694f31d30",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "DC5V Black Mini Active Piezo Buzzers",
@@ -234,11 +250,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B07VK1GJ9X",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/dc5v-black-mini-active-piezo-buzzers-a16e9d58e8.jpg",
-      "bytes": 113257,
-      "sha256": "a16e9d58e8c5057a23c2bef9b73d11edbca9c85dff79e4da712d4553b3fd267b",
+      "localImage": "/images/checkout/components/dc5v-black-mini-active-piezo-buzzers-a16e9d58e8.webp",
+      "bytes": 81250,
+      "sha256": "e61e9a35d0f37a28776cb03601d5111a8c4343e77665e3a1578439ef05748008",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Ethernet Breakout",
@@ -315,11 +332,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0BLTSSMXH",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/wireless-transmitter-6bc3329a17.jpg",
-      "bytes": 263802,
-      "sha256": "6bc3329a17954fe78fb5c639ff18b3230a3dcbeebd35165c0671eb49fe7ea7fa",
+      "localImage": "/images/checkout/components/wireless-transmitter-6bc3329a17.webp",
+      "bytes": 238418,
+      "sha256": "e26d512d38cce97e868523991b6a261fbe73eb38c27b03f7826a65cd42e45487",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "XBee 3 PCB Antenna",
@@ -341,11 +359,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B01D8KOZF4",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/elegoo-kit-ad63d27dcb.jpg",
-      "bytes": 356819,
-      "sha256": "ad63d27dcb3d512e4a9c298291d0ac02b16d2aded41cbd407be7d271adec17fe",
+      "localImage": "/images/checkout/components/elegoo-kit-ad63d27dcb.webp",
+      "bytes": 307908,
+      "sha256": "b2582b2401462b306b10c05aa8789ec63b0500e1561d29902f25cc49d90a29b5",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Raspberry Pi 4 (1GB)",
@@ -354,11 +373,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.adafruit.com/product/4295",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/raspberry-pi-4-1gb-1071788d0f.jpg",
-      "bytes": 24138,
-      "sha256": "1071788d0ff938566131b637fb1f3fcc4d67c6ceb371d7a72a86ab0221ec320a",
+      "localImage": "/images/checkout/components/raspberry-pi-4-1gb-1071788d0f.webp",
+      "bytes": 15678,
+      "sha256": "2cc1a08eb673956930390c9fa3e37ec5459d38342de5862ab6735077f610d369",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Raspberry Pi 5 (2GB)",
@@ -381,11 +401,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.gobilda.com/2000-series-dual-mode-servo-25-2-torque/",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/2000-series-dual-mode-servo-53dd980af7.jpg",
-      "bytes": 33766,
-      "sha256": "53dd980af7e0b6318a6af3e433c04613eb582b957afa0bdef9f208fc98444fe8",
+      "localImage": "/images/checkout/components/2000-series-dual-mode-servo-53dd980af7.webp",
+      "bytes": 14572,
+      "sha256": "263cc119b2bd0601c1efb44d6c6d0e4fb224d3f41a62d54689362bd00bac186f",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "550 Titan 12-Turn",
@@ -394,11 +415,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.rcsuperstore.com/traxxas-550-titan-12-turn-motor/",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/550-titan-12-turn-71cc81dc3b.jpg",
-      "bytes": 23055,
-      "sha256": "71cc81dc3b9cec2e82f1ccda838c2e4a141caa27a83f8f9826bacde7296ccff0",
+      "localImage": "/images/checkout/components/550-titan-12-turn-71cc81dc3b.webp",
+      "bytes": 10914,
+      "sha256": "c1000b49008bcf6a846fc654ae5f10c2f3ec0ba68f9905541db044769760019a",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "M200 Motor",
@@ -420,11 +442,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B07L6FZVT1",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/mg90s-ca2c80be85.jpg",
-      "bytes": 154198,
-      "sha256": "ca2c80be85995e0d8df56360c27fef682e59da08c54ab605050a9700f9df11d9",
+      "localImage": "/images/checkout/components/mg90s-ca2c80be85.webp",
+      "bytes": 123810,
+      "sha256": "79c5fb84e6f8ef062e45e3ac72e588d2c70844b5007c05487a964a90f87e4e0d",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "S3004 servo",
@@ -433,11 +456,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B001KAPMG6",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/s3004-servo-0c0cc2418d.jpg",
-      "bytes": 44218,
-      "sha256": "0c0cc2418dbb6fa8ad44dd2f1015c844c6f0618edd2a1b15555e07fe9e84acbd",
+      "localImage": "/images/checkout/components/s3004-servo-0c0cc2418d.webp",
+      "bytes": 29534,
+      "sha256": "7afc14b12597d1031b88296163a6f98355e139a787aa2d87ab2d02693e39221d",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Type 130",
@@ -459,11 +483,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0CDWL97P3",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/buck-convertor-lipos-to-pis-004150b944.jpg",
-      "bytes": 45186,
-      "sha256": "004150b944bb86118ae486b096bfe8bc74cec95e6adba3c6574c3516723468d8",
+      "localImage": "/images/checkout/components/buck-convertor-lipos-to-pis-004150b944.webp",
+      "bytes": 30494,
+      "sha256": "00ca993afa54860a556a95dd21a1825bf7f36acceae972c3b20d1663592a7a5e",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "DC Barrel Jack to Female Thing",
@@ -472,11 +497,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B079RCNNCK",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/dc-barrel-jack-to-female-thing-3a7f25dbbd.jpg",
-      "bytes": 183651,
-      "sha256": "3a7f25dbbd474760152dd95d5ff6e8eba61234170e6b5196176d8010e01417fb",
+      "localImage": "/images/checkout/components/dc-barrel-jack-to-female-thing-3a7f25dbbd.webp",
+      "bytes": 171296,
+      "sha256": "e411c9bbb5e53803f0531205449154e76d38d25befcc19f78dc160f8de4d9429",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "DC Motors",
@@ -492,11 +518,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0C5JCF5RS",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/l298n-motor-driver-9d4caaf959.jpg",
-      "bytes": 199863,
-      "sha256": "9d4caaf959f371fc76464bb2ca649ed028fc91e87596267d5edf97c58fb89d99",
+      "localImage": "/images/checkout/components/l298n-motor-driver-9d4caaf959.webp",
+      "bytes": 166276,
+      "sha256": "96421072830ea3786ae5e9f048ae44a399c4f2c59bdda3141ca6094b7bd17d40",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Pump",
@@ -505,11 +532,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B00HIX2PEG",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/pump-ec48374e4c.jpg",
-      "bytes": 57050,
-      "sha256": "ec48374e4cf3ee28f68bc94ca5c50b0f2526f43ed1cbedc9951be8ad6b0e3735",
+      "localImage": "/images/checkout/components/pump-ec48374e4c.webp",
+      "bytes": 21938,
+      "sha256": "8d3ec9d1208fd48069c35ee2f5e3206a3df6eecafb53fc5144c37dabfe79bfe0",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Vibration Motors",
@@ -525,11 +553,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B00C4U030G",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/ethernet-cable-1ft-10gb-c45b23f17e.jpg",
-      "bytes": 86917,
-      "sha256": "c45b23f17ef40b9224644e20fd90b412920cde751b71afba3514f344b48527d2",
+      "localImage": "/images/checkout/components/ethernet-cable-1ft-10gb-c45b23f17e.webp",
+      "bytes": 70878,
+      "sha256": "7b900a0b26dc368f4d0c2eb0c5ff888584b0e519110cc00582fd4828928fb928",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "SD Cards (16GB)",
@@ -538,11 +567,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B07XJVFVSJ",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/sd-cards-16gb-7b04c914da.jpg",
-      "bytes": 166437,
-      "sha256": "7b04c914dafdbffcf65407c637950c69af0751c17aafbfe08e4e9fafb0919a2c",
+      "localImage": "/images/checkout/components/sd-cards-16gb-7b04c914da.webp",
+      "bytes": 104730,
+      "sha256": "ef01f90b3f34c9e195d38818a70d8876783020d6c533b7535d3891d9a551a3a9",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "XBee Dongle",
@@ -571,11 +601,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B08T8TDS8S",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/battery-bank-f4fecd4b1b.jpg",
-      "bytes": 114830,
-      "sha256": "f4fecd4b1b6891898153477704c4f0c3a1e254065f1fc8f5d9616e7163d50b77",
+      "localImage": "/images/checkout/components/battery-bank-f4fecd4b1b.webp",
+      "bytes": 106580,
+      "sha256": "cbc69751a76e63fb5801e62f91f19f60f39d0962f2ed88b6b7acf3b83eb3c25c",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Wall power supply",
@@ -584,11 +615,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B083GG2H6R",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/wall-power-supply-cbdbf49bb3.jpg",
-      "bytes": 154605,
-      "sha256": "cbdbf49bb3c466b22ac42dc4e6f28fc28d2d36784050856ace2701771b08acee",
+      "localImage": "/images/checkout/components/wall-power-supply-cbdbf49bb3.webp",
+      "bytes": 121636,
+      "sha256": "f77e4cb334d651e984058de20e1b370fab06193ffb2b0b5d99536f3032749b2b",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "10Pcs Pressure Resistance Strain Gauge",
@@ -597,11 +629,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B07X87CJD8",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/10pcs-pressure-resistance-strain-gauge-c552a0d623.jpg",
-      "bytes": 108427,
-      "sha256": "c552a0d623ee202dbd285f88615fe30d514ae99faec8898d443096f8a299ee48",
+      "localImage": "/images/checkout/components/10pcs-pressure-resistance-strain-gauge-c552a0d623.webp",
+      "bytes": 64656,
+      "sha256": "ffeb095364fe9ba06c21239871c3780db848e1a836c7dba01886970e93b7ef11",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "3MM Photodiode",
@@ -610,11 +643,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B07VNSX74J",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/3mm-photodiode-ee69df6e45.jpg",
-      "bytes": 29038,
-      "sha256": "ee69df6e45f3988969803e4bb720ecdf9e75c71036047ddaa2a4cd33b4695dd2",
+      "localImage": "/images/checkout/components/3mm-photodiode-ee69df6e45.webp",
+      "bytes": 8886,
+      "sha256": "c36496c41cac4100b705df3fc7bec1f1035428116f7ccfcf7ebf42d28aa81612",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "41mm Piezo Disc",
@@ -623,11 +657,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0B2QSQNB2",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/41mm-piezo-disc-4ea0af1606.jpg",
-      "bytes": 129439,
-      "sha256": "4ea0af1606fc04fb0938f6f6af3fec51d7e931146b9b2638dc84e0f50f6314cd",
+      "localImage": "/images/checkout/components/41mm-piezo-disc-4ea0af1606.webp",
+      "bytes": 90198,
+      "sha256": "7f6e066128713f36e09b3d9cb8a39dd44795c35266379aa307b45fa390e2de95",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "50kg Load Cell",
@@ -636,11 +671,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B07B4DNJ2L",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/50kg-load-cell-463ca96d2d.jpg",
-      "bytes": 89207,
-      "sha256": "463ca96d2d01d8263542790311302185931ff8948842cb7df8a28fcd7616c79c",
+      "localImage": "/images/checkout/components/50kg-load-cell-463ca96d2d.webp",
+      "bytes": 73182,
+      "sha256": "b639d596320703800d0e71acc9704192aed5f62c8d8c567493f517fe6debb99a",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "5MM Phototransistor",
@@ -649,11 +685,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B00M1PMHO4",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/5mm-phototransistor-4b24f42062.jpg",
-      "bytes": 43074,
-      "sha256": "4b24f42062954eecab81e9f3e902dda344dc6bef15249f8da580440909efd59a",
+      "localImage": "/images/checkout/components/5mm-phototransistor-4b24f42062.webp",
+      "bytes": 25402,
+      "sha256": "d7a7451b3b6eb7874475506b84b192f38a9fe1bfb650a230c810b62bef585375",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Encoder Sensor - slotted optical interrupter",
@@ -662,11 +699,12 @@
       "status": "downloaded",
       "sourcePage": "https://components101.com/sensors/moc7811-encoder-sensor-pinout-specification-working-application-datasheet",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/encoder-sensor-slotted-optical-interrupter-99bdfec7d9.jpg",
-      "bytes": 61100,
-      "sha256": "99bdfec7d984aa923dd4d1d63f10455899fd8ec4352e865c352c21204ac6b918",
+      "localImage": "/images/checkout/components/encoder-sensor-slotted-optical-interrupter-99bdfec7d9.webp",
+      "bytes": 11496,
+      "sha256": "69a3f7dee2a331074b6c8adc53427b0ea4cbb451f07cf872536d52afaaea0bb9",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Gesture Sensor",
@@ -675,11 +713,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B083KNC1LF",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/gesture-sensor-fcc81be590.jpg",
-      "bytes": 147011,
-      "sha256": "fcc81be59039817c879f71e288960f98b1871b680fc8275e56613ffa759328af",
+      "localImage": "/images/checkout/components/gesture-sensor-fcc81be590.webp",
+      "bytes": 77578,
+      "sha256": "5e647b463ec598b1fb9651598c89625f53d857f55c8886d60f465a6ca412623e",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "GPS Module",
@@ -688,11 +727,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0B31NRSD2",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/gps-module-6b5efbd326.jpg",
-      "bytes": 216484,
-      "sha256": "6b5efbd3261a64a01f66ceb111e410561bcd6fc70b983c35dff9e3a1739d0566",
+      "localImage": "/images/checkout/components/gps-module-6b5efbd326.webp",
+      "bytes": 183588,
+      "sha256": "740708422017a41399d454a83123c281b9ff4dad3fd9ca294e080c104a21e5e0",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Heart Rate Sensor",
@@ -701,11 +741,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B07ZQNC8XP",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/heart-rate-sensor-f4f5247f2b.jpg",
-      "bytes": 55278,
-      "sha256": "f4f5247f2b651a9b2757ae543d579d845c63a83000292f4f8c40cc63e2c85285",
+      "localImage": "/images/checkout/components/heart-rate-sensor-f4f5247f2b.webp",
+      "bytes": 38112,
+      "sha256": "2e375c4799bdaa1e039bf95e174115d80ed9a079ebde404c3f2d05175b6a2124",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "IMU",
@@ -714,11 +755,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B00LP25V1A",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/imu-2ec4382c97.jpg",
-      "bytes": 82101,
-      "sha256": "2ec4382c9747fe5ae2eef1c21f2768740d6fcdc8d4d522d41b7f68020b86d484",
+      "localImage": "/images/checkout/components/imu-2ec4382c97.webp",
+      "bytes": 57762,
+      "sha256": "80afe4fedb847107549133e0845cec2db3d94f09d815af0722ab7cc0d4834382",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Light Dependent Resistor",
@@ -727,11 +769,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B00N1ZJUN4",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/light-dependent-resistor-b02ad257f9.jpg",
-      "bytes": 43722,
-      "sha256": "b02ad257f9f450a515d7f1ee5defb75626792af67ae78dc3fb07b8dc2bf16ba9",
+      "localImage": "/images/checkout/components/light-dependent-resistor-b02ad257f9.webp",
+      "bytes": 29864,
+      "sha256": "e711dc7c2991a8b9ca610e646ae8f3af5ad0e165fe00b4fad8d499f5990d36a1",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Moisture sensor",
@@ -740,11 +783,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B01DKISKLO",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/moisture-sensor-2cd6b101b1.jpg",
-      "bytes": 125137,
-      "sha256": "2cd6b101b120ec6fcffcbfdf58279a45b193f5e7b526965e4f7998029f4393b5",
+      "localImage": "/images/checkout/components/moisture-sensor-2cd6b101b1.webp",
+      "bytes": 88906,
+      "sha256": "3954d7d386029db25bfbf7f7665736dde2b2bfbf43a36add426f324b1996632d",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "MP503 Gas Sensor",
@@ -753,11 +797,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0D8KTLT8D",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/mp503-gas-sensor-09bc627285.jpg",
-      "bytes": 102424,
-      "sha256": "09bc62728525fce5c6459302c4d433a183f2da5114e94033406dca38622f400e",
+      "localImage": "/images/checkout/components/mp503-gas-sensor-09bc627285.webp",
+      "bytes": 76342,
+      "sha256": "fcbce805178372066cce935ebabae43c254cd90a4ac3dd79646db3209fe3396c",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Muscle Sensor",
@@ -766,11 +811,12 @@
       "status": "downloaded",
       "sourcePage": "https://myoware.com/products/muscle-sensor/",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/muscle-sensor-816b60a273.jpg",
-      "bytes": 49057,
-      "sha256": "816b60a27319037744f50e23adb6b3c9111469276e6b58fdf1635d04883a4028",
+      "localImage": "/images/checkout/components/muscle-sensor-816b60a273.webp",
+      "bytes": 27996,
+      "sha256": "385d178de12e88d1318efa974416ee4e449c8ba34bb7dcfb80cd1295c5d92413",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Passive Infrared Sensor",
@@ -779,11 +825,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B07KZW86YR",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/passive-infrared-sensor-c3a062ef66.jpg",
-      "bytes": 43015,
-      "sha256": "c3a062ef66b922b6cedfedead674beb5810ea3407dbe9fd08ff5dd5ab5bafd73",
+      "localImage": "/images/checkout/components/passive-infrared-sensor-c3a062ef66.webp",
+      "bytes": 27822,
+      "sha256": "1bff3817b1b867450d1e658af22ca66a9c530373a69aaeaa320fc1e036a9ac51",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "RFID Kit",
@@ -792,11 +839,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B07VLDSYRW",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/rfid-kit-6d8da4a11c.jpg",
-      "bytes": 59730,
-      "sha256": "6d8da4a11c3fa14fd85388e2966ef86e8203bef012d464568aa1ca86c09fcee1",
+      "localImage": "/images/checkout/components/rfid-kit-6d8da4a11c.webp",
+      "bytes": 46254,
+      "sha256": "f1322f958d5be7204cb7cc628e9fe2ab5b890a0dca07eb5bed72446c115b7780",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Temperature Sensor",
@@ -805,11 +853,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B0D11B8BXR",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/temperature-sensor-4eb3fbdfb7.jpg",
-      "bytes": 203314,
-      "sha256": "4eb3fbdfb797390f14fa997f8b40a4fa83abe0de8caa260378be6c0d5a01d5d3",
+      "localImage": "/images/checkout/components/temperature-sensor-4eb3fbdfb7.webp",
+      "bytes": 148364,
+      "sha256": "ee2216feb30d6444404674ecea0b7e0f7f7c0447a92ea972f291f42ff579c96b",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Thin Film Pressure Sensor",
@@ -818,11 +867,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B074QLDCXQ",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/thin-film-pressure-sensor-407654e9d8.jpg",
-      "bytes": 45279,
-      "sha256": "407654e9d82df16269f8f3273e7cbb9e7dfd18618aef55d4049a31ac1e12b435",
+      "localImage": "/images/checkout/components/thin-film-pressure-sensor-407654e9d8.webp",
+      "bytes": 23088,
+      "sha256": "716f4e3495a8b885a72c3ba0ab6ff0d1ee07d3c79d13c3b5c2ecf22c94385128",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Tilt Switches",
@@ -866,11 +916,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B09B8V1LZ3",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/echo-dot-ad6cd5b555.jpg",
-      "bytes": 79259,
-      "sha256": "ad6cd5b5557a9528d35b43c01e84db4fa74dfb6192b2dacbd9a2b0480669e23d",
+      "localImage": "/images/checkout/components/echo-dot-ad6cd5b555.webp",
+      "bytes": 53128,
+      "sha256": "92adf06836a688e3ad7f77da54e0586b52ea3c381ca6405de41265fd3c341e91",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Echo Show",
@@ -879,11 +930,12 @@
       "status": "downloaded",
       "sourcePage": "https://www.amazon.com/dp/B09B2SBHQK",
       "sourceImage": null,
-      "localImage": "/images/checkout/components/echo-show-809687c221.jpg",
-      "bytes": 181337,
-      "sha256": "809687c2216bcdbc3b66f6a6416452bc79607bf0c01de28c7f7b2125f8cdb570",
+      "localImage": "/images/checkout/components/echo-show-809687c221.webp",
+      "bytes": 176496,
+      "sha256": "0efd5c09aac586b6495dde1c690578734fef07bf92a7886cfea5a82b4b9ee28e",
       "candidateReason": "recovered-from-previous-download",
-      "catalogStatus": "already-current"
+      "catalogStatus": "already-current",
+      "mimeType": "image/webp"
     },
     {
       "name": "Google Home Mini",

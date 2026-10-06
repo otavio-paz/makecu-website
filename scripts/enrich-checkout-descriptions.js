@@ -6,6 +6,12 @@ const descriptions = {
   "Dweii Mini Speaker": "Compact JST-PH wired loudspeaker for alarms, tones, and speech output. It needs an amplifier board; a GPIO pin should not drive it directly.",
   "Electret Condenser Microphone Pickup (2 Pins, 9×7mm)": "Two-pin 9×7 mm electret microphone capsule for analog sound sensing. Use a bias/preamp circuit, and add an ADC when connecting it to a Raspberry Pi.",
 
+  "Tactile Push Buttons (Assorted)": "Assorted 6×6 mm momentary tactile push buttons in multiple actuator heights for breadboard controls, reset inputs, and compact user interfaces.",
+  "Ceramic Capacitors (Assorted)": "Assorted non-polarized ceramic capacitors for decoupling, filtering, and timing circuits. Check the marked capacitance and voltage rating when selecting a part.",
+  "DC-DC Converters": "Adjustable DC-DC converter modules for changing one DC voltage to another. Verify each module's input range, output setting, polarity, and current limit before connecting a load.",
+  "Ultrasonic Sensors": "HC-SR04-style ultrasonic distance sensors for non-contact ranging, obstacle detection, and tank-level prototypes. Protect 3.3 V GPIO from a 5 V echo output when required.",
+  "Pin Headers": "Breakaway male pin-header strips for adding board connections, making adapters, and exposing signals. Cut or snap off the required number of positions and solder them in place.",
+
   "240 Pcs 24 Value Micro Momentary Tactile Switch Assortment Kit": "Assorted momentary tactile switches in multiple actuator heights for breadboard controls, reset inputs, and compact user interfaces.",
   "Grove Button": "Grove momentary push-button module with a ready-to-use digital output. Connect it through a Grove cable or base shield for a simple user input.",
   "Grove Touch Sensor": "Grove capacitive touch module that produces a digital signal when its pad is touched. Useful for touch controls without a mechanical switch.",

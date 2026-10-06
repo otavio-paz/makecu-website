@@ -1,5 +1,8 @@
 .checkout-page {
-  background: #071828;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 103, 0, 0.12), transparent 22%),
+    linear-gradient(180deg, #00519a 0%, #3a6ea5 48%, #00519a 100%);
+  background-attachment: fixed;
   color: #e9f2f8;
 }
 
@@ -20,7 +23,7 @@
 .checkout-header {
   align-items: center;
   backdrop-filter: blur(16px);
-  background: rgba(7, 24, 40, 0.92);
+  background: rgba(0, 81, 154, 0.9);
   border-bottom: 1px solid rgba(235, 235, 235, 0.14);
   display: flex;
   justify-content: space-between;
@@ -34,6 +37,14 @@
 .checkout-header .brand {
   left: auto;
   position: static;
+}
+
+.checkout-header .brand-mark {
+  border-color: var(--paper);
+  border-radius: 3px;
+  height: 46px;
+  object-fit: cover;
+  width: 46px;
 }
 
 .checkout-session {
@@ -68,13 +79,113 @@
 
 .checkout-state-card,
 .checkout-auth {
-  background: rgba(12, 39, 63, 0.9);
+  background: rgba(0, 58, 112, 0.93);
   border: 1px solid rgba(235, 235, 235, 0.18);
   border-radius: 14px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
   margin: 8vh auto 0;
   max-width: 1040px;
   padding: clamp(28px, 6vw, 68px);
+}
+
+.checkout-login-stage {
+  isolation: isolate;
+  margin: 8vh auto 0;
+  max-width: 1180px;
+  min-height: 610px;
+  padding: 38px 70px;
+  position: relative;
+}
+
+.checkout-auth-circuit {
+  animation: checkoutCircuitDrift 34s linear infinite;
+  background:
+    linear-gradient(90deg, rgba(235, 235, 235, 0.07) 0 1px, transparent 1px 100%),
+    linear-gradient(0deg, rgba(235, 235, 235, 0.07) 0 1px, transparent 1px 100%),
+    radial-gradient(circle at 18% 20%, rgba(255, 103, 0, 0.18), transparent 20%),
+    radial-gradient(circle at 78% 68%, rgba(192, 192, 192, 0.12), transparent 26%);
+  background-size: 72px 72px, 72px 72px, auto, auto;
+  border-radius: 22px;
+  inset: -35px -42px;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+}
+
+.checkout-auth-circuit::after {
+  background: radial-gradient(circle at 50% 52%, rgba(0, 81, 154, 0.08), rgba(0, 81, 154, 0.6) 76%);
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.checkout-auth-circuit svg {
+  animation: checkoutBoardFloat 8s ease-in-out infinite;
+  height: 100%;
+  inset: 0;
+  opacity: 0.7;
+  position: absolute;
+  width: 100%;
+}
+
+.checkout-circuit-grid path,
+.checkout-circuit-traces path,
+.checkout-circuit-branches path,
+.checkout-circuit-chip rect,
+.checkout-circuit-chip path {
+  fill: none;
+  stroke: var(--paper);
+  vector-effect: non-scaling-stroke;
+}
+
+.checkout-circuit-grid path {
+  opacity: 0.12;
+  stroke-width: 1;
+}
+
+.checkout-circuit-traces path {
+  opacity: 0.52;
+  stroke: var(--orange-light);
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 4;
+}
+
+.checkout-circuit-traces path:last-child,
+.checkout-circuit-branches path {
+  opacity: 0.34;
+  stroke: var(--silver);
+  stroke-width: 3;
+}
+
+.checkout-circuit-nodes circle {
+  fill: var(--orange);
+  filter: drop-shadow(0 0 7px rgba(255, 103, 0, 0.9));
+}
+
+.checkout-circuit-chip rect,
+.checkout-circuit-chip path {
+  opacity: 0.58;
+  stroke-width: 3;
+}
+
+.checkout-circuit-chip .checkout-circuit-core {
+  fill: rgba(255, 103, 0, 0.3);
+  stroke: var(--orange);
+}
+
+.checkout-circuit-pulses circle {
+  fill: var(--orange);
+  filter: drop-shadow(0 0 7px rgba(255, 103, 0, 0.9));
+}
+
+.checkout-circuit-pulses .is-paper {
+  fill: var(--paper);
+}
+
+.checkout-circuit-pulses .is-silver {
+  fill: var(--silver);
 }
 
 .checkout-state-card {
@@ -127,6 +238,11 @@
   display: grid;
   gap: clamp(36px, 7vw, 80px);
   grid-template-columns: 1.2fr 0.8fr;
+  margin: 0;
+  max-width: none;
+  min-height: 500px;
+  position: relative;
+  z-index: 1;
 }
 
 .checkout-auth-copy > p {
@@ -467,6 +583,10 @@
   grid-template-columns: 2fr 1fr 1fr auto;
   margin-bottom: 24px;
   padding: 16px;
+}
+
+.checkout-inventory-filters {
+  grid-template-columns: 2fr 1fr 1fr;
 }
 
 .checkout-search input {
@@ -867,6 +987,11 @@
   max-width: 520px;
 }
 
+.checkout-activity-search {
+  margin-bottom: 18px;
+  max-width: 720px;
+}
+
 .checkout-team-layout {
   display: grid;
   gap: 18px;
@@ -1000,16 +1125,30 @@
   border: 1px solid #c7d5de;
   border-radius: 7px;
   display: flex;
-  flex: 0 0 58px;
-  height: 58px;
+  color: inherit;
+  cursor: zoom-in;
+  flex: 0 0 81.2px;
+  height: 81.2px;
   justify-content: center;
   overflow: hidden;
+  padding: 0;
+  width: 81.2px;
 }
 
 .checkout-inventory-thumbnail img {
   height: 100%;
   object-fit: cover;
+  transition: transform 160ms ease;
   width: 100%;
+}
+
+.checkout-inventory-thumbnail:hover img {
+  transform: scale(1.04);
+}
+
+.checkout-inventory-thumbnail:focus-visible {
+  outline: 3px solid #ff6a00;
+  outline-offset: 3px;
 }
 
 .checkout-inventory-thumbnail .checkout-component-placeholder {
@@ -1090,6 +1229,27 @@
   color: #244862;
 }
 
+.checkout-image-dialog {
+  max-width: min(900px, calc(100% - 32px));
+  overflow: hidden;
+  width: auto;
+}
+
+.checkout-image-preview {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 220px;
+}
+
+.checkout-image-preview img {
+  border-radius: 8px;
+  display: block;
+  max-height: 72vh;
+  max-width: 100%;
+  object-fit: contain;
+}
+
 .checkout-form-grid {
   display: grid;
   gap: 14px;
@@ -1147,6 +1307,27 @@
   z-index: 200;
 }
 
+@keyframes checkoutCircuitDrift {
+  from {
+    background-position: 0 0, 0 0, center, center;
+  }
+
+  to {
+    background-position: 72px 72px, -72px 72px, center, center;
+  }
+}
+
+@keyframes checkoutBoardFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(14px);
+  }
+}
+
 @media (max-width: 900px) {
   .checkout-auth,
   .checkout-team-layout {
@@ -1159,6 +1340,10 @@
 
   .checkout-filters {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .checkout-login-stage {
+    padding: 32px;
   }
 
   .checkout-team-list {
@@ -1188,6 +1373,16 @@
   .checkout-state-card {
     margin-top: 3vh;
     padding: 26px 20px;
+  }
+
+  .checkout-login-stage {
+    margin-top: 3vh;
+    min-height: 0;
+    padding: 18px 6px;
+  }
+
+  .checkout-auth-circuit {
+    inset: -18px -10px;
   }
 
   .checkout-page-heading {
@@ -1247,5 +1442,16 @@
     bottom: 12px;
     left: 12px;
     right: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkout-auth-circuit,
+  .checkout-auth-circuit svg {
+    animation: none;
+  }
+
+  .checkout-circuit-pulses {
+    display: none;
   }
 }

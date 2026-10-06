@@ -23,18 +23,8 @@
       "productUrl": "https://www.amazon.com/dp/B01N0VMN9P"
     },
     {
-      "name": "OCR 180Pcs Tactile Push Button Switch 10 Values 6x6mm Micro Momentary Tact Button Switches Assortment Kit",
-      "sourceRow": 6,
-      "productUrl": "https://www.amazon.com/dp/B01MRP025V"
-    },
-    {
-      "name": "240 Pcs 24 Value Micro Momentary Tactile Switch Assortment Kit",
+      "name": "Tactile Push Buttons (Assorted)",
       "sourceRow": 7,
-      "productUrl": "https://www.amazon.com/dp/B0BFWK5N8V"
-    },
-    {
-      "name": "Push Buttons",
-      "sourceRow": 8,
       "productUrl": "https://www.amazon.com/dp/B0BFWK5N8V"
     },
     {
@@ -68,7 +58,7 @@
       "productUrl": "https://www.amazon.com/dp/B088NVX2L7"
     },
     {
-      "name": "Ultrasonic Sensor",
+      "name": "Ultrasonic Sensors",
       "sourceRow": 15,
       "productUrl": "https://www.amazon.com/dp/B0B1MJJLJP"
     },
@@ -358,7 +348,7 @@
       "productUrl": "https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/101020014/5482603"
     },
     {
-      "name": "Logitech Webcam",
+      "name": "Logitech Webcams",
       "sourceRow": 150,
       "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/16299/17829508"
     },
@@ -381,11 +371,6 @@
       "name": "Google Home Mini",
       "sourceRow": 155,
       "productUrl": "https://www.bestbuy.com/site/home-mini-1st-generation-smart-speaker-with-google-assistant-chalk/6082194.p"
-    },
-    {
-      "name": "Ultrasonic Distance Module",
-      "sourceRow": 156,
-      "productUrl": "https://www.digikey.com/en/products/detail/sparkfun-electronics/13959/6193598"
     },
     {
       "name": "10k Trimmer",
@@ -413,7 +398,7 @@
       "productUrl": "https://www.digikey.com/en/products/detail/parallax-inc/700-00012/1774444"
     },
     {
-      "name": "Ceramic Capacitors",
+      "name": "Ceramic Capacitors (Assorted)",
       "sourceRow": 162,
       "productUrl": "https://www.digikey.com/en/products/detail/vishay-beyschlag-draloric-bc-components/HOTC-KIT-KH/5983098"
     },

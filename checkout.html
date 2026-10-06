@@ -7,7 +7,7 @@ custom_class: checkout-page
 
 <header class="checkout-header">
   <a class="brand" href="{{ '/' | relative_url }}" aria-label="{{ site.event.name }} home">
-    <span class="brand-mark" aria-hidden="true">MC</span>
+    <img class="brand-mark" src="{{ '/images/logos/MakeCU-Logo.webp' | relative_url }}" alt="">
     <span>Hardware Desk</span>
   </a>
   <div class="checkout-session" data-session hidden>
@@ -18,12 +18,10 @@ custom_class: checkout-page
 
 <main class="checkout-main" data-checkout-app>
   <section class="checkout-state-card" data-loading-state aria-live="polite">
-    <span class="checkout-kicker">$ ./hardware_checkout</span>
     <h1>Connecting to the hardware desk…</h1>
   </section>
 
   <section class="checkout-state-card" data-closed-state hidden>
-    <span class="checkout-kicker">SYSTEM STANDBY</span>
     <h1>Hardware checkout opens when MakeCU goes live.</h1>
     <p>The catalog, ordering, and volunteer tools are locked outside the live hackathon window.</p>
     <dl class="checkout-window">
@@ -33,22 +31,52 @@ custom_class: checkout-page
     <a class="checkout-button checkout-button-secondary" href="{{ '/' | relative_url }}">Back to MakeCU</a>
   </section>
 
-  <section class="checkout-auth" data-login-state hidden>
-    <div class="checkout-auth-copy">
-      <span class="checkout-kicker">MAKECU 2026</span>
-      <h1>Hardware Checkout</h1>
-      <div class="checkout-flow" aria-label="Checkout process">
-        <span>Browse</span><span aria-hidden="true">→</span><span>Reserve</span><span aria-hidden="true">→</span><span>Pickup</span><span aria-hidden="true">→</span><span>Return</span>
-      </div>
+  <section class="checkout-login-stage" data-login-state hidden>
+    <div class="checkout-auth-circuit" aria-hidden="true">
+      <svg viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <g class="checkout-circuit-grid">
+          <path d="M0 90H1200M0 240H1200M0 390H1200M0 540H1200M160 0V720M390 0V720M650 0V720M910 0V720M1120 0V720"></path>
+        </g>
+        <g class="checkout-circuit-traces">
+          <path id="checkout-trace-a" d="M-80 180H170L230 240H390L455 305H650L720 375H930L1000 445H1280"></path>
+          <path id="checkout-trace-b" d="M1280 110H1080L1015 175H830L760 245H585L515 315H310L245 380H-80"></path>
+          <path id="checkout-trace-c" d="M-80 560H210L275 495H480L545 430H735L800 365H1010L1080 295H1280"></path>
+          <path d="M160 760V610L225 545V435L290 370V270L355 205V-40M900-40V115L835 180V300L905 370V510L840 575V760"></path>
+        </g>
+        <g class="checkout-circuit-branches">
+          <path d="M390 240V135H485M650 305V195H555M930 375V265H1035M310 380V490H215M735 430V545H640"></path>
+        </g>
+        <g class="checkout-circuit-nodes">
+          <circle cx="170" cy="180" r="7"></circle><circle cx="390" cy="240" r="7"></circle><circle cx="650" cy="305" r="8"></circle><circle cx="930" cy="375" r="7"></circle><circle cx="1080" cy="110" r="7"></circle><circle cx="760" cy="245" r="7"></circle><circle cx="310" cy="380" r="8"></circle><circle cx="275" cy="495" r="7"></circle><circle cx="735" cy="430" r="8"></circle><circle cx="1080" cy="295" r="7"></circle>
+        </g>
+        <g class="checkout-circuit-chip" transform="translate(530 278)">
+          <rect width="150" height="120"></rect>
+          <path d="M-24 18H0M-24 42H0M-24 66H0M-24 90H0M150 18H174M150 42H174M150 66H174M150 90H174M25-24V0M55-24V0M85-24V0M115-24V0M25 120V144M55 120V144M85 120V144M115 120V144"></path>
+          <rect class="checkout-circuit-core" x="48" y="36" width="54" height="48"></rect>
+        </g>
+        <g class="checkout-circuit-pulses">
+          <circle r="7"><animateMotion dur="8s" repeatCount="indefinite"><mpath href="#checkout-trace-a"></mpath></animateMotion></circle>
+          <circle class="is-paper" r="6"><animateMotion dur="11s" begin="-4s" repeatCount="indefinite"><mpath href="#checkout-trace-b"></mpath></animateMotion></circle>
+          <circle class="is-silver" r="6"><animateMotion dur="10s" begin="-7s" repeatCount="indefinite"><mpath href="#checkout-trace-c"></mpath></animateMotion></circle>
+        </g>
+      </svg>
     </div>
-    <form class="checkout-login-card" data-login-form>
-      <h2>Team & volunteer login</h2>
-      <label>Username<input name="username" autocomplete="username" required></label>
-      <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
-      <p class="checkout-form-error" data-login-error role="alert" hidden></p>
-      <button class="checkout-button checkout-button-primary" type="submit">Sign in</button>
-      <p class="checkout-form-note">Teams receive credentials from MakeCU volunteers. Volunteers use their admin account.</p>
-    </form>
+    <div class="checkout-auth">
+      <div class="checkout-auth-copy">
+        <h1>Hardware Checkout</h1>
+        <div class="checkout-flow" aria-label="Checkout process">
+          <span>Browse</span><span aria-hidden="true">→</span><span>Reserve</span><span aria-hidden="true">→</span><span>Pickup</span><span aria-hidden="true">→</span><span>Return</span>
+        </div>
+      </div>
+      <form class="checkout-login-card" data-login-form>
+        <h2>Team & volunteer login</h2>
+        <label>Username<input name="username" autocomplete="username" required></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+        <p class="checkout-form-error" data-login-error role="alert" hidden></p>
+        <button class="checkout-button checkout-button-primary" type="submit">Sign in</button>
+        <p class="checkout-form-note">Teams receive credentials from MakeCU volunteers. Volunteers use their admin account.</p>
+      </form>
+    </div>
   </section>
 
   <section class="checkout-app-shell" data-team-app hidden>
@@ -60,7 +88,7 @@ custom_class: checkout-page
 
     <div data-team-panel="catalog">
       <div class="checkout-page-heading">
-        <div><span class="checkout-kicker">TEAM CATALOG</span><h1>Choose your hardware</h1></div>
+        <h1>Choose your hardware</h1>
         <button class="checkout-button checkout-button-primary" type="button" data-open-cart>Review order <span data-cart-button-count>0</span></button>
       </div>
       <aside class="checkout-cooldown" data-cooldown hidden aria-live="polite"></aside>
@@ -74,12 +102,12 @@ custom_class: checkout-page
     </div>
 
     <div data-team-panel="orders" hidden>
-      <div class="checkout-page-heading"><div><span class="checkout-kicker">RECEIPTS</span><h1>Your orders</h1></div></div>
+      <div class="checkout-page-heading"><h1>Your orders</h1></div>
       <div class="checkout-order-list" data-team-orders></div>
     </div>
 
     <div data-team-panel="holding" hidden>
-      <div class="checkout-page-heading"><div><span class="checkout-kicker">TEAM HARDWARE</span><h1>Currently checked out</h1></div></div>
+      <div class="checkout-page-heading"><h1>Currently checked out</h1></div>
       <div class="checkout-holding-grid" data-team-holding></div>
     </div>
   </section>
@@ -95,33 +123,39 @@ custom_class: checkout-page
     </nav>
 
     <div data-admin-panel="overview">
-      <div class="checkout-page-heading"><div><span class="checkout-kicker">VOLUNTEER DESK</span><h1>Live overview</h1></div></div>
+      <div class="checkout-page-heading"><h1>Live overview</h1></div>
       <div class="checkout-overview-grid" data-admin-overview></div>
     </div>
 
     <div data-admin-panel="orders" hidden>
-      <div class="checkout-page-heading"><div><span class="checkout-kicker">ORDER QUEUE</span><h1>Prepare & hand out</h1></div><button class="checkout-button checkout-button-secondary" type="button" data-refresh-orders>Refresh</button></div>
+      <div class="checkout-page-heading"><h1>Prepare & hand out</h1><button class="checkout-button checkout-button-secondary" type="button" data-refresh-orders>Refresh</button></div>
       <div class="checkout-order-board" data-admin-orders aria-label="Orders grouped by fulfillment stage"></div>
     </div>
 
     <div data-admin-panel="teams" hidden>
-      <div class="checkout-page-heading"><div><span class="checkout-kicker">RETURNS</span><h1>Team hardware</h1></div><button class="checkout-button checkout-button-secondary" type="button" data-open-team-create>Add team</button></div>
+      <div class="checkout-page-heading"><h1>Team hardware</h1><button class="checkout-button checkout-button-secondary" type="button" data-open-team-create>Add team</button></div>
       <label class="checkout-search checkout-team-search"><span class="screen-reader-text">Search teams</span><input type="search" placeholder="Search team name or identifier" data-team-search></label>
       <div class="checkout-team-layout"><div class="checkout-team-list" data-team-list></div><div class="checkout-team-detail" data-team-detail><p class="checkout-empty">Select a team to view outstanding hardware and receipts.</p></div></div>
     </div>
 
     <div data-admin-panel="inventory" hidden>
-      <div class="checkout-page-heading"><div><span class="checkout-kicker">INVENTORY</span><h1>Hardware catalog</h1></div><button class="checkout-button checkout-button-primary" type="button" data-new-component>Add component</button></div>
+      <div class="checkout-page-heading"><h1>Hardware catalog</h1><button class="checkout-button checkout-button-primary" type="button" data-new-component>Add component</button></div>
+      <div class="checkout-filters checkout-inventory-filters">
+        <label class="checkout-search"><span>Component name</span><input type="search" placeholder="Search component name" data-inventory-search></label>
+        <label><span>Category tag</span><select data-inventory-category-filter><option value="">All categories</option></select></label>
+        <label><span>Compatibility tag</span><select data-inventory-compatibility-filter><option value="">All platforms</option><option>Arduino</option><option>Raspberry Pi</option><option>Arduino + Raspberry Pi</option><option>N/A</option></select></label>
+      </div>
       <div class="checkout-inventory-table-wrap"><table class="checkout-table"><thead><tr><th>Component</th><th>Available</th><th>Reserved</th><th>Out</th><th>Unavailable</th><th>Total</th><th></th></tr></thead><tbody data-inventory-table></tbody></table></div>
     </div>
 
     <div data-admin-panel="activity" hidden>
-      <div class="checkout-page-heading"><div><span class="checkout-kicker">AUDIT TRAIL</span><h1>Desk activity</h1></div></div>
+      <div class="checkout-page-heading"><h1>Desk activity</h1></div>
+      <label class="checkout-search checkout-activity-search"><span>Search activity</span><input type="search" placeholder="Search actions, teams, volunteers, or order numbers" data-activity-search></label>
       <ol class="checkout-activity-list" data-activity-list></ol>
     </div>
 
     <div data-admin-panel="report" hidden>
-      <div class="checkout-page-heading"><div><span class="checkout-kicker">RECONCILIATION</span><h1>End-of-event discrepancy report</h1></div><button class="checkout-button checkout-button-secondary" type="button" data-refresh-report>Refresh</button></div>
+      <div class="checkout-page-heading"><h1>End-of-event discrepancy report</h1><button class="checkout-button checkout-button-secondary" type="button" data-refresh-report>Refresh</button></div>
       <p class="checkout-form-note">Compares component counters with active order reservations and per-team holdings. Resolve every mismatch and outstanding team before closing the hardware desk.</p>
       <div data-discrepancy-report></div>
     </div>
@@ -180,6 +214,11 @@ custom_class: checkout-page
     <p class="checkout-form-error" data-component-error hidden></p>
     <div class="checkout-dialog-actions"><button class="checkout-button checkout-button-secondary" type="button" data-dialog-close>Cancel</button><button class="checkout-button checkout-button-primary" type="submit">Save component</button></div>
   </form>
+</dialog>
+
+<dialog class="checkout-dialog checkout-image-dialog" data-image-dialog>
+  <div class="checkout-dialog-header"><div><span class="checkout-kicker">COMPONENT IMAGE</span><h2 data-image-dialog-title></h2></div><button class="checkout-icon-button" type="button" data-dialog-close aria-label="Close image preview">×</button></div>
+  <div class="checkout-image-preview"><img data-image-dialog-image src="" alt=""></div>
 </dialog>
 
 <script src="{{ '/js/checkout.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
