@@ -30,7 +30,7 @@ npm run checkout:dev
 
 Open `http://127.0.0.1:4173/checkout/`. `checkout:provision-admins` creates `admin-1` through `admin-4` with independent random passwords and deactivates the legacy generic `admin` login. The plaintext passwords are written only to the ignored and build-excluded `checkout-admin-credentials.local.json` file; the database stores salted scrypt hashes. Re-running the command preserves the passwords, while `npm run checkout:provision-admins -- --rotate` explicitly rotates all four.
 
-The checkout API fails closed outside the configured event window. Set `CHECKOUT_LIVE_START`, `CHECKOUT_ORDERING_END`, and `CHECKOUT_RETURN_END` in production; `CHECKOUT_FORCE_LIVE` is intended only for local testing.
+Outside the configured event window, team accounts cannot sign in or use checkout data. Admin accounts may still sign in from the closed screen to rehearse the workflow and maintain inventory; every bypass is enforced from the user's server-side database role. Set `CHECKOUT_LIVE_START`, `CHECKOUT_ORDERING_END`, and `CHECKOUT_RETURN_END` in production; `CHECKOUT_FORCE_LIVE` is intended only for local testing.
 
 Run `npm test` for the inventory concurrency, idempotency, authorization, admin provisioning, claim lease, stale-edit, pickup/cancel, return, and audit regression tests. Active inventory requires a photo and accessible image description; seeded sample components remain inactive until organizers add and verify those images. See [DEPLOYMENT.md](DEPLOYMENT.md) for production database and event-window configuration.
 

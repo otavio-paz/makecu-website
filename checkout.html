@@ -23,12 +23,15 @@ custom_class: checkout-page
 
   <section class="checkout-state-card" data-closed-state hidden>
     <h1>Hardware checkout opens when MakeCU goes live.</h1>
-    <p>The catalog, ordering, and volunteer tools are locked outside the live hackathon window.</p>
+    <p>Team browsing and ordering are locked outside the live hackathon window. Organizers can still sign in to review and update inventory.</p>
     <dl class="checkout-window">
       <div><dt>Opens</dt><dd data-live-start></dd></div>
       <div><dt>Closes</dt><dd data-live-end></dd></div>
     </dl>
-    <a class="checkout-button checkout-button-secondary" href="{{ '/' | relative_url }}">Back to MakeCU</a>
+    <div class="checkout-state-actions">
+      <button class="checkout-button checkout-button-primary" type="button" data-closed-admin-login>Organizer sign in</button>
+      <a class="checkout-button checkout-button-secondary" href="{{ '/' | relative_url }}">Back to MakeCU</a>
+    </div>
   </section>
 
   <section class="checkout-login-stage" data-login-state hidden>
@@ -69,12 +72,12 @@ custom_class: checkout-page
         </div>
       </div>
       <form class="checkout-login-card" data-login-form>
-        <h2>Team & volunteer login</h2>
+        <h2 data-login-title>Team & volunteer login</h2>
         <label>Username<input name="username" autocomplete="username" required></label>
         <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
         <p class="checkout-form-error" data-login-error role="alert" hidden></p>
         <button class="checkout-button checkout-button-primary" type="submit">Sign in</button>
-        <p class="checkout-form-note">Teams receive credentials from MakeCU volunteers. Volunteers use their admin account.</p>
+        <p class="checkout-form-note" data-login-note>Teams receive credentials from MakeCU volunteers. Volunteers use their admin account.</p>
       </form>
     </div>
   </section>

@@ -18,7 +18,8 @@
     activeAdminTab: "overview",
     mutationKeys: {},
     pollTimer: null,
-    toastTimer: null
+    toastTimer: null,
+    liveStatus: null
   };
   var categories = ["Audio", "Button", "Camera", "Communication", "Distance", "Electronics", "Microcontroller", "Motor", "Motor Related", "Pi-related", "Power", "Sensor", "Tool"];
   var loadingState = document.querySelector("[data-loading-state]");
@@ -736,10 +737,21 @@
     try {
       var response = await window.fetch("/api/checkout?action=status", { credentials: "same-origin" });
       var statusResult = await response.json();
+      state.liveStatus = statusResult.status;
 
       if (!statusResult.status.live) {
         document.querySelector("[data-live-start]").textContent = formatDate(statusResult.status.startsAt);
         document.querySelector("[data-live-end]").textContent = formatDate(statusResult.status.endsAt);
+        try {
+          var closedMe = await api("me");
+          if (closedMe.user.role === "admin") {
+            await enterApplication(closedMe.user);
+            return;
+          }
+        } catch (error) {
+          if (error.status !== 401 && error.status !== 423) throw error;
+        }
+        setSession(null);
         showOnly(closedState);
         return;
       }
@@ -760,6 +772,12 @@
       loadingState.insertAdjacentHTML("beforeend", '<p class="checkout-form-error">' + escapeHtml(error.message) + "</p>");
     }
   };
+
+  document.querySelector("[data-closed-admin-login]").addEventListener("click", function () {
+    document.querySelector("[data-login-title]").textContent = "Organizer login";
+    document.querySelector("[data-login-note]").textContent = "Only admin accounts can sign in outside the live hackathon window.";
+    showOnly(loginState);
+  });
 
   document.querySelector("[data-login-form]").addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -785,7 +803,7 @@
     await api("logout").catch(function () {});
     window.clearInterval(state.pollTimer);
     setSession(null);
-    showOnly(loginState);
+    showOnly(state.liveStatus && !state.liveStatus.live ? closedState : loginState);
   });
 
   document.querySelectorAll("[data-team-tab]").forEach(function (button) {

@@ -39,6 +39,8 @@ Add these environment variables to the Vercel project for Production and Preview
 
 Use `.env.checkout.example` as a key-only reference. Never commit real credentials. Do not set `CHECKOUT_FORCE_LIVE` in Vercel; the override is ignored when `NODE_ENV=production`.
 
+The event window blocks team login and team checkout access before opening and after closing. Admin accounts remain available from the closed checkout screen so organizers can test and update inventory. This exception is based on the authenticated database role in the API, not on a browser-only flag; a team account or existing team session still receives HTTP 423 outside the window.
+
 Before the event, run the row-locking integration suite against a disposable PostgreSQL database (never the production database):
 
 ```powershell
