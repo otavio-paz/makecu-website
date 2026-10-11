@@ -2041,11 +2041,36 @@ a {
 }
 
 .judge-recruitment-status {
-  color: var(--silver);
+  animation: checklistPercentLoopGlitch 5s steps(1, end) infinite;
+  color: var(--orange);
   font-family: var(--font-ui);
   font-size: 14px;
   margin: -18px 0 24px;
+  position: relative;
   text-align: center;
+}
+
+.judge-recruitment-status::before,
+.judge-recruitment-status::after {
+  content: attr(data-text);
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.judge-recruitment-status::before {
+  animation: checklistPercentTopLoopGlitch 5s steps(1, end) infinite;
+  clip-path: inset(0 0 50% 0);
+  color: #64e7ff;
+  text-shadow: 4px 0 0 var(--orange);
+}
+
+.judge-recruitment-status::after {
+  animation: checklistPercentBottomLoopGlitch 5s steps(1, end) infinite;
+  clip-path: inset(50% 0 0 0);
+  color: var(--orange-light);
+  text-shadow: -4px 0 0 #64e7ff;
 }
 
 .sponsor-tier {
@@ -2875,7 +2900,10 @@ a {
   .meter-fill,
   .checklist-meter strong,
   .checklist-meter strong::before,
-  .checklist-meter strong::after {
+  .checklist-meter strong::after,
+  .judge-recruitment-status,
+  .judge-recruitment-status::before,
+  .judge-recruitment-status::after {
     animation-duration: 5s !important;
     animation-iteration-count: infinite !important;
   }
