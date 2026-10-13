@@ -1,4 +1,4 @@
-const DEFAULT_START = "2026-11-07T09:00:00-05:00";
+const DEFAULT_START = "2026-10-13T00:00:00-04:00";
 const DEFAULT_END = "2026-11-08T17:00:00-05:00";
 
 function liveStatus(now) {
