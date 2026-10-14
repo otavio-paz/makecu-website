@@ -440,12 +440,16 @@
 
 .checkout-correction-receipt { border-left: 4px solid var(--checkout-accent); }
 
-.checkout-report-balanced {
-  margin: 1rem 0;
-  padding: 0.85rem;
-  border: 1px solid #2f9e63;
+.checkout-report-generated {
+  display: inline-flex;
+  margin: 0 0 1rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #bdc9d1;
   border-radius: 0.55rem;
-  background: rgba(47, 158, 99, 0.08);
+  background: #fff;
+  color: #12253a;
+  font-size: 0.95rem;
+  font-weight: 700;
 }
 
 .checkout-report-mismatch { background: rgba(217, 67, 67, 0.08); }
@@ -943,7 +947,9 @@
 }
 
 .checkout-holding-card {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .checkout-holding-quantity {
@@ -1184,6 +1190,64 @@
   font-family: var(--font-ui);
   font-size: 11px;
 }
+
+.checkout-activity-list li > span small,
+.checkout-activity-list li > button span small {
+  color: #607688;
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.checkout-activity-receipt {
+  display: block !important;
+  padding: 0 !important;
+}
+
+.checkout-activity-receipt button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  font: inherit;
+  gap: 2px 16px;
+  grid-template-columns: 140px minmax(0, 1fr) auto;
+  padding: 14px 0;
+  text-align: left;
+  width: 100%;
+}
+
+.checkout-activity-receipt button:hover,
+.checkout-activity-receipt button:focus-visible {
+  background: #e2ebf0;
+  outline: 0;
+}
+
+.checkout-activity-receipt em {
+  color: #00519a;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.checkout-receipt-details {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+
+.checkout-receipt-details div {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 150px 1fr;
+}
+
+.checkout-receipt-details dt { color: #607688; }
+.checkout-receipt-details dd { margin: 0; font-weight: 700; }
 
 .checkout-empty {
   color: #6a7e8c;
@@ -1430,6 +1494,10 @@
   }
 
   .checkout-activity-list li {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-activity-receipt button {
     grid-template-columns: 1fr;
   }
 

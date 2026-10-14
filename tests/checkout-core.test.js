@@ -1,4 +1,6 @@
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
 const { after, before, test } = require("node:test");
 
 process.env.CHECKOUT_FORCE_LIVE = "true";
@@ -160,6 +162,9 @@ test("transactional order, pickup, damaged return, audit, and team isolation flo
 
   const detailBefore = await request("team-detail", { teamId: winnerTeamId }, adminCookie);
   assert.equal(detailBefore.body.inventory[0].checkedOutQuantity, 1);
+  const teamDashboard = await request("team-dashboard", {}, winnerCookie);
+  assert.equal(teamDashboard.body.inventory[0].imageUrl, "/images/hardware/last-camera.png");
+  assert.equal(teamDashboard.body.inventory[0].imageAlt, "Small camera module on a white background");
   const returned = await request("process-return", {
     teamId: winnerTeamId,
     items: [{ componentId, quantity: 1, condition: "damaged", note: "Lens cracked during demo." }]
@@ -176,7 +181,50 @@ test("transactional order, pickup, damaged return, audit, and team isolation flo
 
   const activity = await request("activity", {}, adminCookie);
   assert.ok(activity.body.activity.some(function (item) { return item.message.indexOf("confirmed pickup") >= 0; }));
-  assert.ok(activity.body.activity.some(function (item) { return /processed R-\d+/.test(item.message); }));
+  const orderActivity = activity.body.activity.find(function (item) {
+    return item.receiptType === "order" && item.orderId === orderId;
+  });
+  assert.ok(orderActivity);
+  assert.equal(orderActivity.teamName, success === submissions[0] ? "Byte Builders" : "Robo Cats");
+  assert.match(orderActivity.receiptCode, /^O-\d{5}$/);
+  const openedOrder = await request("activity-receipt", { activityId: orderActivity.id }, adminCookie);
+  assert.equal(openedOrder.status, 200);
+  assert.equal(openedOrder.body.receiptType, "order");
+  assert.equal(openedOrder.body.order.id, orderId);
+
+  const inventoryActivity = activity.body.activity.find(function (item) {
+    return item.receiptType == null && item.message.indexOf("Last Camera") >= 0;
+  });
+  assert.ok(inventoryActivity);
+  assert.equal((await request("activity-receipt", { activityId: inventoryActivity.id }, adminCookie)).status, 404);
+  assert.equal((await request("activity-receipt", { activityId: 2147483647 }, adminCookie)).status, 404);
+
+  const returnActivity = activity.body.activity.find(function (item) { return /processed R-\d+/.test(item.message); });
+  assert.ok(returnActivity);
+  assert.equal(returnActivity.actorName, "MakeCU Admin");
+  assert.equal(returnActivity.actorRole, "admin");
+  assert.equal(returnActivity.teamName, success === submissions[0] ? "Byte Builders" : "Robo Cats");
+  assert.equal(returnActivity.receiptType, "return");
+  assert.match(returnActivity.receiptCode, /^R-\d{5}$/);
+
+  const openedReceipt = await request("activity-receipt", { activityId: returnActivity.id }, adminCookie);
+  assert.equal(openedReceipt.status, 200);
+  assert.equal(openedReceipt.body.receiptType, "return");
+  assert.equal(openedReceipt.body.team.id, winnerTeamId);
+  assert.equal(openedReceipt.body.receipt.processedBy, "MakeCU Admin");
+  assert.equal(openedReceipt.body.receipt.items[0].condition, "damaged");
+
+  await database.query("UPDATE checkout_activity SET return_receipt_id = NULL WHERE id = $1", [returnActivity.id]);
+  await database.exec(fs.readFileSync(path.join(process.cwd(), "db", "checkout-schema.sql"), "utf8"));
+  const migratedActivity = (await request("activity", {}, adminCookie)).body.activity.find(function (item) {
+    return item.id === returnActivity.id;
+  });
+  assert.equal(migratedActivity.receiptType, "return");
+  assert.equal(migratedActivity.receiptCode, returnActivity.receiptCode);
+  assert.equal((await request("activity-receipt", { activityId: migratedActivity.id }, adminCookie)).status, 200);
+
+  const deniedReceipt = await request("activity-receipt", { activityId: returnActivity.id }, winnerCookie);
+  assert.equal(deniedReceipt.status, 403);
 });
 
 test("same-team simultaneous submissions are serialized", async function () {
@@ -680,6 +728,17 @@ test("return mistakes are corrected with append-only correction receipts", async
   assert.equal(corrected.body.returns[0].items[0].correctableQuantity, 0);
   assert.equal(corrected.body.returnCorrections[0].items[0].correctedCondition, "still_held");
   assert.match(corrected.body.returnCorrections[0].receiptCode, /^C-/);
+
+  const activity = await request("activity", {}, adminCookie);
+  const correctionActivity = activity.body.activity.find(function (item) {
+    return item.receiptType === "correction" && item.teamName === "Return Correction Team";
+  });
+  assert.ok(correctionActivity);
+  const openedCorrection = await request("activity-receipt", { activityId: correctionActivity.id }, adminCookie);
+  assert.equal(openedCorrection.status, 200);
+  assert.equal(openedCorrection.body.receiptType, "correction");
+  assert.equal(openedCorrection.body.team.name, "Return Correction Team");
+  assert.equal(openedCorrection.body.receipt.reason, "Volunteer selected returned instead of still with team.");
 
   const catalog = await request("catalog", {}, adminCookie);
   const correctedComponent = catalog.body.components.find(function (item) {

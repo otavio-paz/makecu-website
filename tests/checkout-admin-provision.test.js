@@ -32,7 +32,7 @@ test("provisions four distinct admin accounts without storing plaintext password
   const result = await provisionAdminAccounts(database, { credentialsPath });
   const credentials = JSON.parse(fs.readFileSync(credentialsPath, "utf8"));
   const rows = await database.query(
-    "SELECT username, password_hash, role, team_id FROM checkout_users WHERE username = ANY($1) ORDER BY username",
+    "SELECT username, password_hash, role, display_name, team_id FROM checkout_users WHERE username = ANY($1) ORDER BY username",
     [ADMIN_ACCOUNTS.map(function (account) { return account.username; })]
   );
 
@@ -41,6 +41,7 @@ test("provisions four distinct admin accounts without storing plaintext password
   assert.equal(new Set(credentials.accounts.map(function (account) { return account.password; })).size, 4);
   assert.ok(credentials.accounts.every(function (account) { return account.password.length >= 30; }));
   assert.equal(rows.rows.length, 4);
+  assert.deepEqual(rows.rows.map(function (row) { return row.display_name; }), ["Otavio", "Alice", "Nehal", "Sarrah"]);
   const legacy = await database.query("SELECT active FROM checkout_users WHERE username = 'admin'");
   assert.equal(legacy.rows[0].active, false);
 
@@ -55,7 +56,10 @@ test("provisions four distinct admin accounts without storing plaintext password
 
 test("re-running provisioning preserves existing passwords unless rotation is explicit", async function () {
   const before = fs.readFileSync(credentialsPath, "utf8");
+  await database.query("UPDATE checkout_users SET display_name = 'Old label' WHERE username = 'admin-1'");
   await provisionAdminAccounts(database, { credentialsPath });
   const after = fs.readFileSync(credentialsPath, "utf8");
   assert.equal(after, before);
+  const refreshed = await database.query("SELECT display_name FROM checkout_users WHERE username = 'admin-1'");
+  assert.equal(refreshed.rows[0].display_name, "Otavio");
 });

@@ -190,6 +190,8 @@ CREATE TABLE IF NOT EXISTS checkout_activity (
   actor_user_id BIGINT REFERENCES checkout_users(id),
   team_id BIGINT REFERENCES checkout_teams(id),
   order_id BIGINT REFERENCES checkout_orders(id),
+  return_receipt_id BIGINT REFERENCES checkout_return_receipts(id),
+  return_correction_id BIGINT REFERENCES checkout_return_corrections(id),
   message TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -237,9 +239,26 @@ ALTER TABLE checkout_order_items ADD COLUMN IF NOT EXISTS component_category_sna
 ALTER TABLE checkout_return_receipts ADD COLUMN IF NOT EXISTS receipt_code TEXT UNIQUE;
 ALTER TABLE checkout_return_items ADD COLUMN IF NOT EXISTS component_name_snapshot TEXT NOT NULL DEFAULT '';
 ALTER TABLE checkout_idempotency_requests ADD COLUMN IF NOT EXISTS request_hash TEXT NOT NULL DEFAULT '';
+ALTER TABLE checkout_activity ADD COLUMN IF NOT EXISTS return_receipt_id BIGINT REFERENCES checkout_return_receipts(id);
+ALTER TABLE checkout_activity ADD COLUMN IF NOT EXISTS return_correction_id BIGINT REFERENCES checkout_return_corrections(id);
+
+CREATE INDEX IF NOT EXISTS checkout_activity_return_receipt_idx ON checkout_activity(return_receipt_id);
+CREATE INDEX IF NOT EXISTS checkout_activity_return_correction_idx ON checkout_activity(return_correction_id);
 
 UPDATE checkout_orders SET receipt_code = 'O-' || LPAD(id::text, 5, '0') WHERE receipt_code IS NULL;
 UPDATE checkout_return_receipts SET receipt_code = 'R-' || LPAD(id::text, 5, '0') WHERE receipt_code IS NULL;
+UPDATE checkout_activity activity
+   SET return_receipt_id = receipts.id
+  FROM checkout_return_receipts receipts
+ WHERE activity.return_receipt_id IS NULL
+   AND activity.team_id = receipts.team_id
+   AND activity.message LIKE '% ' || receipts.receipt_code || '.%';
+UPDATE checkout_activity activity
+   SET return_correction_id = corrections.id
+  FROM checkout_return_corrections corrections
+ WHERE activity.return_correction_id IS NULL
+   AND activity.team_id = corrections.team_id
+   AND activity.message LIKE '% ' || corrections.receipt_code || ' correcting %';
 UPDATE checkout_order_items items
    SET component_name_snapshot = components.name,
        component_image_url_snapshot = components.image_url,

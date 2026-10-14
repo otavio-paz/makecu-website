@@ -3,12 +3,12 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { hashPassword } = require("./checkout-security");
 
-const ADMIN_ACCOUNTS = [1, 2, 3, 4].map(function (number) {
-  return {
-    username: `admin-${number}`,
-    displayName: `MakeCU Admin ${number}`
-  };
-});
+const ADMIN_ACCOUNTS = [
+  { username: "admin-1", displayName: "Otavio" },
+  { username: "admin-2", displayName: "Alice" },
+  { username: "admin-3", displayName: "Nehal" },
+  { username: "admin-4", displayName: "Sarrah" }
+];
 
 function randomPassword() {
   return crypto.randomBytes(24).toString("base64url");
@@ -58,7 +58,13 @@ async function provisionAdminAccounts(database, options) {
   for (const account of ADMIN_ACCOUNTS) {
     const saved = !rotate && savedCredentials.get(account.username);
     if (saved && existingUsers.has(account.username)) {
-      credentials.push(saved);
+      await database.query(
+        `UPDATE checkout_users
+            SET role = 'admin', display_name = $2, team_id = NULL, active = TRUE
+          WHERE username = $1`,
+        [account.username, account.displayName]
+      );
+      credentials.push(Object.assign({}, saved, { displayName: account.displayName }));
       continue;
     }
 
