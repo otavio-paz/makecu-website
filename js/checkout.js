@@ -19,7 +19,9 @@
     mutationKeys: {},
     pollTimer: null,
     toastTimer: null,
-    liveStatus: null
+    liveStatus: null,
+    teamDetailRequestId: 0,
+    openingActivityReceiptId: null
   };
   var categories = ["Audio", "Button", "Camera", "Communication", "Distance", "Electronics", "Microcontroller", "Motor", "Motor Related", "Pi-related", "Power", "Sensor", "Tool"];
   var loadingState = document.querySelector("[data-loading-state]");
@@ -368,12 +370,41 @@
     var events = order.events && order.events.length ? '<ol class="checkout-activity-list">' + order.events.map(function (event) {
       return '<li><time datetime="' + escapeHtml(event.createdAt) + '">' + formatDate(event.createdAt) + '</time><span>' + escapeHtml(event.type.replace(/_/g, " ")) + (event.actorName ? " · " + escapeHtml(event.actorName) : "") + "</span></li>";
     }).join("") + "</ol>" : "";
+    orderDialog.querySelector("[data-receipt-dialog-kicker]").textContent = "ORDER RECEIPT";
     orderDialog.querySelector("[data-order-dialog-title]").textContent = title;
     orderDialog.querySelector("[data-order-dialog-body]").innerHTML =
       '<div class="checkout-receipt-hero' + heroClass + '"><span>' + escapeHtml(statusLabel(order.status).toUpperCase()) + '</span><strong>' + escapeHtml(order.receiptCode || "#" + order.id) + "</strong><span>" + escapeHtml(order.teamName) + " · " + formatDate(order.createdAt) + "</span></div>" +
       (order.protectedStockOverrideReason ? '<div class="checkout-override-notice"><strong>Protected-stock exception</strong><p>' + escapeHtml(order.protectedStockOverrideReason) + "</p></div>" : "") +
       orderItemsMarkup(order, false) +
       (order.status === "ready" ? "<p><strong>Please bring this screen to the hardware desk.</strong></p>" : "") + events;
+    orderDialog.showModal();
+  };
+
+  var activityReceiptItemsMarkup = function (items, correction) {
+    return '<div class="checkout-order-items">' + items.map(function (item) {
+      var outcome = correction
+        ? escapeHtml(item.originalCondition) + " → " + escapeHtml(item.correctedCondition.replace("_", " "))
+        : escapeHtml(item.condition);
+      return '<div class="checkout-order-item"><span><strong>' + escapeHtml(item.name) + '</strong><small>' + outcome + (item.note ? " · " + escapeHtml(item.note) : "") + '</small></span><span class="checkout-order-item-quantity">× ' + item.quantity + "</span></div>";
+    }).join("") + "</div>";
+  };
+
+  var openActivityReceipt = function (result) {
+    if (result.receiptType === "order") {
+      openOrderReceipt(result.order);
+      return;
+    }
+
+    var receipt = result.receipt;
+    var correction = result.receiptType === "correction";
+    var label = correction ? "RETURN CORRECTION" : "RETURN";
+    orderDialog.querySelector("[data-receipt-dialog-kicker]").textContent = correction ? "CORRECTION RECEIPT" : "RETURN RECEIPT";
+    orderDialog.querySelector("[data-order-dialog-title]").textContent = receipt.receiptCode;
+    orderDialog.querySelector("[data-order-dialog-body]").innerHTML =
+      '<div class="checkout-receipt-hero"><span>' + label + '</span><strong>' + escapeHtml(receipt.receiptCode) + '</strong><span>' + escapeHtml(result.team.name) + " · " + formatDate(receipt.createdAt) + "</span></div>" +
+      '<dl class="checkout-receipt-details"><div><dt>Responsible admin</dt><dd>' + escapeHtml(receipt.processedBy) + '</dd></div><div><dt>Team</dt><dd>' + escapeHtml(result.team.name) + "</dd></div>" +
+      (correction ? '<div><dt>Original return</dt><dd>' + escapeHtml(receipt.originalReturnReceiptCode) + '</dd></div><div><dt>Reason</dt><dd>' + escapeHtml(receipt.reason) + "</dd></div>" : "") +
+      "</dl>" + activityReceiptItemsMarkup(receipt.items, correction);
     orderDialog.showModal();
   };
 
@@ -400,7 +431,9 @@
     }
 
     grid.innerHTML = state.dashboard.inventory.map(function (item) {
-      return '<article class="checkout-holding-card">' + tagMarkup(item.category) + '<h2>' + escapeHtml(item.name) + '</h2><p class="checkout-holding-quantity">× ' + item.checkedOutQuantity + "</p></article>";
+      return '<article class="checkout-holding-card">' +
+        '<div class="checkout-component-image">' + imageMarkup(item) + "</div>" +
+        '<div class="checkout-component-body"><div class="checkout-tags">' + tagMarkup(item.category) + '</div><h2>' + escapeHtml(item.name) + '</h2><p class="checkout-holding-quantity">× ' + item.checkedOutQuantity + "</p></div></article>";
     }).join("");
   };
 
@@ -552,8 +585,135 @@
     renderTeams();
   };
 
-  var renderTeamDetail = function (detail) {
+  var captureFieldDraft = function (field) {
+    return {
+      value: field.value,
+      active: document.activeElement === field,
+      selectionStart: typeof field.selectionStart === "number" ? field.selectionStart : null,
+      selectionEnd: typeof field.selectionEnd === "number" ? field.selectionEnd : null
+    };
+  };
+
+  var restoreFieldDraft = function (field, draft) {
+    if (!field || !draft) {
+      return;
+    }
+
+    field.value = draft.value;
+    if (draft.active) {
+      field.focus();
+      if (draft.selectionStart != null && typeof field.setSelectionRange === "function") {
+        field.setSelectionRange(draft.selectionStart, draft.selectionEnd);
+      }
+    }
+  };
+
+  var captureTeamDetailDraft = function (container, teamId) {
+    if (Number(container.dataset.teamDetailTeam) !== Number(teamId)) {
+      return null;
+    }
+
+    var draft = { returns: {}, overrides: {}, corrections: {} };
+    container.querySelectorAll("[data-return-component]").forEach(function (row) {
+      draft.returns[row.dataset.returnComponent] = {
+        quantity: captureFieldDraft(row.querySelector("[data-return-quantity]")),
+        condition: captureFieldDraft(row.querySelector("[data-return-condition]")),
+        note: captureFieldDraft(row.querySelector("[data-return-note]"))
+      };
+    });
+    container.querySelectorAll("[data-override-component]").forEach(function (row) {
+      draft.overrides[row.dataset.overrideComponent] = captureFieldDraft(row.querySelector("[data-override-quantity]"));
+    });
+
+    var protectedOrder = container.querySelector(".checkout-protected-order");
+    if (protectedOrder) {
+      draft.protectedOrder = {
+        open: protectedOrder.open,
+        reason: captureFieldDraft(protectedOrder.querySelector("[data-override-reason]"))
+      };
+    }
+
+    container.querySelectorAll("[data-correction-receipt]").forEach(function (correction) {
+      var correctionDraft = {
+        open: correction.open,
+        reason: captureFieldDraft(correction.querySelector("[data-correction-reason]")),
+        items: {}
+      };
+      correction.querySelectorAll("[data-correction-item]").forEach(function (row) {
+        correctionDraft.items[row.dataset.correctionItem] = {
+          quantity: captureFieldDraft(row.querySelector("[data-correction-quantity]")),
+          condition: captureFieldDraft(row.querySelector("[data-correction-condition]")),
+          note: captureFieldDraft(row.querySelector("[data-correction-note]"))
+        };
+      });
+      draft.corrections[correction.dataset.correctionReceipt] = correctionDraft;
+    });
+    return draft;
+  };
+
+  var restoreTeamDetailDraft = function (container, draft) {
+    if (!draft) {
+      return;
+    }
+
+    container.querySelectorAll("[data-return-component]").forEach(function (row) {
+      var rowDraft = draft.returns[row.dataset.returnComponent];
+      if (!rowDraft) return;
+      restoreFieldDraft(row.querySelector("[data-return-quantity]"), rowDraft.quantity);
+      restoreFieldDraft(row.querySelector("[data-return-condition]"), rowDraft.condition);
+      restoreFieldDraft(row.querySelector("[data-return-note]"), rowDraft.note);
+    });
+    container.querySelectorAll("[data-override-component]").forEach(function (row) {
+      restoreFieldDraft(row.querySelector("[data-override-quantity]"), draft.overrides[row.dataset.overrideComponent]);
+    });
+
+    var protectedOrder = container.querySelector(".checkout-protected-order");
+    if (protectedOrder && draft.protectedOrder) {
+      protectedOrder.open = draft.protectedOrder.open;
+      restoreFieldDraft(protectedOrder.querySelector("[data-override-reason]"), draft.protectedOrder.reason);
+    }
+
+    container.querySelectorAll("[data-correction-receipt]").forEach(function (correction) {
+      var correctionDraft = draft.corrections[correction.dataset.correctionReceipt];
+      if (!correctionDraft) return;
+      correction.open = correctionDraft.open;
+      restoreFieldDraft(correction.querySelector("[data-correction-reason]"), correctionDraft.reason);
+      correction.querySelectorAll("[data-correction-item]").forEach(function (row) {
+        var rowDraft = correctionDraft.items[row.dataset.correctionItem];
+        if (!rowDraft) return;
+        restoreFieldDraft(row.querySelector("[data-correction-quantity]"), rowDraft.quantity);
+        restoreFieldDraft(row.querySelector("[data-correction-condition]"), rowDraft.condition);
+        restoreFieldDraft(row.querySelector("[data-correction-note]"), rowDraft.note);
+      });
+    });
+  };
+
+  var teamDetailHasDraft = function () {
     var container = document.querySelector("[data-team-detail]");
+    if (!container || !container.dataset.teamDetailTeam) {
+      return false;
+    }
+
+    if (container.querySelector(".checkout-protected-order[open], .checkout-return-correction[open]")) {
+      return true;
+    }
+
+    return Array.prototype.some.call(container.querySelectorAll(
+      "[data-return-quantity], [data-return-note], [data-override-quantity], [data-override-reason], [data-correction-quantity], [data-correction-note], [data-correction-reason]"
+    ), function (field) {
+      return String(field.value || "").trim() !== "" && String(field.value) !== "0";
+    }) || Array.prototype.some.call(container.querySelectorAll("[data-return-condition]"), function (field) {
+      return field.value !== "good";
+    }) || Array.prototype.some.call(container.querySelectorAll("[data-correction-condition]"), function (field) {
+      return field.value !== "still_held";
+    });
+  };
+
+  var renderTeamDetail = function (detail, options) {
+    var container = document.querySelector("[data-team-detail]");
+    var draft = options && options.preserveDraft === false
+      ? null
+      : captureTeamDetailDraft(container, detail.team.id);
     var holding = detail.inventory.length ? detail.inventory.map(function (item) {
       return '<div class="checkout-return-row" data-return-component="' + item.componentId + '"><strong>' + escapeHtml(item.name) + '<span>Currently holding ' + item.checkedOutQuantity + '</span></strong><label>Return now<input type="number" min="0" max="' + item.checkedOutQuantity + '" value="0" data-return-quantity></label><label>Condition<select data-return-condition><option value="good">Good</option><option value="damaged">Damaged</option><option value="missing">Missing</option></select></label><label>Note<input maxlength="1000" placeholder="Required if damaged/missing" data-return-note></label></div>';
     }).join("") + '<div class="checkout-order-actions"><button class="checkout-button checkout-button-primary" type="button" data-process-return="' + detail.team.id + '">Process Return</button></div>' : '<p class="checkout-empty">This team has returned all checked-out hardware.</p>';
@@ -579,12 +739,23 @@
       : "";
 
     container.innerHTML = '<div class="checkout-order-card-header"><div><span class="checkout-kicker">TEAM</span><h2>' + escapeHtml(detail.team.name) + '</h2><p class="checkout-order-card-meta">' + escapeHtml(detail.team.identifier) + '</p></div><button class="checkout-button checkout-button-secondary" type="button" data-reset-password="' + detail.team.id + '">Reset password</button></div><h3 class="checkout-section-title">Currently Holding</h3>' + holding + protectedOrder + '<h3 class="checkout-section-title">Orders & Pickup History</h3>' + orders + '<h3 class="checkout-section-title">Return History</h3>' + receipts + corrections;
+    container.dataset.teamDetailTeam = detail.team.id;
+    restoreTeamDetailDraft(container, draft);
   };
 
-  var loadTeamDetail = async function (teamId) {
-    state.selectedTeamId = Number(teamId);
+  var loadTeamDetail = async function (teamId, options) {
+    var requestedTeamId = Number(teamId);
+    var requestId = ++state.teamDetailRequestId;
+    state.selectedTeamId = requestedTeamId;
     renderTeams();
-    renderTeamDetail(await api("team-detail", { teamId: teamId }));
+    var detail = await api("team-detail", { teamId: requestedTeamId });
+    if (state.selectedTeamId !== requestedTeamId || requestId !== state.teamDetailRequestId) {
+      return;
+    }
+    if (options && options.polling && teamDetailHasDraft()) {
+      return;
+    }
+    renderTeamDetail(detail, options);
   };
 
   var renderInventory = function () {
@@ -610,12 +781,20 @@
   var renderActivity = function () {
     var search = document.querySelector("[data-activity-search]").value.trim().toLowerCase();
     var items = state.activity.filter(function (item) {
-      var haystack = [item.message, item.actorName, item.teamName, item.orderId == null ? "" : "order " + item.orderId, formatDate(item.createdAt)].join(" ").toLowerCase();
+      var haystack = [item.message, item.actorName, item.teamName, item.orderId == null ? "" : "order " + item.orderId, item.receiptType, item.receiptCode, formatDate(item.createdAt)].join(" ").toLowerCase();
       return !search || haystack.indexOf(search) >= 0;
     });
 
     document.querySelector("[data-activity-list]").innerHTML = items.length ? items.map(function (item) {
-      return '<li><time datetime="' + escapeHtml(item.createdAt) + '">' + formatDate(item.createdAt) + '</time><span>' + escapeHtml(item.message) + "</span></li>";
+      var meta = [
+        item.actorName ? (item.actorRole === "admin" ? "Admin: " : "Actor: ") + escapeHtml(item.actorName) : "System",
+        item.teamName ? "Team: " + escapeHtml(item.teamName) : "No team"
+      ].join(" · ");
+      var content = '<time datetime="' + escapeHtml(item.createdAt) + '">' + formatDate(item.createdAt) + '</time><span><strong>' + escapeHtml(item.message) + '</strong><small>' + meta + "</small></span>";
+      if (item.receiptType) {
+        return '<li class="checkout-activity-receipt"><button type="button" data-view-activity-receipt="' + item.id + '">' + content + '<em>View ' + escapeHtml(item.receiptCode || "receipt") + "</em></button></li>";
+      }
+      return "<li>" + content + "</li>";
     }).join("") : '<li class="checkout-empty">' + (search ? "No activity matches that search." : "No activity yet.") + "</li>";
   };
 
@@ -635,8 +814,8 @@
     }).join("") : '<p class="checkout-empty">No teams are holding hardware.</p>';
 
     document.querySelector("[data-discrepancy-report]").innerHTML =
-      '<p class="checkout-order-card-meta">Generated ' + formatDate(report.generatedAt) + '</p><div class="checkout-overview-grid"><article class="checkout-metric-card"><h2>Reconciliation</h2><dl class="checkout-metric-list"><div><dt>Counter mismatches</dt><dd>' + summary.componentsWithMismatches + '</dd></div><div><dt>Components checked</dt><dd>' + summary.components + '</dd></div></dl></article><article class="checkout-metric-card"><h2>Outstanding</h2><dl class="checkout-metric-list"><div><dt>Teams holding hardware</dt><dd>' + summary.teamsHoldingHardware + '</dd></div><div><dt>Units still out</dt><dd>' + summary.unitsStillCheckedOut + '</dd></div><div><dt>Units reserved</dt><dd>' + summary.unitsReserved + '</dd></div></dl></article><article class="checkout-metric-card"><h2>Return outcomes</h2><dl class="checkout-metric-list"><div><dt>Damaged</dt><dd>' + report.returnOutcomes.damaged + '</dd></div><div><dt>Missing</dt><dd>' + report.returnOutcomes.missing + '</dd></div><div><dt>Corrections</dt><dd>' + summary.returnCorrections + '</dd></div></dl></article></div>' +
-      (flagged.length ? '<div class="checkout-override-notice"><strong>Action required</strong><p>' + flagged.length + ' component counter' + (flagged.length === 1 ? " does" : "s do") + ' not match the underlying orders or team holdings.</p></div>' : '<div class="checkout-report-balanced"><strong>Inventory counters reconcile with orders and team holdings.</strong></div>') +
+      '<p class="checkout-report-generated">Generated ' + formatDate(report.generatedAt) + '</p><div class="checkout-overview-grid"><article class="checkout-metric-card"><h2>Reconciliation</h2><dl class="checkout-metric-list"><div><dt>Counter mismatches</dt><dd>' + summary.componentsWithMismatches + '</dd></div><div><dt>Components checked</dt><dd>' + summary.components + '</dd></div></dl></article><article class="checkout-metric-card"><h2>Outstanding</h2><dl class="checkout-metric-list"><div><dt>Teams holding hardware</dt><dd>' + summary.teamsHoldingHardware + '</dd></div><div><dt>Units still out</dt><dd>' + summary.unitsStillCheckedOut + '</dd></div><div><dt>Units reserved</dt><dd>' + summary.unitsReserved + '</dd></div></dl></article><article class="checkout-metric-card"><h2>Return outcomes</h2><dl class="checkout-metric-list"><div><dt>Damaged</dt><dd>' + report.returnOutcomes.damaged + '</dd></div><div><dt>Missing</dt><dd>' + report.returnOutcomes.missing + '</dd></div><div><dt>Corrections</dt><dd>' + summary.returnCorrections + '</dd></div></dl></article></div>' +
+      (flagged.length ? '<div class="checkout-override-notice"><strong>Action required</strong><p>' + flagged.length + ' component counter' + (flagged.length === 1 ? " does" : "s do") + ' not match the underlying orders or team holdings.</p></div>' : "") +
       '<h2 class="checkout-section-title">Component reconciliation</h2><div class="checkout-inventory-table-wrap"><table class="checkout-table"><thead><tr><th>Component</th><th>Reserved / orders</th><th>Out / teams</th><th>Unavailable</th><th>Available</th><th>Status</th></tr></thead><tbody>' + componentRows + '</tbody></table></div><h2 class="checkout-section-title">Outstanding team holdings</h2><div class="checkout-report-teams">' + teams + "</div>";
   };
 
@@ -706,7 +885,7 @@
         } else if (state.activeAdminTab === "teams") {
           loadTeams().catch(function () {});
           if (state.selectedTeamId) {
-            loadTeamDetail(state.selectedTeamId).catch(function () {});
+            loadTeamDetail(state.selectedTeamId, { polling: true }).catch(function () {});
           }
         } else if (state.activeAdminTab === "inventory") {
           loadInventory().catch(function () {});
@@ -985,6 +1164,22 @@
     document.querySelector(selector).addEventListener("input", renderInventory);
   });
   document.querySelector("[data-activity-search]").addEventListener("input", renderActivity);
+  document.querySelector("[data-activity-list]").addEventListener("click", async function (event) {
+    var button = event.target.closest("[data-view-activity-receipt]");
+    if (!button) return;
+    var activityId = Number(button.dataset.viewActivityReceipt);
+    if (state.openingActivityReceiptId != null) return;
+    state.openingActivityReceiptId = activityId;
+    setBusy(button, true, "Opening…");
+    try {
+      openActivityReceipt(await api("activity-receipt", { activityId: activityId }));
+    } catch (error) {
+      notify(error.message);
+    } finally {
+      state.openingActivityReceiptId = null;
+      setBusy(button, false);
+    }
+  });
   document.querySelector("[data-team-list]").addEventListener("click", function (event) {
     var button = event.target.closest("[data-select-team]");
 
@@ -1022,7 +1217,8 @@
 
         setBusy(returnButton, true, "Processing…");
         var detail = await mutate("process-return", { teamId: Number(returnButton.dataset.processReturn), items: items });
-        renderTeamDetail(detail);
+        state.teamDetailRequestId += 1;
+        renderTeamDetail(detail, { preserveDraft: false });
         await loadTeams();
         notify("Return receipt created.");
       } else if (resetButton) {
@@ -1086,7 +1282,8 @@
           reason: correctionReason,
           items: correctionItems
         });
-        renderTeamDetail(correctedDetail);
+        state.teamDetailRequestId += 1;
+        renderTeamDetail(correctedDetail, { preserveDraft: false });
         await Promise.all([loadTeams(), loadAdminOverview()]);
         notify("Append-only return correction recorded.");
       } else if (orderButton) {

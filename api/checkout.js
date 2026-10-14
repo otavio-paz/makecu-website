@@ -300,6 +300,8 @@ async function handler(request, response) {
       }));
     } else if (action === "activity") {
       send(response, 200, { activity: await service.activity(database) });
+    } else if (action === "activity-receipt") {
+      send(response, 200, await service.activityReceipt(database, body.activityId));
     } else if (action === "discrepancy-report") {
       send(response, 200, await service.discrepancyReport(database));
     } else {

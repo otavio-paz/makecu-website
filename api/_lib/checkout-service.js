@@ -944,7 +944,7 @@ async function teamDashboard(database, actor) {
   const items = await orderItems(database, ids);
   const inventoryResult = await database.query(
     `SELECT inventory.checked_out_quantity, components.id, components.name,
-            components.image_url, components.category
+            components.image_url, components.image_alt, components.category
        FROM checkout_team_inventory inventory
        JOIN checkout_components components ON components.id = inventory.component_id
       WHERE inventory.team_id = $1 AND inventory.checked_out_quantity > 0
@@ -966,6 +966,7 @@ async function teamDashboard(database, actor) {
         componentId: Number(row.id),
         name: row.name,
         imageUrl: row.image_url,
+        imageAlt: row.image_alt,
         category: row.category,
         checkedOutQuantity: Number(row.checked_out_quantity)
       };
@@ -1505,10 +1506,12 @@ async function teamAdminDetail(database, teamIdInput) {
   });
   const corrections = await database.query(
     `SELECT corrections.id, corrections.receipt_code, corrections.original_return_receipt_id,
+            original_receipts.receipt_code AS original_return_receipt_code,
             corrections.reason, corrections.created_at, users.display_name AS processed_by,
             items.quantity, items.original_condition, items.corrected_condition, items.note,
             COALESCE(NULLIF(items.component_name_snapshot, ''), components.name) AS name
        FROM checkout_return_corrections corrections
+       JOIN checkout_return_receipts original_receipts ON original_receipts.id = corrections.original_return_receipt_id
        JOIN checkout_users users ON users.id = corrections.processed_by
        JOIN checkout_return_correction_items items ON items.correction_receipt_id = corrections.id
        JOIN checkout_components components ON components.id = items.component_id
@@ -1525,6 +1528,7 @@ async function teamAdminDetail(database, teamIdInput) {
         id,
         receiptCode: row.receipt_code || `C-${String(id).padStart(5, "0")}`,
         originalReturnReceiptId: Number(row.original_return_receipt_id),
+        originalReturnReceiptCode: row.original_return_receipt_code || `R-${String(row.original_return_receipt_id).padStart(5, "0")}`,
         reason: row.reason,
         createdAt: row.created_at,
         processedBy: row.processed_by,
@@ -1643,9 +1647,9 @@ async function processReturn(database, body, actor) {
     }
 
     await transaction.query(
-      `INSERT INTO checkout_activity (actor_user_id, team_id, message)
-       VALUES ($1, $2, $3)`,
-      [actor.id, teamId, `${actor.display_name} processed ${receiptCode}.`]
+      `INSERT INTO checkout_activity (actor_user_id, team_id, return_receipt_id, message)
+       VALUES ($1, $2, $3, $4)`,
+      [actor.id, teamId, receipt.id, `${actor.display_name} processed ${receiptCode}.`]
     );
     return teamAdminDetail(transaction, teamId);
   });
@@ -1780,9 +1784,9 @@ async function correctReturn(database, body, actor) {
     }
 
     await transaction.query(
-      `INSERT INTO checkout_activity (actor_user_id, team_id, message)
-       VALUES ($1, $2, $3)`,
-      [actor.id, originalReceipt.team_id, `${actor.display_name} recorded ${correctionCode} correcting ${originalReceipt.receipt_code || `Return #${returnReceiptId}`}.`]
+      `INSERT INTO checkout_activity (actor_user_id, team_id, return_correction_id, message)
+       VALUES ($1, $2, $3, $4)`,
+      [actor.id, originalReceipt.team_id, correction.id, `${actor.display_name} recorded ${correctionCode} correcting ${originalReceipt.receipt_code || `Return #${returnReceiptId}`}.`]
     );
     return teamAdminDetail(transaction, originalReceipt.team_id);
   });
@@ -1790,23 +1794,74 @@ async function correctReturn(database, body, actor) {
 
 async function activity(database) {
   const result = await database.query(
-    `SELECT activity.*, users.display_name AS actor_name, teams.name AS team_name
+    `SELECT activity.*, users.display_name AS actor_name, users.role AS actor_role,
+            teams.name AS team_name, orders.receipt_code AS order_receipt_code,
+            return_receipts.receipt_code AS return_receipt_code,
+            return_corrections.receipt_code AS return_correction_code
        FROM checkout_activity activity
        LEFT JOIN checkout_users users ON users.id = activity.actor_user_id
        LEFT JOIN checkout_teams teams ON teams.id = activity.team_id
+       LEFT JOIN checkout_orders orders ON orders.id = activity.order_id
+       LEFT JOIN checkout_return_receipts return_receipts ON return_receipts.id = activity.return_receipt_id
+       LEFT JOIN checkout_return_corrections return_corrections ON return_corrections.id = activity.return_correction_id
       ORDER BY activity.created_at DESC LIMIT 250`
   );
 
   return result.rows.map(function (row) {
+    const receiptType = row.order_id != null ? "order" :
+      row.return_receipt_id != null ? "return" :
+        row.return_correction_id != null ? "correction" : null;
     return {
       id: Number(row.id),
       actorName: row.actor_name,
+      actorRole: row.actor_role,
       teamName: row.team_name,
       orderId: row.order_id == null ? null : Number(row.order_id),
+      receiptType,
+      receiptCode: row.order_receipt_code || row.return_receipt_code || row.return_correction_code || null,
       message: row.message,
       createdAt: row.created_at
     };
   });
+}
+
+async function activityReceipt(database, activityIdInput) {
+  const activityId = positiveInteger(activityIdInput, "Activity ID");
+  const result = await database.query(
+    `SELECT id, team_id, order_id, return_receipt_id, return_correction_id
+       FROM checkout_activity
+      WHERE id = $1`,
+    [activityId]
+  );
+  const linked = result.rows[0];
+
+  if (!linked) {
+    throw httpError(404, "Activity not found.");
+  }
+  if (linked.order_id != null) {
+    return { receiptType: "order", order: await orderDetails(database, linked.order_id) };
+  }
+  if (linked.team_id == null) {
+    throw httpError(404, "This activity is not linked to a receipt.");
+  }
+
+  const detail = await teamAdminDetail(database, linked.team_id);
+  if (linked.return_receipt_id != null) {
+    const receipt = detail.returns.find(function (item) {
+      return item.id === Number(linked.return_receipt_id);
+    });
+    if (!receipt) throw httpError(404, "Return receipt not found.");
+    return { receiptType: "return", team: detail.team, receipt };
+  }
+  if (linked.return_correction_id != null) {
+    const receipt = detail.returnCorrections.find(function (item) {
+      return item.id === Number(linked.return_correction_id);
+    });
+    if (!receipt) throw httpError(404, "Return correction receipt not found.");
+    return { receiptType: "correction", team: detail.team, receipt };
+  }
+
+  throw httpError(404, "This activity is not linked to a receipt.");
 }
 
 async function discrepancyReport(database) {
@@ -1922,5 +1977,6 @@ module.exports = {
   processReturn,
   correctReturn,
   activity,
+  activityReceipt,
   discrepancyReport
 };
