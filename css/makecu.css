@@ -2340,6 +2340,23 @@ a {
   max-width: 432px;
 }
 
+.sponsor-tier-gold .sponsor-logo-trigger img[alt="PI (Physik Instrumente)"] {
+  max-height: 110px;
+  width: auto;
+}
+
+.sponsor-tier-platinum .sponsor-logo-trigger {
+  align-items: center;
+  display: grid;
+  min-height: 190.08px;
+  width: min(518.4px, 100%);
+}
+
+.sponsor-tier-platinum .sponsor-logo-trigger img {
+  max-height: 190.08px;
+  max-width: 518.4px;
+}
+
 .sponsor-tier-bronze .sponsor-logo-trigger img {
   width: 85%;
 }
@@ -2853,6 +2870,15 @@ a {
   .sponsor-tier-gold .sponsor-logo-trigger img {
     max-height: 158.4px;
     max-width: min(403.2px, 100%);
+  }
+
+  .sponsor-tier-platinum .sponsor-logo-trigger {
+    width: min(483.84px, 100%);
+  }
+
+  .sponsor-tier-platinum .sponsor-logo-trigger img {
+    max-height: 190.08px;
+    max-width: min(483.84px, 100%);
   }
 
   .sponsor-tier-silver {
