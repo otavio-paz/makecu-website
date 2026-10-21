@@ -3,15 +3,33 @@
     <span>$</span>
     <h2><span class="terminal-command">cat</span> SCHEDULE.txt</h2>
   </div>
-  <div class="timeline">
-    {% for item in site.event.schedule %}
-      <article class="timeline-item">
-        <span>{{ item.time }}</span>
-        <div>
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.description }}</p>
+  <div class="timeline" aria-label="MakeCU 2026 public schedule">
+    {% for day in site.event.schedule %}
+      <section class="schedule-day" aria-labelledby="schedule-day-{{ forloop.index }}">
+        <header class="schedule-day-heading">
+          <div>
+            <span class="schedule-day-label">Day {{ forloop.index }} / {{ day.day }}</span>
+            <h3 id="schedule-day-{{ forloop.index }}">
+              <time datetime="{{ day.datetime }}">{{ day.date }}</time>
+            </h3>
+          </div>
+        </header>
+        <div class="schedule-day-events">
+          {% for item in day.events %}
+            <article class="timeline-item{% if item.highlight %} timeline-item-{{ item.highlight }}{% endif %}">
+              <span class="schedule-time">
+                {% if item.datetime %}<time datetime="{{ item.datetime }}">{{ item.time }}</time>{% else %}{{ item.time }}{% endif %}{% if item.end_time %} - <time datetime="{{ item.end_datetime }}">{{ item.end_time }}</time>{% endif %}
+              </span>
+              <div class="schedule-event">
+                <h4{% if item.highlight == "deadline" %} class="schedule-deadline-title" data-text="{{ item.title }}" aria-label="{{ item.title }}"{% endif %}>{{ item.title }}</h4>
+                {% if item.location %}
+                  <p class="schedule-location"><span aria-hidden="true">@</span> {{ item.location }}</p>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
         </div>
-      </article>
+      </section>
     {% endfor %}
   </div>
 </section>

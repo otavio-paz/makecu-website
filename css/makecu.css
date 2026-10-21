@@ -716,7 +716,6 @@ a {
 
 .section-panel,
 .about-page-links article,
-.timeline,
 .checklist-shell,
 .checklist-card,
 .track-card,
@@ -862,7 +861,7 @@ a {
 .section-panel h3,
 .about-page-links h4,
 .track-card h3,
-.timeline-item h3,
+.timeline-item h4,
 .sponsor-tier h3,
 .team-card h3,
 .judge-card strong,
@@ -899,11 +898,61 @@ a {
 }
 
 .timeline {
+  color: var(--paper);
   display: grid;
+  gap: 22px;
+  overflow: visible;
+  position: relative;
+}
+
+.schedule-day {
+  --schedule-accent: var(--orange);
+  background: rgba(0, 81, 154, 0.72);
+  border: 1px solid rgba(235, 235, 235, 0.3);
+  box-shadow: 8px 8px 0 rgba(255, 103, 0, 0.16);
   overflow: hidden;
 }
 
+.schedule-day:nth-child(even) {
+  --schedule-accent: #64e7ff;
+  box-shadow: 8px 8px 0 rgba(100, 231, 255, 0.14);
+}
+
+.schedule-day-heading {
+  align-items: center;
+  background: rgba(0, 81, 154, 0.9);
+  border-left: 8px solid var(--schedule-accent);
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 22px 28px;
+}
+
+.schedule-day-label {
+  color: var(--schedule-accent);
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.schedule-day-heading h3 {
+  color: var(--paper);
+  font-family: var(--font-heading);
+  font-size: clamp(18px, 2.6vw, 28px);
+  font-weight: 400;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.schedule-day-events {
+  display: grid;
+}
+
 .timeline-item {
+  align-items: start;
   display: grid;
   gap: 24px;
   grid-template-columns: 210px minmax(0, 1fr);
@@ -914,10 +963,77 @@ a {
   border-top: 1px solid rgba(235, 235, 235, 0.24);
 }
 
-.timeline-item span {
-  color: var(--orange);
+.schedule-time {
+  background: var(--schedule-accent);
+  color: var(--blue-dark);
+  display: inline-block;
   font-family: var(--font-ui);
-  font-size: 17px;
+  font-size: 16px;
+  justify-self: start;
+  line-height: 1.2;
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+
+.timeline-item h4 {
+  font-size: clamp(14px, 1.6vw, 20px);
+  overflow-wrap: anywhere;
+}
+
+.schedule-event {
+  min-width: 0;
+}
+
+.schedule-location {
+  color: #64e7ff !important;
+  font-family: var(--font-ui);
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  margin-top: 10px !important;
+}
+
+.schedule-location span {
+  color: var(--orange);
+}
+
+.timeline-item-deadline {
+  background: rgba(255, 103, 0, 0.1);
+  box-shadow: inset 7px 0 0 var(--orange);
+}
+
+.timeline-item-deadline .schedule-time {
+  background: var(--orange);
+}
+
+.timeline-item .schedule-deadline-title {
+  animation: checklistPercentLoopGlitch 5s steps(1, end) infinite;
+  color: var(--orange);
+  display: inline-block;
+  position: relative;
+  width: max-content;
+}
+
+.schedule-deadline-title::before,
+.schedule-deadline-title::after {
+  content: attr(data-text);
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.schedule-deadline-title::before {
+  animation: checklistPercentTopLoopGlitch 5s steps(1, end) infinite;
+  clip-path: inset(0 0 50% 0);
+  color: #64e7ff;
+  text-shadow: 4px 0 0 var(--orange);
+}
+
+.schedule-deadline-title::after {
+  animation: checklistPercentBottomLoopGlitch 5s steps(1, end) infinite;
+  clip-path: inset(50% 0 0 0);
+  color: var(--orange-light);
+  text-shadow: -4px 0 0 #64e7ff;
 }
 
 .checklist {
@@ -2687,6 +2803,17 @@ a {
   .team-grid,
   .timeline-item {
     grid-template-columns: 1fr;
+  }
+
+  .schedule-day-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px 18px;
+  }
+
+  .timeline-item {
+    gap: 14px;
+    padding: 22px 18px;
   }
 
   .countdown-grid span {
