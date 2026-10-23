@@ -290,13 +290,6 @@ event:
         David Watkins is a Research Lead at Tutor Intelligence, where he works on foundation model research and training for robot manipulation, and an advisor to Tola Capital on robotics and AI investments. Previously, he was a Research Lead at the RAI Institute (formerly Boston Dynamics AI Institute), joining as one of its first employees and building its foundation models research team and its largest robot data collection effort. He created Theia, a vision foundation model published at CoRL 2024, and won first place in the MineRL BASALT competition at NeurIPS 2021. He earned his B.S., M.S., and Ph.D. at Columbia University in the Columbia Robotics Lab under Prof. Peter Allen, where his paper on mobile manipulation was an IROS 2022 Best Paper Finalist.
 
   sponsors:
-    - tier: "Platinum"
-      sponsors:
-        - name: "Institute of Foundation Models"
-          logo: "/images/logos/ifm-logo.jpg"
-          url: "https://ifm.ai/"
-          description: |
-            **About IFM:** The Institute of Foundation Models is a global AI research lab dedicated to open and independent development of frontier-class foundation models. Launched in May 2025 by MBZUAI, IFM operates from advanced lab facilities in Abu Dhabi, Silicon Valley and Paris. IFM’s model portfolio includes the K2 series, a fully open-source fleet of LLMs; Jais, the most advanced Arabic LLM; and PAN, a next-generation world model for embodied reasoning and real-world simulation.
     - tier: "Gold"
       sponsors:
         - name: "Notability"
