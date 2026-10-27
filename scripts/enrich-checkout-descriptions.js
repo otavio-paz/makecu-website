@@ -23,7 +23,7 @@ const descriptions = {
   "Touch Button": "TTP223 capacitive-touch module with a digital output and configurable momentary or toggle behavior. It can act as a button behind a thin nonmetal surface.",
 
   "Arducam 5MP Camera": "5-megapixel OV5647 camera module for the Raspberry Pi CSI camera connector. Suitable for computer vision, time-lapse, and image-capture projects.",
-  "ESP (Wifi + Bluetooth) with Camera": "ESP32-CAM development board combining an OV2640 camera with Wi-Fi and Bluetooth. Program it as a self-contained wireless camera; a USB-to-serial adapter may be needed.",
+  "ESP32-CAM Development Board with USB Programmer": "ESP32-CAM development board with an OV2640 2 MP camera, Wi-Fi, Bluetooth, and an ESP32-CAM-MB USB programmer. Use it as a self-contained wireless camera or embedded vision controller.",
   "Logitech Webcam": "USB Logitech webcam for plug-and-play video capture on a Raspberry Pi or computer. Useful for vision, streaming, and video-call prototypes.",
   "Logitech Webcams": "USB Logitech webcams for plug-and-play image and video capture. Check the attached model and available Linux support before relying on a specific resolution or frame rate.",
   "Mini Spy Camera 1528-1799-ND": "Compact Adafruit mini spy camera module for small embedded video projects. Confirm its video interface and power requirements before connecting it to a controller.",
@@ -178,7 +178,7 @@ const descriptions = {
   "Grove Rotary Angle Sensor": "Grove rotary-angle potentiometer module for knobs, setpoints, and manual controls. It produces an analog voltage proportional to shaft position.",
   "Grove Sound Sensor": "Grove microphone sound-level module for detecting claps, beats, and relative loudness. It is intended for envelope level, not high-fidelity audio recording.",
   "Grove Temp Sensor": "Grove temperature-sensor module for measuring ambient temperature in simple monitoring projects. Confirm the board revision to select the correct conversion formula or library.",
-  "Heart Rate Sensor": "MAX30102 optical pulse and blood-oxygen sensing module with an I2C interface. Good skin contact and signal processing are required; it is for prototypes, not medical diagnosis.",
+  "MAX30102 Pulse Oximeter (Heart Rate + SpO₂)": "MAX30102 optical sensor module for prototype heart-rate and blood-oxygen saturation measurements over I2C. Maintain good skin contact and treat readings as experimental, not medical data.",
   "IMU": "MPU-6050-style six-axis IMU combining a three-axis accelerometer and three-axis gyroscope over I2C. Useful for tilt, gesture, and motion tracking.",
   "IR Break Beam Sensor": "Infrared emitter/receiver break-beam pair for detecting objects crossing a path. Align both halves and read the receiver's digital change when the beam is blocked.",
   "IR Break Beam Sensor 1528-2526-ND": "Adafruit infrared break-beam sensor pair for object, doorway, and counter detection. The receiver changes output when an aligned beam is interrupted.",
