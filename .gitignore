@@ -8,6 +8,7 @@ node_modules/
 checkout-dev-data/
 checkout-preview-data/
 checkout-catalog-preview-data/
+checkout-wishlist-preview-data/
 checkout-legacy-restore/
 checkout-legacy-data.zip
 checkout-preview*.log

@@ -1,6 +1,6 @@
 {
   "generatedFrom": "MakeCU Hardware List 2026.xlsx",
-  "sheet": "Full Inventory Check 10-4-26",
+  "sheet": "Full Inventory Check 10-4-26 and Wishlist",
   "items": [
     {
       "name": "Adafruit Microphone Breakout",
@@ -43,9 +43,10 @@
       "productUrl": "https://www.amazon.com/dp/B012V1HEP4"
     },
     {
-      "name": "ESP (Wifi + Bluetooth) with Camera",
-      "sourceRow": 12,
-      "productUrl": "https://www.amazon.com/dp/B09TB1GJ7P"
+      "name": "ESP32-CAM Development Board with USB Programmer",
+      "sourceRow": 4,
+      "productUrl": "https://www.amazon.com/dp/B0FQP9Y114",
+      "sourceSheet": "Wishlist"
     },
     {
       "name": "USB Cameras",
@@ -283,9 +284,10 @@
       "productUrl": "https://www.amazon.com/dp/B0B31NRSD2"
     },
     {
-      "name": "Heart Rate Sensor",
-      "sourceRow": 129,
-      "productUrl": "https://www.amazon.com/dp/B07ZQNC8XP"
+      "name": "MAX30102 Pulse Oximeter (Heart Rate + SpO₂)",
+      "sourceRow": 26,
+      "productUrl": "https://www.amazon.com/dp/B0FND6SJ3K",
+      "sourceSheet": "Wishlist"
     },
     {
       "name": "IMU",
@@ -541,6 +543,174 @@
       "name": "Wire Strippers K604-ND",
       "sourceRow": 205,
       "productUrl": "https://www.digikey.com/en/products/detail/jonard-tools/JIC-2030/2308356"
+    },
+    {
+      "name": "INMP441 I2S MEMS Microphone",
+      "sourceRow": 3,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0GYDQC6WL"
+    },
+    {
+      "name": "MLX90640 Thermal Camera (32×24)",
+      "sourceRow": 5,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B07ZKK8QWY"
+    },
+    {
+      "name": "Slamtec RPLIDAR A1 360° Scanner",
+      "sourceRow": 6,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B07TJW5SXF"
+    },
+    {
+      "name": "ADS1115 16-bit ADC Breakout",
+      "sourceRow": 7,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0F1D3KGG2"
+    },
+    {
+      "name": "WS2812B Addressable RGB LED Strip (5 m)",
+      "sourceRow": 8,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B097BWJGYK"
+    },
+    {
+      "name": "WS2812B NeoPixel Ring (24 pixels)",
+      "sourceRow": 9,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0B2D7742J"
+    },
+    {
+      "name": "SSD1306 0.96-inch OLED Display",
+      "sourceRow": 10,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B09T6SJBV5"
+    },
+    {
+      "name": "4-channel Bidirectional Logic Level Shifter",
+      "sourceRow": 11,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B07F7W91LC"
+    },
+    {
+      "name": "2.9-inch E-Paper Display Module",
+      "sourceRow": 12,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B07P6MJPTD"
+    },
+    {
+      "name": "Arduino GIGA Display Shield",
+      "sourceRow": 13,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0CKBZLTND"
+    },
+    {
+      "name": "7-inch Raspberry Pi Capacitive Touch Display",
+      "sourceRow": 14,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B09XKC53NH"
+    },
+    {
+      "name": "ESP32 ESP-WROOM-32 Development Board",
+      "sourceRow": 15,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0C7C2HQ7P"
+    },
+    {
+      "name": "TB6612FNG Dual Motor Driver",
+      "sourceRow": 16,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0F43L7LLD"
+    },
+    {
+      "name": "Micro-HDMI to HDMI Cable",
+      "sourceRow": 17,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B07KSDB25X"
+    },
+    {
+      "name": "USB Keyboard and Mouse Combo",
+      "sourceRow": 18,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B003NR874S"
+    },
+    {
+      "name": "Raspberry Pi 5 USB-C Power Supply (27 W)",
+      "sourceRow": 19,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0FHH9K47T"
+    },
+    {
+      "name": "LD2410C mmWave Presence Radar",
+      "sourceRow": 20,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0F1F97422"
+    },
+    {
+      "name": "SCD41 NDIR CO₂ Sensor",
+      "sourceRow": 21,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0F6MRMNLH"
+    },
+    {
+      "name": "BME680 Environmental Sensor",
+      "sourceRow": 22,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0FQJFK4CL"
+    },
+    {
+      "name": "VL53L5CX Multizone Time-of-Flight Sensor",
+      "sourceRow": 23,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0GSF96HHH"
+    },
+    {
+      "name": "PMS5003 Particulate Matter Sensor",
+      "sourceRow": 24,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0BG62Z8L3"
+    },
+    {
+      "name": "INA219 Current and Power Monitor",
+      "sourceRow": 25,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B01ICN5OAM"
+    },
+    {
+      "name": "AS7341 11-channel Spectral Sensor",
+      "sourceRow": 27,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B0DBQKDV67"
+    },
+    {
+      "name": "LTR390 UV and Ambient Light Sensor",
+      "sourceRow": 28,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B09FDGTKLX"
+    },
+    {
+      "name": "TMC2209 V1.3 Stepper Motor Driver",
+      "sourceRow": 29,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B08WZFK9KT"
+    },
+    {
+      "name": "Raspberry Pi AI Camera (Sony IMX500)",
+      "sourceRow": 30,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.adafruit.com/product/6009"
+    },
+    {
+      "name": "Analog Pulse Sensor",
+      "sourceRow": 31,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.amazon.com/dp/B09PR3QQVD"
+    },
+    {
+      "name": "Flex Sensor (2.2-inch)",
+      "sourceRow": 33,
+      "sourceSheet": "Wishlist",
+      "productUrl": "https://www.sparkfun.com/flex-sensor-2-2.html"
     }
   ]
 }
