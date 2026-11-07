@@ -3804,6 +3804,25 @@
       "adminNotes": "Spreadsheet rows: 194. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: MLH. Product/vendor: digikey"
     },
     {
+      "name": "IR Infrared Sensor Module (Assorted Boards)",
+      "description": "Infrared sensor modules for sensing projects. Two different board variants are available, as pictured; issued individually. Check the supplied board before choosing wiring and code.",
+      "imageUrl": "https://raw.githubusercontent.com/otavio-paz/makecu-website/gh-pages/images/checkout/components/ir-infrared-sensor-modules.png",
+      "imageAlt": "Organizer photo of two different infrared sensor boards: a narrow three-pin module and a wider four-pin module with two adjustment trimmers.",
+      "category": "Sensor",
+      "compatibility": "Arduino + Raspberry Pi",
+      "arduinoGuidance": "Verify the supplied board's supply voltage, pin labels and output type before wiring.",
+      "raspberryPiGuidance": "Verify output voltage is safe for 3.3 V GPIO; use level shifting if required.",
+      "binLocation": "",
+      "technicalSpecs": "Assorted IR sensor boards; exact models and electrical specifications unconfirmed. Three-pin and four-pin variants shown in organizer photo. Verify pinout, supply voltage and output type for the unit received.",
+      "totalQuantity": 2,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 1,
+      "active": true,
+      "adminNotes": "Organizer confirmed two IR infrared sensor modules on November 7, 2026; limit one per team. Photo shows two different board variants, combined under one assorted inventory entry."
+    },
+    {
       "description": "24 GHz radar module that detects motion, still presence, and small movements for occupancy and interactive-environment projects.",
       "imageUrl": "/images/checkout/components/ld2410c-mmwave-presence-radar-d4314d9c8f.webp",
       "imageAlt": "Product photo of LD2410C mmWave Presence Radar from the linked supplier page",
