@@ -2482,6 +2482,25 @@
       "adminNotes": "Spreadsheet rows: 99. Inventory check: 1 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Tower Pro\nOrganizer confirmed this stock is already included in the surviving JST (13) or ELEGOO SG90 (11) inventory; archived to prevent double counting."
     },
     {
+      "name": "SpringRC SM-S2309S Micro Servo",
+      "description": "SM-S2309S miniature analog positional servo for robotics and small mechanisms. Issued individually.",
+      "imageUrl": "https://raw.githubusercontent.com/otavio-paz/makecu-website/gh-pages/images/checkout/components/sm-s2309s-servos.png",
+      "imageAlt": "Organizer photo of two black SM-S2309S micro servos with three-wire leads and white connectors, one with a cross-shaped horn.",
+      "category": "Motor",
+      "compatibility": "Arduino + Raspberry Pi",
+      "arduinoGuidance": "Control the signal wire from a digital pin using the Servo library; a separate servo driver board is optional.",
+      "raspberryPiGuidance": "Use a servo-pulse-capable GPIO library or an optional PCA9685 servo driver.",
+      "binLocation": "",
+      "technicalSpecs": "No separate servo driver required: use Arduino Servo-library pulses; a PCA9685 is optional. Power from a suitable external 4.8–6 V supply and share ground with the controller. Verify connector pinout. Model datasheet: https://www.arduino.cc/documents/datasheets/servoMotor.PDF ; control guide: https://docs.arduino.cc/learn/electronics/servo-motors/",
+      "totalQuantity": 2,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 2,
+      "active": true,
+      "adminNotes": "Organizer confirmed two SM-S2309S servos on November 7, 2026; limit two per team. Photo label identifies full model SM-S2309S."
+    },
+    {
       "name": "Sunfounder 55 g Servo",
       "totalQuantity": 2,
       "description": "Sunfounder 55 g servo for robotics mechanisms. This is a separate servo type from the SF3218MG. Verify the label, voltage, and horn fit before use.",
