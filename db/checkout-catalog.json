@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "source": "MakeCU November 6 physical inventory and received wishlist; pending deletions require organizer confirmation",
+  "source": "MakeCU November 6 physical inventory and received wishlist; red/uncolored CURC items have zero available stock",
   "components": [
     {
       "name": "Adafruit Microphone Breakout",
@@ -13,12 +13,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 2. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $12.19"
+      "adminNotes": "Spreadsheet rows: 2. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $12.19\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Audio Amplifier",
@@ -31,12 +32,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 5,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 3. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $1.99. Original notes: Speaker kit (1/2)"
+      "adminNotes": "Spreadsheet rows: 3. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $1.99. Original notes: Speaker kit (1/2)\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Dweii Mini Speaker",
@@ -49,12 +51,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 5,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 4. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $2.50. Original notes: Speaker kit (2/2)"
+      "adminNotes": "Spreadsheet rows: 4. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $2.50. Original notes: Speaker kit (2/2)\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Electret Condenser Microphone Pickup (2 Pins, 9×7mm)",
@@ -67,12 +70,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 3,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 5. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.60. Original notes: Could work on a PI, but you would need an ADC (analog to digital)"
+      "adminNotes": "Spreadsheet rows: 5. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.60. Original notes: Could work on a PI, but you would need an ADC (analog to digital)\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "ELEGOO Passive Buzzer Pack",
@@ -194,12 +198,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 30,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 3,
+      "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 10. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.28"
+      "adminNotes": "Spreadsheet rows: 10. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.28\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Arducam 5MP Camera",
@@ -339,12 +344,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 5,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 13. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $17.59"
+      "adminNotes": "Spreadsheet rows: 13. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $17.59\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Echo DOT",
@@ -430,12 +436,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 5,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 14. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $25.98"
+      "adminNotes": "Spreadsheet rows: 14. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $25.98\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "description": "Motorized 360-degree two-dimensional laser scanner for indoor mapping, localization, navigation, and obstacle detection.",
@@ -466,12 +473,12 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 6,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Organizer correction on 2026-11-05: 6 units managed by CURC. Source: CURC.",
+      "adminNotes": "Organizer correction on 2026-11-05: 6 units managed by CURC. Source: CURC.\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
       "mlhQuantity": 0
     },
     {
@@ -594,12 +601,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 2,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 20. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: not listed"
+      "adminNotes": "Spreadsheet rows: 20. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: not listed\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "5V 650nm 5mW Red Dot Laser",
@@ -612,12 +620,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 20,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 2,
+      "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 21. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.68. Original notes: RPI will be on or off unless you smooth the digital signal. Also these could technically blind someone"
+      "adminNotes": "Spreadsheet rows: 21. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.68. Original notes: RPI will be on or off unless you smooth the digital signal. Also these could technically blind someone\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "7 Segment Serial Display",
@@ -666,12 +675,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 3,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 23. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 23. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "9V to dc jack",
@@ -684,12 +694,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 24. Inventory check: 1 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: not listed"
+      "adminNotes": "Spreadsheet rows: 24. Inventory check: 1 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: not listed\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "description": "Four-channel 16-bit analog-to-digital converter with a programmable gain amplifier for reading analog sensors from Arduino, ESP32, or Raspberry Pi projects.",
@@ -794,12 +805,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 3,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 25. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Digi-Key"
+      "adminNotes": "Spreadsheet rows: 25. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Digi-Key\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Capacitor",
@@ -848,12 +860,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 2,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 30. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: DigiKey"
+      "adminNotes": "Spreadsheet rows: 30. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: DigiKey\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "DC 5V Relay Module",
@@ -884,12 +897,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 7,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 17, 18. Inventory check: 0 of 2 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Mouser, Murata"
+      "adminNotes": "Spreadsheet rows: 17, 18. Inventory check: 0 of 2 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Mouser, Murata\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "DC5V Black Mini Active Piezo Buzzers",
@@ -902,12 +916,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 20,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 2,
+      "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 33. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.70"
+      "adminNotes": "Spreadsheet rows: 33. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.70\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "ELEGOO 10 kΩ Potentiometer",
@@ -1129,12 +1144,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 2,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 35. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: sparkfun"
+      "adminNotes": "Spreadsheet rows: 35. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: sparkfun\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Gemma",
@@ -1147,12 +1163,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 36. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 36. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Graphic LCD Display TFT",
@@ -1237,12 +1254,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 10,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 1,
+      "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 38, 39. Inventory check: 0 of 2 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Digi-Key"
+      "adminNotes": "Spreadsheet rows: 38, 39. Inventory check: 0 of 2 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Digi-Key\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Joystick",
@@ -1327,12 +1345,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 6,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 44. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: openhacks"
+      "adminNotes": "Spreadsheet rows: 44. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: openhacks\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "LED Green",
@@ -1345,12 +1364,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 10,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 1,
+      "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 45. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Digi-Key"
+      "adminNotes": "Spreadsheet rows: 45. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Digi-Key\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Load Cell Amplifier",
@@ -1381,12 +1401,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 46. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: SpierceTech"
+      "adminNotes": "Spreadsheet rows: 46. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: SpierceTech\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Mini Grabber Test Clip",
@@ -1455,12 +1476,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 6,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 48. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 48. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "NE555P Timer IC",
@@ -1546,12 +1568,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 54. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: not listed"
+      "adminNotes": "Spreadsheet rows: 54. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: not listed\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Real Time Clock Module IC",
@@ -1564,12 +1587,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 3,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 55. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 55. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Resistor Kit",
@@ -1600,12 +1624,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 56. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: DigiKey"
+      "adminNotes": "Spreadsheet rows: 56. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: DigiKey\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "RF receiver",
@@ -1618,12 +1643,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 57. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Kowatec"
+      "adminNotes": "Spreadsheet rows: 57. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Kowatec\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "SenseCAP Indicator",
@@ -1654,12 +1680,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "Adafruit PCA9685; 16 channels; 12-bit PWM; I2C interface.",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 61. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 61. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Small Solderable Prototyping Board",
@@ -1691,12 +1718,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 6,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 62. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: not listed"
+      "adminNotes": "Spreadsheet rows: 62. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: not listed\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Solderless Breadboard (full)",
@@ -1818,12 +1846,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 2,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 73. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Saiko Systems"
+      "adminNotes": "Spreadsheet rows: 73. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Saiko Systems\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "USB-C Cable",
@@ -1873,12 +1902,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 15,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 2,
+      "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 77. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $2.00. Original notes: Uses UART, so should be simple to set up on the Pi"
+      "adminNotes": "Spreadsheet rows: 77. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $2.00. Original notes: Uses UART, so should be simple to set up on the Pi\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "description": "Five-meter strip with 300 individually addressable RGB pixels for lighting effects, status displays, and interactive installations. The strip requires a separate regulated 5 V supply sized for the intended brightness.",
@@ -1927,12 +1957,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 80. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: sparkfun. Original notes: Requires dongle"
+      "adminNotes": "Spreadsheet rows: 80. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: sparkfun. Original notes: Requires dongle\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "XBee Shield (Wireless transceiver)",
@@ -1945,12 +1976,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 81. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: SparkFun"
+      "adminNotes": "Spreadsheet rows: 81. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: SparkFun\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Arduino and Base Shields",
@@ -2000,12 +2032,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 8,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 82. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $44.99"
+      "adminNotes": "Spreadsheet rows: 82. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $44.99\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "ELEGOO UNO R3 Arduino-Compatible Controller Board",
@@ -2145,12 +2178,13 @@
       "raspberryPiGuidance": "Requires a 3.3 V-compatible stepper driver and external motor power. Do not connect motor windings directly to Raspberry Pi GPIO.",
       "binLocation": "",
       "technicalSpecs": "Requires one 4 Phase ULN2003 Stepper Motor Driver.",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 87. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 87. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "4 Phase ULN2003 Stepper Motor Driver",
@@ -2163,12 +2197,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 88. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon"
+      "adminNotes": "Spreadsheet rows: 88. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "9g Micro Servo",
@@ -2384,12 +2419,13 @@
       "raspberryPiGuidance": "This brushless motor requires a configured VESC or compatible brushless ESC plus a suitable external power source; the Pi provides control only.",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 93. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: bluerobotics"
+      "adminNotes": "Spreadsheet rows: 93. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: bluerobotics\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "MG90S",
@@ -2511,12 +2547,13 @@
       "raspberryPiGuidance": "Requires a 3.3 V-compatible motor driver and external motor power. Never power or drive the motor directly from Raspberry Pi GPIO.",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 19,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 2,
+      "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 101. Inventory check: 1 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: gikfun"
+      "adminNotes": "Spreadsheet rows: 101. Inventory check: 1 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: gikfun\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Vibration Motors",
@@ -2529,12 +2566,13 @@
       "raspberryPiGuidance": "Requires a 3.3 V-compatible motor driver and external motor power. Never power or drive the motor directly from Raspberry Pi GPIO.",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 25,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 2,
+      "protectedStock": 0,
       "maxActivePerTeam": 5,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 102, 110. Inventory check: 0 of 2 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit, Digikey. Listed unit cost: $1.20. Original notes: Vibration motor"
+      "adminNotes": "Spreadsheet rows: 102, 110. Inventory check: 0 of 2 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit, Digikey. Listed unit cost: $1.20. Original notes: Vibration motor\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "30 A DC Motor Driver",
@@ -2566,12 +2604,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 12,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 1,
+      "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 103. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $5.32. Original notes: Need this to power a pi off the lipos"
+      "adminNotes": "Spreadsheet rows: 103. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $5.32. Original notes: Need this to power a pi off the lipos\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "DC Barrel Jack to Female",
@@ -2584,12 +2623,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 10,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 104. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $7.99"
+      "adminNotes": "Spreadsheet rows: 104. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $7.99\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "DC Motors",
@@ -2675,12 +2715,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 107. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Seeed Studio"
+      "adminNotes": "Spreadsheet rows: 107. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Seeed Studio\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Motor Shield V3.0",
@@ -2693,12 +2734,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 2,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 108. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 108. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Pump",
@@ -2784,12 +2826,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 5,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 112. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $1.99. Original notes: For hooking up with pis"
+      "adminNotes": "Spreadsheet rows: 112. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $1.99. Original notes: For hooking up with pis\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "description": "Video cable for connecting a Raspberry Pi 4 or 5 micro-HDMI output to a full-size HDMI monitor or capture device.",
@@ -2894,12 +2937,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 114. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: sparkfun"
+      "adminNotes": "Spreadsheet rows: 114. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: sparkfun\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "1584EN DC Voltage Regulator Module",
@@ -2931,12 +2975,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 6,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 115. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $14.59"
+      "adminNotes": "Spreadsheet rows: 115. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $14.59\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "4×AA Battery Holder with DC Barrel Jack",
@@ -3025,12 +3070,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 14,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 1,
+      "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 116. Inventory check: 1 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $6.30. Original notes: Did not spend long looking, could probobly find better (max current is a concern for moter heavy builds)"
+      "adminNotes": "Spreadsheet rows: 116. Inventory check: 1 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $6.30. Original notes: Did not spend long looking, could probobly find better (max current is a concern for moter heavy builds)\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "ELEGOO 5 V Relay",
@@ -3174,12 +3220,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 2,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 119. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 119. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "3MM Photodiode",
@@ -3192,12 +3239,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 20,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 2,
+      "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 120. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.33. Original notes: ADC to work with the PI"
+      "adminNotes": "Spreadsheet rows: 120. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.33. Original notes: ADC to work with the PI\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "41mm Piezo Disc",
@@ -3210,12 +3258,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 20,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 2,
+      "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 121. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $1.00. Original notes: Would be pretty weird on the PI, but you could use them as buttons"
+      "adminNotes": "Spreadsheet rows: 121. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $1.00. Original notes: Would be pretty weird on the PI, but you could use them as buttons\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "4x4 Matrix Keypad",
@@ -3228,12 +3277,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 122. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 122. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "50kg Load Cell",
@@ -3246,12 +3296,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 4,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 123. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $2.25. Original notes: ADC to work with the PI"
+      "adminNotes": "Spreadsheet rows: 123. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $2.25. Original notes: ADC to work with the PI\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "5MM Phototransistor",
@@ -3264,12 +3315,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 20,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 2,
+      "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 124. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.29. Original notes: ADC to work with the PI"
+      "adminNotes": "Spreadsheet rows: 124. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.29. Original notes: ADC to work with the PI\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "9-DOF IMU + TEMP sensor",
@@ -3282,12 +3334,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 125. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 125. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Adafruit SHTC3 Temperature and Humidity Sensor",
@@ -3466,12 +3519,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 10,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 1,
+      "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 126. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: components101"
+      "adminNotes": "Spreadsheet rows: 126. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: components101\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Gesture Sensor",
@@ -3484,12 +3538,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 2,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 127. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $19.99"
+      "adminNotes": "Spreadsheet rows: 127. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $19.99\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "GPS Module",
@@ -3502,12 +3557,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 10,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 1,
+      "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 128. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $9.50"
+      "adminNotes": "Spreadsheet rows: 128. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $9.50\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Grove - Piezo Vibration Sensor",
@@ -3628,12 +3684,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 18,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 2,
+      "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 130, 131. Inventory check: 0 of 2 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $3.66. Original notes: Need to either pre-solder or have someone on soldering duty for these"
+      "adminNotes": "Spreadsheet rows: 130, 131. Inventory check: 0 of 2 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $3.66. Original notes: Need to either pre-solder or have someone on soldering duty for these\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "description": "Bidirectional high-side current, bus-voltage, and power monitor module for energy measurements and power debugging over I2C.",
@@ -3718,12 +3775,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 100,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 10,
+      "protectedStock": 0,
       "maxActivePerTeam": 5,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 132. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.74. Original notes: ADC to work with the PI"
+      "adminNotes": "Spreadsheet rows: 132. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $0.74. Original notes: ADC to work with the PI\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Liquid Level Sensor",
@@ -3773,12 +3831,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 17,
+      "totalQuantity": 2,
       "unavailableQuantity": 0,
-      "protectedStock": 2,
+      "protectedStock": 0,
       "maxActivePerTeam": 3,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 133, 195. Inventory check: 1 of 2 source rows confirmed on 10/4/26. Source: CURC, MLH. Product/vendor: Amazon, digikey. Listed unit cost: $1.58. Original notes: Analog seems to be prefered, but can do digital output. Original usage notes (needs review): count: 6"
+      "adminNotes": "Spreadsheet rows: 133, 195. Inventory check: 1 of 2 source rows confirmed on 10/4/26. Source: CURC, MLH. Product/vendor: Amazon, digikey. Listed unit cost: $1.58. Original notes: Analog seems to be prefered, but can do digital output. Original usage notes (needs review): count: 6\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 2
     },
     {
       "name": "MP503 Gas Sensor",
@@ -3791,12 +3850,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 5,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 134. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $4.48. Original notes: Has digital and analog output"
+      "adminNotes": "Spreadsheet rows: 134. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $4.48. Original notes: Has digital and analog output\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Muscle Sensor",
@@ -3809,12 +3869,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 135. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: myoware"
+      "adminNotes": "Spreadsheet rows: 135. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: myoware\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Passive Infrared Sensor",
@@ -3827,12 +3888,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 6,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 136. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $2.83"
+      "adminNotes": "Spreadsheet rows: 136. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $2.83\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "PIR (motion) sensor",
@@ -3845,12 +3907,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 138. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit"
+      "adminNotes": "Spreadsheet rows: 138. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Adafruit\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "description": "Laser-scattering air-quality sensor for measuring airborne PM1.0, PM2.5, and PM10 particle concentrations.",
@@ -3881,12 +3944,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 10,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 118. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $8.59. Original notes: ADC to work with the PI"
+      "adminNotes": "Spreadsheet rows: 118. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $8.59. Original notes: ADC to work with the PI\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "RFID Kit",
@@ -3899,12 +3963,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 6,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 140. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $4.99. Original notes: IC sensor, ID card"
+      "adminNotes": "Spreadsheet rows: 140. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $4.99. Original notes: IC sensor, ID card\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "RGB Color Sensor with IR Filter",
@@ -3990,12 +4055,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 10,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
-      "protectedStock": 1,
+      "protectedStock": 0,
       "maxActivePerTeam": 2,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 141. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $1.44. Original notes: Would need an ADC for the pi"
+      "adminNotes": "Spreadsheet rows: 141. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $1.44. Original notes: Would need an ADC for the pi\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Thin Film Pressure Sensor",
@@ -4008,12 +4074,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 6,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 142. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $8.07. Original notes: ADC to work with the PI"
+      "adminNotes": "Spreadsheet rows: 142. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: Amazon. Listed unit cost: $8.07. Original notes: ADC to work with the PI\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "Touch Screen",
@@ -4026,12 +4093,13 @@
       "raspberryPiGuidance": "",
       "binLocation": "",
       "technicalSpecs": "",
-      "totalQuantity": 1,
+      "totalQuantity": 0,
       "unavailableQuantity": 0,
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Spreadsheet rows: 144. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: not listed"
+      "adminNotes": "Spreadsheet rows: 144. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: not listed\nOrganizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.",
+      "mlhQuantity": 0
     },
     {
       "name": "TouchTronix SNX0505-SNS-01 Tactile Sensor",

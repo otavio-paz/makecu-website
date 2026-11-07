@@ -43,7 +43,7 @@ test('database reconciliation is audited, idempotent, and preserves relationship
     assert.ok(first.created.length>50);
     assert.equal(Number((await db.query('SELECT total_quantity FROM checkout_components WHERE id=$1',[mg.id])).rows[0].total_quantity),18);
     assert.equal(Number((await db.query('SELECT COUNT(*) AS count FROM checkout_component_relationships')).rows[0].count),1);
-    assert.equal(Number((await db.query('SELECT total_quantity FROM checkout_components WHERE id=$1',[red.id])).rows[0].total_quantity),19);
+    assert.equal(Number((await db.query('SELECT total_quantity FROM checkout_components WHERE id=$1',[red.id])).rows[0].total_quantity),0);
     const retired=(await db.query('SELECT total_quantity,active FROM checkout_components WHERE id=$1',[sg.id])).rows[0];
     assert.equal(Number(retired.total_quantity),0);
     assert.equal(retired.active,false);

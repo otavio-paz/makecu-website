@@ -35,7 +35,7 @@ test("the finalized catalog imports atomically only into an empty inventory", as
        MAX(mlh_quantity) FILTER (WHERE LOWER(name) = 'moisture sensor') AS moisture_mlh
        FROM checkout_components`
   );
-  assert.equal(Number(mlh.rows[0].mlh_only), 52);
+  assert.equal(Number(mlh.rows[0].mlh_only), 53);
   assert.equal(Number(mlh.rows[0].moisture_mlh), 2);
   await assert.rejects(importCatalog(database, catalog), /only when checkout_components is empty/);
   await resetDatabaseForTests();

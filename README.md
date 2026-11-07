@@ -80,7 +80,11 @@ The November 6 physical inventory and received wishlist are reconciled with
 `npm run checkout:reconcile-final-inventory`. With `DATABASE_URL` set this defaults
 to a read-only preview; pass `-- --apply` to apply the verified changes through
 the audited inventory service. `-- --catalog` updates the local seed snapshot
-and source manifest. This reconciliation performs no database deletions, holds
+and source manifest. Use `-- --stockouts-only --apply` to mark red/uncolored CURC
+items out of stock without resetting newer counts for confirmed components.
+This preserves MLH stock and existing reservations, loans, and damaged-stock
+records while setting available stock to zero. The DMM, small solderable boards,
+and PING unit remain protected. This reconciliation performs no database deletions, holds
 ambiguous matches and package counts, preserves MLH inventory and existing order
 history, and excludes four unreceived wishlist shipments from new additions.
 Review [INVENTORY_REVIEW_2026-11-07.md](INVENTORY_REVIEW_2026-11-07.md) for the
