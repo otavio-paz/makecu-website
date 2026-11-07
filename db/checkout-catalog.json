@@ -2409,6 +2409,25 @@
       "adminNotes": "Spreadsheet rows: 182. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: MLH. Product/vendor: digikey"
     },
     {
+      "name": "Hitec D625MW Metal-Gear Digital Servo",
+      "description": "Hitec D625MW wide-voltage digital servo with metal gears for robotics and mechanisms. Compatible with a 2-cell LiPo or 6-cell Ni-MH battery supply. Issued individually.",
+      "imageUrl": "https://raw.githubusercontent.com/otavio-paz/makecu-website/gh-pages/images/checkout/components/hitec-d625mw-servo.png",
+      "imageAlt": "Organizer photo of a black Hitec D625MW servo in its case, with red, yellow and black leads and D625MW packaging.",
+      "category": "Motor",
+      "compatibility": "Arduino + Raspberry Pi",
+      "arduinoGuidance": "Control the signal wire with the Servo library; a separate servo driver is optional. Use external servo power and a shared ground.",
+      "raspberryPiGuidance": "Use servo control pulses from a suitable GPIO library or optional servo driver; use external servo power and a shared ground.",
+      "binLocation": "",
+      "technicalSpecs": "Metal-gear digital servo; 2S LiPo / 6-cell Ni-MH compatible. Keep supply at or below 8.4 V and use a supply rated for servo current. Manufacturer: https://hitecrcd.com/d625mw-high-speed-metal-gear-25t-digital-sport-servo/",
+      "totalQuantity": 3,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 3,
+      "active": true,
+      "adminNotes": "Organizer confirmed three Hitec D625MW metal-gear servos, compatible with 2-cell LiPo / 6-cell Ni-MH, on November 7, 2026. Limit three per team. Organizer supplied photo."
+    },
+    {
       "name": "M200 Motor",
       "description": "Blue Robotics M200 brushless motor designed for marine and robotics propulsion. It requires a compatible brushless ESC and careful current-limited testing.",
       "imageUrl": "/images/checkout/components/m200-motor-cacfb86b67.webp",
