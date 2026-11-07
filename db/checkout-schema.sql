@@ -345,3 +345,21 @@ UPDATE checkout_return_items items
 UPDATE checkout_components
    SET active = FALSE
  WHERE active = TRUE AND (image_url = '' OR image_alt = '');
+
+-- Order reservations do not expire. Enforce this for older deployed API workers too.
+CREATE OR REPLACE FUNCTION checkout_keep_reservations_open() RETURNS trigger AS $$
+BEGIN
+  IF TG_OP = 'UPDATE' AND OLD.status IN ('submitted','reviewing','accepted','ready') AND NEW.status = 'expired' THEN
+    RAISE EXCEPTION 'Automatic order expiration is disabled';
+  END IF;
+  IF NEW.status IN ('submitted','reviewing','accepted','ready') THEN
+    NEW.reservation_expires_at := NULL;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+DROP TRIGGER IF EXISTS checkout_no_order_expiration ON checkout_orders;
+CREATE TRIGGER checkout_no_order_expiration BEFORE INSERT OR UPDATE ON checkout_orders
+FOR EACH ROW EXECUTE FUNCTION checkout_keep_reservations_open();
+UPDATE checkout_orders SET reservation_expires_at = NULL
+WHERE status IN ('submitted','reviewing','accepted','ready') AND reservation_expires_at IS NOT NULL;

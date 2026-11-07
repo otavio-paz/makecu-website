@@ -2,8 +2,7 @@ const { hashPassword } = require("./checkout-security");
 const { componentInput, cleanString, httpError, positiveInteger, relationshipInput, returnInput } = require("./checkout-validation");
 const {
   MAX_DISTINCT_ORDER_ITEMS,
-  ORDER_COOLDOWN_MINUTES,
-  ORDER_EXPIRATION_MINUTES
+  ORDER_COOLDOWN_MINUTES
 } = require("./checkout-constants");
 
 function relationshipView(row) {
@@ -181,65 +180,7 @@ async function recordOrderEvent(database, orderId, actorId, eventType, details) 
   );
 }
 
-async function expireOrders(database) {
-  return database.transaction(async function (transaction) {
-    const result = await transaction.query(
-      `SELECT * FROM checkout_orders
-        WHERE status IN ('submitted', 'reviewing', 'accepted', 'ready')
-          AND reservation_expires_at IS NOT NULL
-          AND reservation_expires_at <= NOW()
-          AND (status <> 'reviewing' OR claim_expires_at IS NULL OR claim_expires_at <= NOW())
-        ORDER BY id
-        FOR UPDATE SKIP LOCKED`
-    );
-
-    for (const order of result.rows) {
-      const items = await transaction.query(
-        "SELECT * FROM checkout_order_items WHERE order_id = $1 ORDER BY component_id FOR UPDATE",
-        [order.id]
-      );
-
-      for (const item of items.rows) {
-        const quantity = Number(item.approved_quantity);
-
-        if (!quantity) {
-          continue;
-        }
-
-        await transaction.query(
-          `UPDATE checkout_components
-              SET reserved_quantity = reserved_quantity - $2, updated_at = NOW()
-            WHERE id = $1`,
-          [item.component_id, quantity]
-        );
-        await transaction.query(
-          `INSERT INTO checkout_inventory_transactions
-            (component_id, team_id, order_id, transaction_type, quantity, note)
-           VALUES ($1, $2, $3, 'ORDER_EXPIRED', $4, 'Reservation expired automatically')`,
-          [item.component_id, order.team_id, order.id, -quantity]
-        );
-      }
-
-      await transaction.query(
-        `UPDATE checkout_orders
-            SET status = 'expired', expired_at = NOW(), claim_expires_at = NULL
-          WHERE id = $1`,
-        [order.id]
-      );
-      await recordOrderEvent(transaction, order.id, null, "ORDER_EXPIRED", {});
-      await transaction.query(
-        `INSERT INTO checkout_activity (team_id, order_id, message)
-         VALUES ($1, $2, $3)`,
-        [order.team_id, order.id, `Order ${order.receipt_code || `#${order.id}`} expired and its reservation was released.`]
-      );
-    }
-
-    return result.rowCount;
-  });
-}
-
 async function catalog(database, user, includeInactive) {
-  await expireOrders(database);
   const teamId = user && user.role === "team" ? user.team_id : null;
   const result = await database.query(
     `SELECT components.*,
@@ -775,7 +716,7 @@ async function submitOrder(database, body, actor) {
 
     const orderResult = await transaction.query(
       `INSERT INTO checkout_orders (team_id, reservation_expires_at)
-       VALUES ($1, NOW() + INTERVAL '${ORDER_EXPIRATION_MINUTES} minutes') RETURNING *`,
+       VALUES ($1, NULL) RETURNING *`,
       [actor.team_id]
     );
     const order = orderResult.rows[0];
@@ -1028,7 +969,7 @@ async function createProtectedStockOverrideOrder(database, body, actor) {
         (team_id, status, reviewed_by, reviewing_at, claim_expires_at, reservation_expires_at,
          protected_stock_override_by, protected_stock_override_reason, protected_stock_override_at)
         VALUES ($1, 'reviewing', $2, NOW(), NOW() + INTERVAL '7 minutes',
-                NOW() + INTERVAL '${ORDER_EXPIRATION_MINUTES} minutes',
+                NULL,
                $2, $3, NOW())
        RETURNING *`,
       [teamId, actor.id, reason]
@@ -1118,7 +1059,6 @@ async function orderDetails(database, orderId, teamId) {
 }
 
 async function teamDashboard(database, actor) {
-  await expireOrders(database);
   const ordersResult = await database.query(
     `SELECT orders.*, teams.name AS team_name, reviewer.display_name AS reviewer_name,
             accepted.display_name AS accepted_by_name, ready.display_name AS ready_by_name,
@@ -1167,7 +1107,6 @@ async function teamDashboard(database, actor) {
 }
 
 async function adminOrders(database) {
-  await expireOrders(database);
   const result = await database.query(
     `SELECT orders.*, teams.name AS team_name, reviewer.display_name AS reviewer_name,
             accepted.display_name AS accepted_by_name, ready.display_name AS ready_by_name,
@@ -1189,7 +1128,6 @@ async function adminOrders(database) {
 }
 
 async function adminOverview(database) {
-  await expireOrders(database);
   const orders = await database.query(
     "SELECT status, COUNT(*) AS count FROM checkout_orders GROUP BY status"
   );
@@ -1238,7 +1176,7 @@ async function claimOrder(database, body, actor) {
       await transaction.query(
         `UPDATE checkout_orders
             SET claim_expires_at = NOW() + INTERVAL '7 minutes',
-                reservation_expires_at = NOW() + INTERVAL '${ORDER_EXPIRATION_MINUTES} minutes'
+                reservation_expires_at = NULL
           WHERE id = $1`,
         [orderId]
       );
@@ -1256,7 +1194,7 @@ async function claimOrder(database, body, actor) {
       `UPDATE checkout_orders
           SET status = 'reviewing', reviewed_by = $2, reviewing_at = NOW(),
               claim_expires_at = NOW() + INTERVAL '7 minutes',
-              reservation_expires_at = NOW() + INTERVAL '${ORDER_EXPIRATION_MINUTES} minutes'
+              reservation_expires_at = NULL
         WHERE id = $1`,
       [orderId, actor.id]
     );
@@ -1292,7 +1230,7 @@ async function releaseClaim(database, body, actor) {
       `UPDATE checkout_orders
           SET status = 'submitted', reviewed_by = NULL, reviewing_at = NULL,
               claim_expires_at = NULL,
-              reservation_expires_at = NOW() + INTERVAL '${ORDER_EXPIRATION_MINUTES} minutes'
+              reservation_expires_at = NULL
         WHERE id = $1`,
       [orderId]
     );
@@ -1422,7 +1360,7 @@ async function transitionOrder(database, body, actor, transition) {
         `UPDATE checkout_orders
             SET status = 'accepted', accepted_by = $2, accepted_at = NOW(),
                 claim_expires_at = NULL,
-                reservation_expires_at = NOW() + INTERVAL '${ORDER_EXPIRATION_MINUTES} minutes'
+                reservation_expires_at = NULL
           WHERE id = $1`,
         [orderId, actor.id]
       );
@@ -1447,7 +1385,7 @@ async function transitionOrder(database, body, actor, transition) {
       await transaction.query(
         `UPDATE checkout_orders
             SET status = 'ready', ready_by = $2, ready_at = NOW(),
-                reservation_expires_at = NOW() + INTERVAL '${ORDER_EXPIRATION_MINUTES} minutes'
+                reservation_expires_at = NULL
           WHERE id = $1`,
         [orderId, actor.id]
       );
@@ -1620,7 +1558,6 @@ async function teamsList(database, search) {
 }
 
 async function teamAdminDetail(database, teamIdInput) {
-  await expireOrders(database);
   const teamId = positiveInteger(teamIdInput, "Team ID");
   const teamResult = await database.query(
     "SELECT * FROM checkout_teams WHERE id = $1",
@@ -2072,7 +2009,6 @@ async function activityReceipt(database, activityIdInput) {
 }
 
 async function discrepancyReport(database) {
-  await expireOrders(database);
   const componentsResult = await database.query(
     `SELECT components.id, components.name, components.category, components.total_quantity,
             components.mlh_quantity, components.reserved_quantity, components.checked_out_quantity, components.unavailable_quantity,

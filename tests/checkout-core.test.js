@@ -485,7 +485,7 @@ test("pickup and cancellation cannot both win", async function () {
   assert.ok(["picked_up", "cancelled"].includes(detail.body.order.status));
 });
 
-test("expired orders release their reservation and keep a receipt", async function () {
+test("orders remain reserved and claimable even when an old client writes a past deadline", async function () {
   await request("create-team", {
     name: "Expiry Explorers",
     identifier: "expiry-explorers",
@@ -522,10 +522,11 @@ test("expired orders release their reservation and keep a receipt", async functi
   const catalog = await request("catalog", {}, adminCookie);
   const stored = catalog.body.components.find(function (item) { return item.id === component.body.component.id; });
 
-  assert.equal(expired.status, "expired");
+  assert.equal(expired.status, "submitted");
+  assert.equal(expired.reservationExpiresAt, null);
   assert.match(expired.receiptCode, /^O-\d{5}$/);
-  assert.equal(stored.reservedQuantity, 0);
-  assert.equal(stored.availableQuantity, 2);
+  assert.equal(stored.reservedQuantity, 1);
+  assert.equal(stored.availableQuantity, 1);
 });
 
 test("structured motor-driver relationships warn without blocking checkout", async function () {

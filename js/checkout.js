@@ -407,7 +407,6 @@
       '<div class="checkout-receipt-hero' + heroClass + '"><span>' + escapeHtml(statusLabel(order.status).toUpperCase()) + '</span><strong>' + escapeHtml(order.receiptCode || "#" + order.id) + "</strong><span>" + escapeHtml(order.teamName) + " · " + formatDate(order.createdAt) + "</span></div>" +
       (order.protectedStockOverrideReason ? '<div class="checkout-override-notice"><strong>Protected-stock exception</strong><p>' + escapeHtml(order.protectedStockOverrideReason) + "</p></div>" : "") +
       orderItemsMarkup(order, false) +
-      (activeOrderStatus(order.status) && order.reservationExpiresAt ? '<p><strong>This stage expires:</strong> ' + formatDate(order.reservationExpiresAt) + '</p>' : '') +
       (order.status === "ready" ? "<p><strong>Please bring this screen to the hardware desk.</strong></p>" : "") + events;
     orderDialog.showModal();
   };
@@ -449,7 +448,7 @@
     }
 
     list.innerHTML = state.dashboard.orders.map(function (order) {
-      var expiry = activeOrderStatus(order.status) && order.reservationExpiresAt ? " · expires " + formatDate(order.reservationExpiresAt) : "";
+      var expiry = "";
       return '<article class="checkout-order-card"><div class="checkout-order-card-header"><div><h2>' + escapeHtml(order.receiptCode || "Order #" + order.id) + '</h2><p class="checkout-order-card-meta">' + formatDate(order.createdAt) + expiry + '</p></div><span class="checkout-status checkout-status-' + order.status + '">' + escapeHtml(statusLabel(order.status)) + "</span></div>" +
         orderItemsMarkup(order, false) + '<div class="checkout-order-actions"><button class="checkout-button checkout-button-secondary" type="button" data-view-order="' + order.id + '">Open receipt</button></div></article>';
     }).join("");
@@ -599,7 +598,7 @@
       var cards = orders.length ? orders.map(function (order) {
         var adjustable = order.status === "reviewing" && order.reviewedBy === state.user.id;
         var claimMeta = order.status === "reviewing" && order.claimExpiresAt ? " · claim until " + formatDate(order.claimExpiresAt) : "";
-        var expiryMeta = activeOrderStatus(order.status) && order.reservationExpiresAt ? " · stage expires " + formatDate(order.reservationExpiresAt) : "";
+        var expiryMeta = "";
         return '<article class="checkout-order-card checkout-order-board-card" data-admin-order="' + order.id + '"><div class="checkout-order-card-header"><div><h2>' + escapeHtml(order.receiptCode || "#" + order.id) + " — " + escapeHtml(order.teamName) + '</h2><p class="checkout-order-card-meta">Submitted ' + formatDate(order.createdAt) + (order.reviewerName ? " · " + escapeHtml(order.reviewerName) : "") + claimMeta + expiryMeta + "</p></div></div>" +
           (order.protectedStockOverrideReason ? '<div class="checkout-override-notice"><strong>Protected-stock exception</strong><p>' + escapeHtml(order.protectedStockOverrideReason) + "</p></div>" : "") +
           orderItemsMarkup(order, adjustable, true) + '<div class="checkout-order-actions">' + adminOrderActions(order) + "</div></article>";
