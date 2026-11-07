@@ -36,7 +36,13 @@ Each account can change its display name once using **Change name (once)**. Logi
 
 Outside the configured event window, team accounts cannot sign in or use checkout data. Admin accounts may still sign in from the closed screen to rehearse the workflow and maintain inventory; every bypass is enforced from the user's server-side database role. Set `CHECKOUT_LIVE_START`, `CHECKOUT_ORDERING_END`, and `CHECKOUT_RETURN_END` in production; `CHECKOUT_FORCE_LIVE` is intended only for local testing.
 
-Team orders are limited to 10 distinct components and a 45-minute interval between successful orders. An admin can grant an audited, expiring exception that is consumed by the team's next successful order. Each active fulfillment stage (`submitted`, `reviewing`, `accepted`, and `ready`) receives a one-hour expiration. Motor-driver relationships are displayed as warnings and do not block checkout.
+Team orders are limited to 10 distinct components and a 45-minute interval between successful orders. An admin can grant an audited, expiring exception that is consumed by the team's next successful order. Orders remain reserved until pickup or cancellation, without automatic expiration. Volunteer claim leases remain separate from the order reservation. Motor-driver relationships are displayed as warnings and do not block checkout.
+
+Organizers can temporarily pause order cooldowns and volunteer claim timeouts with
+`node scripts/pause-order-timing.js` against the intended production database.
+Each explicit invocation starts a two-hour pause. The database stores its end
+time, so cooldowns resume automatically without a scheduled job or redeployment.
+Automatic order reservation expiration remains disabled after the pause.
 
 Run `npm test` for the 40-team load case, same-team multi-session serialization, inventory concurrency, idempotency, authorization, login throttling, request-size/origin hardening, admin provisioning, claim lease, stale-edit, pickup/cancel, return, and audit regression tests. Active inventory requires a photo and accessible image description; seeded sample components remain inactive until organizers add and verify those images. See [DEPLOYMENT.md](DEPLOYMENT.md) for production database and event-window configuration.
 
@@ -80,7 +86,11 @@ The November 6 physical inventory and received wishlist are reconciled with
 `npm run checkout:reconcile-final-inventory`. With `DATABASE_URL` set this defaults
 to a read-only preview; pass `-- --apply` to apply the verified changes through
 the audited inventory service. `-- --catalog` updates the local seed snapshot
-and source manifest. This reconciliation performs no database deletions, holds
+and source manifest. Use `-- --stockouts-only --apply` to mark red/uncolored CURC
+items out of stock without resetting newer counts for confirmed components.
+This preserves MLH stock and existing reservations, loans, and damaged-stock
+records while setting available stock to zero. The DMM, small solderable boards,
+and PING unit remain protected. This reconciliation performs no database deletions, holds
 ambiguous matches and package counts, preserves MLH inventory and existing order
 history, and excludes four unreceived wishlist shipments from new additions.
 Review [INVENTORY_REVIEW_2026-11-07.md](INVENTORY_REVIEW_2026-11-07.md) for the

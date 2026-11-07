@@ -38,7 +38,7 @@ async function expirationSeconds(orderId) {
        FROM checkout_orders WHERE id = $1`,
     [orderId]
   );
-  return Number(result.rows[0].seconds);
+  return result.rows[0].seconds;
 }
 
 before(async function () {
@@ -94,7 +94,7 @@ test("orders reject more than 10 distinct items before reserving inventory", asy
   assert.equal(Number(orders.rows[0].count), 0);
 });
 
-test("a missing motor driver warns but does not block and submitted orders expire in one hour", async function () {
+test("a missing motor driver warns but does not block and submitted orders have no expiration", async function () {
   const advice = await service.cartAdvice(database, policyActor, [
     { componentId: Number(components[0].id), quantity: 1 }
   ]);
@@ -105,7 +105,7 @@ test("a missing motor driver warns but does not block and submitted orders expir
     items: [{ componentId: Number(components[0].id), quantity: 1 }]
   }, policyActor);
   assert.equal(order.status, "submitted");
-  assert.ok(await expirationSeconds(order.id) > 3590);
+  assert.equal(await expirationSeconds(order.id), null);
 });
 
 test("an admin can grant one audited timeout exception and it is consumed by the next order", async function () {
@@ -155,13 +155,13 @@ test("two simultaneous submissions from the same team serialize so only one succ
   simultaneousWinningOrder = results.find(function (result) { return result.status === "fulfilled"; }).value;
 });
 
-test("reviewing, accepted, and ready stages each receive a one-hour expiration", async function () {
+test("reviewing, accepted, and ready orders remain reserved without expiration", async function () {
   await service.claimOrder(database, { orderId: simultaneousWinningOrder.id }, admin);
-  assert.ok(await expirationSeconds(simultaneousWinningOrder.id) > 3590);
+  assert.equal(await expirationSeconds(simultaneousWinningOrder.id), null);
   await service.transitionOrder(database, { orderId: simultaneousWinningOrder.id }, admin, "accept");
-  assert.ok(await expirationSeconds(simultaneousWinningOrder.id) > 3590);
+  assert.equal(await expirationSeconds(simultaneousWinningOrder.id), null);
   await service.transitionOrder(database, { orderId: simultaneousWinningOrder.id }, admin, "ready");
-  assert.ok(await expirationSeconds(simultaneousWinningOrder.id) > 3590);
+  assert.equal(await expirationSeconds(simultaneousWinningOrder.id), null);
 });
 
 test("40 teams can submit simultaneously without losing reservations", async function () {

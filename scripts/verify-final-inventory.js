@@ -1,6 +1,7 @@
 const fs=require('node:fs');
 const {definitions,reviewReport,superseded}=require('./reconcile-inventory-2026-11-07');
 const {correctedName}=require('./inventory-name-policy');
+const {stockoutCandidates}=require('./inventory-stockout-policy');
 
 async function main(){
   const base=process.env.CHECKOUT_BASE_URL||'https://makecu.dev';
@@ -17,9 +18,13 @@ async function main(){
     const {components}=await response.json();
     const normalize=s=>s.trim().toLowerCase();
     const mismatches=[];
+    const stockouts=stockoutCandidates(components,definitions(),true);
+    for(const component of stockouts){
+      if(component.availableQuantity!==0||component.teamAvailableQuantity!==0) mismatches.push(`Expected zero availability: ${component.name}`);
+    }
     const photosNeeded=[];
     const imageUrls=new Set();
-    for(const d of definitions()){
+    for(const d of process.argv.includes('--stockouts-only')?[]:definitions()){
       const matches=components.filter(c=>!superseded(c)&&[d.name,...d.aliases].map(normalize).includes(normalize(c.name)));
       if(matches.length!==1||matches[0].totalQuantity!==d.quantity) mismatches.push(d.name);
       else if(matches[0].imageUrl==='/images/checkout-image-pending.svg') photosNeeded.push(matches[0].name);
@@ -40,11 +45,14 @@ async function main(){
       const checks=await Promise.allSettled(urls.slice(i,i+4).map(async url=>{const r=await fetch(url,{method:'HEAD'});if(!r.ok||!r.headers.get('content-type')?.startsWith('image/'))throw new Error(url);}));
       checks.forEach((result,index)=>{if(result.status==='rejected')imageFailures.push(urls[i+index]);});
     }
-    console.log(JSON.stringify({website:origin,verifiedDefinitions:definitions().length,catalogRecords:components.length,mismatches,verifiedImages:urls.length-imageFailures.length,imageFailures,photosNeeded},null,2));
+    console.log(JSON.stringify({website:origin,verifiedDefinitions:process.argv.includes('--stockouts-only')?0:definitions().length,verifiedStockoutRecords:stockouts.length,catalogRecords:components.length,mismatches,verifiedImages:urls.length-imageFailures.length,imageFailures,photosNeeded},null,2));
     if(process.argv.includes('--report') && !mismatches.length && !imageFailures.length){
-      const selected=components.filter(c=>photosNeeded.includes(c.name));
+      const selected=process.argv.includes('--stockouts-only')?components:components.filter(c=>photosNeeded.includes(c.name));
       let report=reviewReport({components:selected});
-      report=report.replace('\n\n',`\n\nVerified against the live website at ${origin}/checkout/: ${definitions().length} reconciled records match the confirmed counts, ${urls.length-imageFailures.length} distinct image URLs load, and ${photosNeeded.length} reconciled records still need photos. Confirmed follow-up quantities and whole-pack issue units are included.\n\n`);
+      const summary=process.argv.includes('--stockouts-only')
+        ? `${stockouts.length} affected records have zero available and zero team-available units. Protected items remain active. Existing allocations and MLH stock are retained.`
+        : `${definitions().length} reconciled records match the confirmed counts, ${urls.length-imageFailures.length} distinct image URLs load, and ${photosNeeded.length} reconciled records still need photos. Confirmed follow-up quantities and whole-pack issue units are included.`;
+      report=report.replace('\n\n',`\n\nVerified against the live website at ${origin}/checkout/: ${summary}\n\n`);
       report+='\n## Package evidence checked\n\n';
       for(const [label,url] of [['10 level shifter boards per package','https://www.amazon.com/dp/B07F7W91LC'],['3 ESP32 development boards per package','https://www.amazon.com/dp/B0C7C2HQ7P'],['4 TB6612FNG boards per package','https://www.amazon.com/dp/B0F43L7LLD'],['2 VL53L5CX modules per package','https://www.amazon.com/dp/B0GSF96HHH'],['3 ADS1115 boards per package','https://www.amazon.com/dp/B0F1D3KGG2'],['NeoPixel rings: organizer confirmed 9 individual rings','https://www.amazon.com/dp/B0B2D7742J'],['3 FainWan pulse sensors per package','https://www.amazon.com/dp/B09PR3QQVD'],['ELEGOO Super Starter Kit reference','https://us.elegoo.com/products/elegoo-uno-r3-super-starter-kit']])report+=`- [${label}](${url})\n`;
       fs.writeFileSync('INVENTORY_REVIEW_2026-11-07.md',report);

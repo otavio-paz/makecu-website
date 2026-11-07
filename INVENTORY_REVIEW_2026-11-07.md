@@ -1,6 +1,6 @@
 # Inventory reconciliation — November 7, 2026
 
-Verified against the live website at https://www.makecu.dev/checkout/: 107 reconciled records match the confirmed counts, 49 distinct image URLs load, and 56 reconciled records still need photos. Confirmed follow-up quantities and whole-pack issue units are included.
+Verified against the live website at https://www.makecu.dev/checkout/: 71 affected records have zero available and zero team-available units. Protected items remain active. Existing allocations and MLH stock are retained.
 
 No red or uncolored item has been deleted. MLH inventory is preserved as confirmed by the organizer. Superseded JST and SG90 records are archived with zero stock after confirmation that their units are already included in the surviving totals.
 
@@ -25,9 +25,11 @@ No red or uncolored item has been deleted. MLH inventory is preserved as confirm
 
 Names receive only small spelling/spacing corrections. Uncertain model identifiers are retained.
 
-## Proposed removals — confirmation required
+## Out-of-stock workbook rows
 
-| Main row | Color | Workbook item | Quantity | Note |
+Red and uncolored CURC items are retained with zero available stock. Confirmed green/received items that share a merged record retain their verified quantities. MLH inventory and explicitly protected items are preserved.
+
+| Main row | Color | Workbook item | Workbook quantity | Note |
 | --- | --- | --- | ---: | --- |
 | 2 | Uncolored | Adafruit Microphone Breakout | 1 |  |
 | 3 | Uncolored | Audio Amplifier | 5 |  |
@@ -177,10 +179,13 @@ These four rows existed in the older local snapshot but were absent from product
 - ELEGOO Small Solderless Breadboard
 - ELEGOO UNO R3 Prototype Expansion Shield
 - ELEGOO UNO R3 USB Cable
+- JST Headers 4 pin male
 - Mini Grabber Test Clip
 - Mini-USB Cable
 - NE555P Timer IC
+- Power Hub
 - Small Solderable Prototyping Board
+- Solder Pad
 - Solderless Breadboard (Half Size)
 - USB-C Cable
 - ELEGOO Arduino Nano-Compatible Controller Board
@@ -201,6 +206,7 @@ These four rows existed in the older local snapshot but were absent from product
 - Raspberry Pi Camera Holder with Cable
 - Raspberry Pi Camera Ribbon Cable Set
 - 1584EN DC Voltage Regulator Module
+- 3S Lipo Battery
 - 4×AA Battery Holder with DC Barrel Jack
 - 8-Channel Servo Power Distribution Node
 - 9 V Battery Snap Connector (Bare Leads)
@@ -214,8 +220,12 @@ These four rows existed in the older local snapshot but were absent from product
 - ELEGOO 2-Axis Analog Joystick Module
 - ELEGOO DHT11 Temperature and Humidity Module
 - ELEGOO Infrared Receiver Module
+- Grove Sound Sensor
+- Grove Temp Sensor
 - Liquid Level Sensor
+- PIR (motion) sensor
 - Sonar Altimeter and Echosounder (PING)
+- Touch Screen
 - Small Camera Tripod
 
 ## Package evidence checked

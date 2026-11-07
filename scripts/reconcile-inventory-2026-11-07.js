@@ -4,6 +4,7 @@ const evidence = require('./inventory-review-2026-11-07.json');
 const { WISHLIST_COMPONENTS, WISHLIST_UPDATES } = require('./apply-wishlist-catalog');
 const service = require('../api/_lib/checkout-service');
 const {correctedName,protectedFromRemoval} = require('./inventory-name-policy');
+const {stockoutCandidates,zeroAvailable} = require('./inventory-stockout-policy');
 const PENDING = '/images/checkout-image-pending.svg';
 const REASON = 'Reconciled with November 6 physical inventory and received wishlist, reviewed November 7, 2026.';
 const normalize = name => name.trim().toLowerCase().replace(/\s+/g, ' ');
@@ -154,6 +155,14 @@ function makePlan(components) {
     if(components.some(c=>c!==current && normalize(c.name)===normalize(name))){pending.push({name,reason:'Corrected name already exists; review before merging.'});continue;}
     updates.push({current,next:{...current,name}});
   }
+  for(const current of stockoutCandidates(components,definitions())) {
+    const existing=updates.find(update=>update.current===current);
+    const next=zeroAvailable(existing?existing.next:current);
+    const note='Organizer confirmed red/uncolored inventory is out of stock; zero available CURC units. MLH stock and existing order/return history retained.';
+    if(!(next.adminNotes||'').includes(note)) next.adminNotes=`${next.adminNotes||''}\n${note}`.trim();
+    if(existing) existing.next=next;
+    else if(next.totalQuantity!==current.totalQuantity||next.protectedStock!==current.protectedStock||next.adminNotes!==current.adminNotes) updates.push({current,next});
+  }
   return {updates,pending};
 }
 
@@ -173,19 +182,23 @@ function applyCatalog(catalog, imageByName = new Map()) {
     else result.components.push(next);
     if (current && current.name !== next.name) result.relationships = result.relationships.map(r=>({...r, sourceName:r.sourceName===current.name?next.name:r.sourceName, targetName:r.targetName===current.name?next.name:r.targetName}));
   }
-  result.source = 'MakeCU November 6 physical inventory and received wishlist; pending deletions require organizer confirmation';
+  result.source = 'MakeCU November 6 physical inventory and received wishlist; red/uncolored CURC items have zero available stock';
   const retained = new Set(result.components.map(c=>c.name));
   result.relationships=result.relationships.filter(r=>retained.has(r.sourceName)&&retained.has(r.targetName));
   result.components.sort((a,b)=>a.category.localeCompare(b.category)||a.name.localeCompare(b.name));
   return result;
 }
 
-async function applyDatabase(database, {apply = false, imageByName = new Map()} = {}) {
+async function applyDatabase(database, {apply = false, imageByName = new Map(),stockoutsOnly=false} = {}) {
   return database.transaction(async tx => {
     const actor = (await tx.query("SELECT id,username,role,display_name FROM checkout_users WHERE role='admin' AND active=TRUE ORDER BY id LIMIT 1")).rows[0];
     if (!actor) throw new Error('An active inventory admin is required.');
     const components = await service.catalog(tx, actor, true);
     const plan = makePlan(components);
+    if(stockoutsOnly){
+      const targets=new Set(stockoutCandidates(components,definitions(),true));
+      plan.updates=plan.updates.filter(update=>targets.has(update.current));
+    }
     const result = {applied:apply, updated:[],created:[],pending:plan.pending};
     for (const {current,next} of plan.updates) {
       if (imageByName.has(next.name)) Object.assign(next,imageByName.get(next.name));
@@ -203,7 +216,7 @@ function reviewReport(catalog) {
   for (const [row,reason] of pendingWishlist) lines.push(`- Wishlist row ${row}: ${reason}`);
   lines.push('- BME680 confirmed: 4 individual modules. No quantity or identity decisions remain pending.');
   lines.push('', '## Keep in inventory — organizer confirmed', '', '- DMM: retain, including the uncolored CURC workbook row. The existing MLH DMM remains unchanged.', '- Small Solderable Prototyping Board: retain 6.', '- Sonar Altimeter and Echosounder (PING): retain 1.', '', 'Names receive only small spelling/spacing corrections. Uncertain model identifiers are retained.');
-  lines.push('', '## Proposed removals — confirmation required', '', '| Main row | Color | Workbook item | Quantity | Note |', '| --- | --- | --- | ---: | --- |');
+  lines.push('', '## Out-of-stock workbook rows', '', 'Red and uncolored CURC items are retained with zero available stock. Confirmed green/received items that share a merged record retain their verified quantities. MLH inventory and explicitly protected items are preserved.', '', '| Main row | Color | Workbook item | Workbook quantity | Note |', '| --- | --- | --- | ---: | --- |');
   for (const row of evidence.main.filter(r=>(r.fill===8||r.fill===0)&&!protectedFromRemoval(r.name))) lines.push(`| ${row.row} | ${row.fill===8?'Red':'Uncolored'} | ${correctedName(row.name).replaceAll('|','/')} | ${row.quantity??'Unspecified'} | ${row.notes.replaceAll('|','/')} |`);
   lines.push('', 'Merged records need partial stock reconciliation, not whole-record deletion: tactile switches, ceramic capacitors (retain MLH stock), JST male headers, moisture sensors (retain MLH stock), and MAX30102 sensors (received wishlist stock).', '', '## Not received — excluded from additions', '');
   for (const row of evidence.wishlist.filter(r=>!r.received)) lines.push(`- Wishlist row ${row.row}: ${row.name}.`);
@@ -235,7 +248,7 @@ async function main() {
   }
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required; refusing to change an unintended local database.');
   const {getDatabase,resetDatabaseForTests}=require('../api/_lib/checkout-db');
-  try { console.log(JSON.stringify(await applyDatabase(await getDatabase(),{apply:process.argv.includes('--apply')}),null,2)); }
+  try { console.log(JSON.stringify(await applyDatabase(await getDatabase(),{apply:process.argv.includes('--apply'),stockoutsOnly:process.argv.includes('--stockouts-only')}),null,2)); }
   finally { await resetDatabaseForTests(); }
 }
 if(require.main===module) main().catch(error=>{console.error(error.message);process.exitCode=1;});
