@@ -44,6 +44,12 @@ Each explicit invocation starts a two-hour pause. The database stores its end
 time, so cooldowns resume automatically without a scheduled job or redeployment.
 Automatic order reservation expiration remains disabled after the pause.
 
+Teams receive in-page notifications when their order status changes, detected by
+the five-second refresh. Updates remain in the team-only Order updates panel
+until dismissed and survive reloads in the same browser session. The first visit
+establishes a baseline without alerting on existing order history. Status alerts
+are isolated by team login and are not shown to volunteers.
+
 Run `npm test` for the 40-team load case, same-team multi-session serialization, inventory concurrency, idempotency, authorization, login throttling, request-size/origin hardening, admin provisioning, claim lease, stale-edit, pickup/cancel, return, and audit regression tests. Active inventory requires a photo and accessible image description; seeded sample components remain inactive until organizers add and verify those images. See [DEPLOYMENT.md](DEPLOYMENT.md) for production database and event-window configuration.
 
 ### Full catalog descriptions and provisional images

@@ -1416,6 +1416,20 @@
   z-index: 200;
 }
 
+.checkout-order-updates {
+  background: #eff8f2;
+  border: 1px solid #4d9d68;
+  border-left: 4px solid #11612e;
+  border-radius: 8px;
+  color: #17542c;
+  margin: 16px 0;
+  padding: 16px;
+}
+.checkout-order-updates .checkout-page-heading { margin: 0 0 8px; flex-wrap: wrap; gap: 8px; }
+.checkout-order-updates h2 { margin: 0; font-size: 1.1rem; }
+.checkout-order-updates ul { margin: 0; padding-left: 20px; }
+.checkout-order-updates li + li { margin-top: 6px; }
+
 @keyframes checkoutCircuitDrift {
   from {
     background-position: 0 0, 0 0, center, center;

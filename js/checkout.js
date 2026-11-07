@@ -24,6 +24,11 @@
     teamDetailRequestId: 0,
     openingActivityReceiptId: null
   };
+  var teamDataRequestId = 0;
+  var orderUpdateOwner = null;
+  var observedOrderStatuses = null;
+  var unreadOrderUpdates = [];
+  var teamOrderUpdates = document.querySelector("[data-team-order-updates]");
   var categories = ["Audio", "Button", "Camera", "Communication", "Distance", "Electronics", "Microcontroller", "Motor", "Motor Related", "Pi-related", "Power", "Sensor", "Tool"];
   var maxDistinctCartItems = 10;
   var loadingState = document.querySelector("[data-loading-state]");
@@ -152,6 +157,58 @@
     }, 4200);
   };
 
+  var orderUpdateStorageKey = function () { return "makecu-order-updates-team-" + orderUpdateOwner; };
+  var saveOrderUpdates = function () {
+    try { window.sessionStorage.setItem(orderUpdateStorageKey(), JSON.stringify({ statuses: observedOrderStatuses, unread: unreadOrderUpdates })); }
+    catch (error) { /* Notifications still work when storage is unavailable. */ }
+  };
+  var renderOrderUpdates = function () {
+    teamOrderUpdates.hidden = !state.user || state.user.role !== "team" || !unreadOrderUpdates.length;
+    document.querySelector("[data-team-order-update-list]").innerHTML = unreadOrderUpdates.map(function (message) {
+      return "<li>" + escapeHtml(message) + "</li>";
+    }).join("");
+  };
+  var detectOrderUpdates = function (orders) {
+    if (!state.user || state.user.role !== "team") return;
+    if (orderUpdateOwner !== state.user.id) {
+      orderUpdateOwner = state.user.id;
+      observedOrderStatuses = null;
+      unreadOrderUpdates = [];
+      try {
+        var stored = JSON.parse(window.sessionStorage.getItem(orderUpdateStorageKey()) || "null");
+        if (stored && stored.statuses && typeof stored.statuses === "object" && !Array.isArray(stored.statuses)) {
+          observedOrderStatuses = stored.statuses;
+          unreadOrderUpdates = Array.isArray(stored.unread) ? stored.unread.filter(function (message) { return typeof message === "string"; }).slice(0, 20) : [];
+        }
+      } catch (error) { /* Establish a new baseline for invalid or unavailable storage. */ }
+      renderOrderUpdates();
+    }
+    var next = {};
+    var messages = [];
+    orders.forEach(function (order) {
+      if (["submitted", "reviewing", "accepted", "ready", "picked_up", "cancelled", "expired"].indexOf(order.status) < 0) return;
+      next[order.id] = order.status;
+      if (observedOrderStatuses && observedOrderStatuses[order.id] !== order.status &&
+          (observedOrderStatuses[order.id] || order.status !== "submitted")) {
+        messages.push("Order " + (order.receiptCode || "#" + order.id) +
+          (order.status === "ready" ? " is ready for pickup at the hardware desk." : " is now " + statusLabel(order.status) + "."));
+      }
+    });
+    observedOrderStatuses = next;
+    if (messages.length) {
+      unreadOrderUpdates = messages.concat(unreadOrderUpdates).slice(0, 20);
+      renderOrderUpdates();
+      notify(messages.join(" "));
+    }
+    saveOrderUpdates();
+  };
+  document.querySelector("[data-dismiss-order-updates]").addEventListener("click", function () {
+    if (!state.user || state.user.role !== "team") return;
+    unreadOrderUpdates = [];
+    saveOrderUpdates();
+    renderOrderUpdates();
+  });
+
   var setBusy = function (button, busy, label) {
     if (!button) {
       return;
@@ -168,6 +225,16 @@
   };
 
   var setSession = function (user) {
+    if (!user || !state.user || state.user.id !== user.id || state.user.role !== user.role) {
+      teamDataRequestId += 1;
+      orderUpdateOwner = null;
+      observedOrderStatuses = null;
+      unreadOrderUpdates = [];
+      teamOrderUpdates.hidden = true;
+      document.querySelector("[data-team-order-update-list]").innerHTML = "";
+      window.clearTimeout(state.toastTimer);
+      toast.hidden = true;
+    }
     state.user = user;
     session.hidden = !user;
 
@@ -470,10 +537,15 @@
   };
 
   var loadTeamData = async function (quiet) {
+    var user = state.user;
+    if (!user || user.role !== "team") return;
+    var requestId = ++teamDataRequestId;
     try {
       var results = await Promise.all([api("catalog"), api("team-dashboard")]);
+      if (requestId !== teamDataRequestId || state.user !== user) return;
       state.components = results[0].components;
       state.dashboard = results[1];
+      detectOrderUpdates(state.dashboard.orders);
       state.components.forEach(function (component) {
         if (component.mlhQuantity > 0) {
           delete state.cart[component.id];
