@@ -38,6 +38,12 @@ Outside the configured event window, team accounts cannot sign in or use checkou
 
 Team orders are limited to 10 distinct components and a 45-minute interval between successful orders. An admin can grant an audited, expiring exception that is consumed by the team's next successful order. Orders remain reserved until pickup or cancellation, without automatic expiration. Volunteer claim leases remain separate from the order reservation. Motor-driver relationships are displayed as warnings and do not block checkout.
 
+Organizers can temporarily pause order cooldowns and volunteer claim timeouts with
+`node scripts/pause-order-timing.js` against the intended production database.
+Each explicit invocation starts a two-hour pause. The database stores its end
+time, so cooldowns resume automatically without a scheduled job or redeployment.
+Automatic order reservation expiration remains disabled after the pause.
+
 Run `npm test` for the 40-team load case, same-team multi-session serialization, inventory concurrency, idempotency, authorization, login throttling, request-size/origin hardening, admin provisioning, claim lease, stale-edit, pickup/cancel, return, and audit regression tests. Active inventory requires a photo and accessible image description; seeded sample components remain inactive until organizers add and verify those images. See [DEPLOYMENT.md](DEPLOYMENT.md) for production database and event-window configuration.
 
 ### Full catalog descriptions and provisional images

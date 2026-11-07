@@ -347,13 +347,22 @@ UPDATE checkout_components
  WHERE active = TRUE AND (image_url = '' OR image_alt = '');
 
 -- Order reservations do not expire. Enforce this for older deployed API workers too.
+CREATE TABLE IF NOT EXISTS checkout_timing_controls (
+  singleton BOOLEAN PRIMARY KEY DEFAULT TRUE CHECK (singleton),
+  paused_until TIMESTAMPTZ
+);
 CREATE OR REPLACE FUNCTION checkout_keep_reservations_open() RETURNS trigger AS $$
+DECLARE pause_until TIMESTAMPTZ;
 BEGIN
   IF TG_OP = 'UPDATE' AND OLD.status IN ('submitted','reviewing','accepted','ready') AND NEW.status = 'expired' THEN
     RAISE EXCEPTION 'Automatic order expiration is disabled';
   END IF;
   IF NEW.status IN ('submitted','reviewing','accepted','ready') THEN
     NEW.reservation_expires_at := NULL;
+  END IF;
+  SELECT paused_until INTO pause_until FROM checkout_timing_controls WHERE singleton=TRUE;
+  IF pause_until > NOW() AND NEW.status='reviewing' AND NEW.claim_expires_at IS NOT NULL THEN
+    NEW.claim_expires_at := GREATEST(NEW.claim_expires_at,pause_until);
   END IF;
   RETURN NEW;
 END;
@@ -363,3 +372,18 @@ CREATE TRIGGER checkout_no_order_expiration BEFORE INSERT OR UPDATE ON checkout_
 FOR EACH ROW EXECUTE FUNCTION checkout_keep_reservations_open();
 UPDATE checkout_orders SET reservation_expires_at = NULL
 WHERE status IN ('submitted','reviewing','accepted','ready') AND reservation_expires_at IS NOT NULL;
+
+CREATE OR REPLACE FUNCTION checkout_keep_temporary_cooldown_override() RETURNS trigger AS $$
+BEGIN
+  IF NEW.reason='Temporary organizer timing pause' AND EXISTS (
+    SELECT 1 FROM checkout_timing_controls WHERE singleton=TRUE AND paused_until>NOW()
+  ) THEN
+    NEW.consumed_at := NULL;
+    NEW.order_id := NULL;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+DROP TRIGGER IF EXISTS checkout_temporary_cooldown_pause ON checkout_order_cooldown_overrides;
+CREATE TRIGGER checkout_temporary_cooldown_pause BEFORE UPDATE ON checkout_order_cooldown_overrides
+FOR EACH ROW EXECUTE FUNCTION checkout_keep_temporary_cooldown_override();

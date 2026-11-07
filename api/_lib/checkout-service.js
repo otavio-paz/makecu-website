@@ -781,6 +781,8 @@ async function submitOrder(database, body, actor) {
 }
 
 async function orderCooldownStatus(database, teamId) {
+  const timingPause=await database.query('SELECT paused_until FROM checkout_timing_controls WHERE singleton=TRUE AND paused_until>NOW()');
+  if(timingPause.rows.length) return {secondsLeft:0,policySecondsLeft:0,overrideAvailable:false,overrideId:null,overrideReason:'Temporary organizer timing pause',overrideExpiresAt:timingPause.rows[0].paused_until,latestOrderId:null};
   const latestOrder = await database.query(
     `SELECT id, created_at,
             GREATEST(0, CEIL(EXTRACT(EPOCH FROM
