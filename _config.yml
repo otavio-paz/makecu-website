@@ -188,7 +188,7 @@ event:
           end_time: "3:00 pm"
           end_datetime: "2026-11-07T15:00:00-05:00"
           title: "[Beginner Hacks] Electronics/Microcontrollers"
-          location: "Makerspace"
+          location: "Mudd 833"
         - time: "2:00 pm"
           datetime: "2026-11-07T14:00:00-05:00"
           title: "Air Dry Clay"
