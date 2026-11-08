@@ -3585,6 +3585,25 @@
       "mlhQuantity": 0
     },
     {
+      "name": "Flame Sensor Module",
+      "description": "Flame sensor module for electronics sensing projects, with an adjustment trimmer. Issued individually.",
+      "imageUrl": "https://raw.githubusercontent.com/otavio-paz/makecu-website/gh-pages/images/checkout/components/flame-sensor-module.png",
+      "imageAlt": "Organizer photo of a red four-pin flame sensor board with a black sensing element and blue adjustment trimmer.",
+      "category": "Sensor",
+      "compatibility": "Arduino + Raspberry Pi",
+      "arduinoGuidance": "Verify supply requirements and pin labels before wiring.",
+      "raspberryPiGuidance": "Verify output voltage is safe for 3.3 V GPIO before connecting.",
+      "binLocation": "",
+      "technicalSpecs": "Flame sensor module with four-pin header and adjustment trimmer. Exact model and electrical specifications unconfirmed; check pin labels and supply requirements before use.",
+      "totalQuantity": 1,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 1,
+      "active": true,
+      "adminNotes": "Organizer confirmed one flame sensor module on November 7, 2026. Maximum one per team. Organizer supplied photo."
+    },
+    {
       "name": "Gesture Sensor",
       "description": "Gesture/proximity sensor module for recognizing hand movements without contact. The linked board is compatible with Arduino and Raspberry Pi digital interfaces.",
       "imageUrl": "/images/checkout/components/gesture-sensor-fcc81be590.webp",
@@ -3729,6 +3748,25 @@
       "maxActivePerTeam": 2,
       "active": true,
       "adminNotes": "Spreadsheet rows: 192. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: MLH. Product/vendor: not listed"
+    },
+    {
+      "name": "HX711 Load Cell Amplifier",
+      "description": "HX711 load cell amplifier module for load-cell and weighing projects. Amplifier board only; load cell not included. Issued individually.",
+      "imageUrl": "https://raw.githubusercontent.com/otavio-paz/makecu-website/gh-pages/images/checkout/components/hx711-load-cell-amplifier.png",
+      "imageAlt": "Organizer photo of a green HX711 load cell amplifier board with load-cell terminals and GND, DT, SCK and VCC pin labels.",
+      "category": "Sensor",
+      "compatibility": "Arduino + Raspberry Pi",
+      "arduinoGuidance": "Check board pin labels and voltage requirements before wiring; use an HX711-compatible library.",
+      "raspberryPiGuidance": "Verify DT output voltage is safe for 3.3 V GPIO before connecting.",
+      "binLocation": "",
+      "technicalSpecs": "HX711 load cell amplifier module. Board labels include E+, E-, A-, A+, B-, B+, GND, DT, SCK and VCC. Check the board's supply requirements and load-cell wiring before use.",
+      "totalQuantity": 1,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 1,
+      "active": true,
+      "adminNotes": "Organizer confirmed one HX711 Load Cell Amplifier on November 7, 2026. Maximum one per team. Organizer supplied photo."
     },
     {
       "name": "IMU",
