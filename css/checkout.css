@@ -439,6 +439,17 @@
   margin-top: 1rem;
 }
 
+.checkout-component-holdings {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border: 1px solid #b7c7d2;
+  border-radius: 0.55rem;
+  background: #f2f7fa;
+}
+.checkout-component-holdings-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.checkout-component-holdings-header h3 { margin: 0; font-size: 1rem; }
+.checkout-component-holdings small { display: block; }
+
 .checkout-return-picker { min-width: 0; }
 .checkout-return-picker-toggle,
 .checkout-return-picker-option {

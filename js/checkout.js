@@ -22,6 +22,7 @@
     toastTimer: null,
     liveStatus: null,
     teamDetailRequestId: 0,
+    componentHoldingsRequestId: 0,
     openingActivityReceiptId: null
   };
   var teamDataRequestId = 0;
@@ -228,6 +229,10 @@
     if (!user || !state.user || state.user.id !== user.id || state.user.role !== user.role) {
       teamDataRequestId += 1;
       state.adminOrdersRequestId += 1;
+      state.componentHoldingsRequestId += 1;
+      document.querySelector('[data-component-holdings]').hidden = true;
+      document.querySelector('[data-component-holdings-body]').innerHTML = '';
+      if (componentDialog.open) componentDialog.close();
       state.adminOrders = [];
       document.querySelector("[data-admin-orders]").innerHTML = "";
       orderUpdateOwner = null;
@@ -1738,7 +1743,41 @@
     }).join("");
   };
 
+  var loadComponentHoldings = async function (componentId) {
+    var actor = state.user;
+    if (!actor || actor.role !== 'admin') return;
+    var requestId = ++state.componentHoldingsRequestId;
+    var body = document.querySelector('[data-component-holdings-body]');
+    var button = document.querySelector('[data-refresh-component-holdings]');
+    body.textContent = 'Loading current team holdings…';
+    button.disabled = true;
+    var isCurrent = function () {
+      return requestId === state.componentHoldingsRequestId && state.user === actor &&
+        componentDialog.open && Number(document.querySelector('[data-component-form]').id.value) === componentId;
+    };
+    try {
+      var result = await api('component-holdings', { componentId: componentId });
+      if (!isCurrent()) return;
+      body.innerHTML = result.teams.length ? '<p>' + result.totalHeldQuantity + ' unit(s) held by ' + result.teams.length + ' team(s).</p><div class="checkout-inventory-table-wrap"><table class="checkout-table"><thead><tr><th scope="col">Team</th><th scope="col">Quantity held</th></tr></thead><tbody>' + result.teams.map(function (team) {
+        return '<tr><td><strong>' + escapeHtml(team.teamName) + '</strong><small>@' + escapeHtml(team.identifier) + '</small></td><td>' + team.quantity + '</td></tr>';
+      }).join('') + '</tbody></table></div>' : '<p>No teams are currently holding this component.</p>';
+    } catch (error) {
+      if (isCurrent()) body.textContent = 'Could not load team holdings. ' + error.message + ' Use Refresh to try again.';
+    } finally {
+      if (requestId === state.componentHoldingsRequestId) button.disabled = false;
+    }
+  };
+
+  document.querySelector('[data-refresh-component-holdings]').addEventListener('click', function () {
+    var componentId = Number(document.querySelector('[data-component-form]').id.value);
+    if (componentId > 0 && componentDialog.open) loadComponentHoldings(componentId);
+  });
+
   var openComponentForm = function (component) {
+    state.componentHoldingsRequestId += 1;
+    document.querySelector('[data-component-holdings]').hidden = !component;
+    document.querySelector('[data-component-holdings-body]').innerHTML = '';
+    document.querySelector('[data-refresh-component-holdings]').disabled = false;
     var form = document.querySelector("[data-component-form]");
     form.reset();
     form.id.value = component ? component.id : "";
@@ -1765,6 +1804,7 @@
     form.querySelector("[data-component-error]").hidden = true;
     renderRelationshipRows(component ? component.relationships : [], component ? component.id : null);
     componentDialog.showModal();
+    if (component) loadComponentHoldings(component.id);
   };
 
   document.querySelector("[data-add-relationship]").addEventListener("click", function () {

@@ -392,6 +392,8 @@ async function handler(request, response) {
       send(response, 201, await mutate(async function (transaction) {
         return { order: await service.createProtectedStockOverrideOrder(transaction, body, admin) };
       }));
+    } else if (action === "component-holdings") {
+      send(response, 200, await service.componentHoldings(database, body.componentId));
     } else if (action === "save-component") {
       send(response, body.id ? 200 : 201, await mutate(async function (transaction) {
         return { component: await service.saveComponent(transaction, body, admin) };

@@ -1574,6 +1574,29 @@ async function teamsList(database, search) {
   });
 }
 
+async function componentHoldings(database, componentIdInput) {
+  const componentId = positiveInteger(componentIdInput, "Component ID");
+  const result = await database.query(
+    `SELECT components.id AS component_id, components.name AS component_name,
+            teams.id AS team_id, teams.name AS team_name, teams.identifier,
+            inventory.checked_out_quantity
+       FROM checkout_components components
+       LEFT JOIN checkout_team_inventory inventory
+         ON inventory.component_id = components.id AND inventory.checked_out_quantity > 0
+       LEFT JOIN checkout_teams teams ON teams.id = inventory.team_id
+      WHERE components.id = $1
+      ORDER BY teams.name, teams.id`,
+    [componentId]
+  );
+  if (!result.rows.length) throw httpError(404, "Component not found.");
+  const teams = result.rows.filter(function (row) { return row.team_id != null; }).map(function (row) {
+    return { teamId: Number(row.team_id), teamName: row.team_name, identifier: row.identifier,
+      quantity: Number(row.checked_out_quantity) };
+  });
+  return { componentId, componentName: result.rows[0].component_name, teams,
+    totalHeldQuantity: teams.reduce(function (sum, team) { return sum + team.quantity; }, 0) };
+}
+
 async function teamAdminDetail(database, teamIdInput) {
   const teamId = positiveInteger(teamIdInput, "Team ID");
   const returnInventory = await database.query(
@@ -2149,6 +2172,7 @@ module.exports = {
   adjustOrder,
   transitionOrder,
   teamsList,
+  componentHoldings,
   teamAdminDetail,
   processReturn,
   correctReturn,
