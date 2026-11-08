@@ -1652,6 +1652,25 @@
       "mlhQuantity": 0
     },
     {
+      "name": "Satistronics Laser Module",
+      "description": "Satistronics laser module on a three-pin breakout board for electronics projects. Issued individually.",
+      "imageUrl": "https://raw.githubusercontent.com/otavio-paz/makecu-website/gh-pages/images/checkout/components/satistronics-laser-module.png",
+      "imageAlt": "Organizer photo of a Satistronics laser module with a brass cylindrical emitter mounted on a black three-pin board.",
+      "category": "Electronics",
+      "compatibility": "N/A",
+      "arduinoGuidance": "",
+      "raspberryPiGuidance": "",
+      "binLocation": "",
+      "technicalSpecs": "Brand: Satistronics. Exact model, supply voltage, wavelength and output power unconfirmed; verify the module specifications and pinout before use.",
+      "totalQuantity": 1,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 1,
+      "active": true,
+      "adminNotes": "Organizer confirmed one Satistronics laser module on November 7, 2026 and supplied photo. One-per-team limit and zero protected stock follow the recent single-unit additions."
+    },
+    {
       "name": "SenseCAP Indicator",
       "description": "SenseCAP indicator/display unit for showing data from compatible sensors and connected services. Confirm the exact SenseCAP model and supported inputs before planning integration.",
       "imageUrl": "/images/checkout/components/Sense CAP Indicator.webp",
