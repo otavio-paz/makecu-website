@@ -4235,6 +4235,25 @@
       "mlhQuantity": 0
     },
     {
+      "name": "Tilt Ball Switch",
+      "description": "Tilt ball switch module for detecting changes in orientation. Issued individually.",
+      "imageUrl": "https://raw.githubusercontent.com/otavio-paz/makecu-website/gh-pages/images/checkout/components/tilt-ball-switch.png",
+      "imageAlt": "Organizer photo of a tilt ball switch module with a blue cylindrical switch on a black three-pin board.",
+      "category": "Sensor",
+      "compatibility": "N/A",
+      "arduinoGuidance": "",
+      "raspberryPiGuidance": "",
+      "binLocation": "",
+      "technicalSpecs": "Tilt ball switch on a three-pin module. Exact model and electrical specifications unconfirmed; verify pinout and supply requirements before use.",
+      "totalQuantity": 1,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 1,
+      "active": true,
+      "adminNotes": "Organizer confirmed one Tilt Ball Switch on November 7, 2026 and supplied photo. One-per-team limit and zero protected stock follow the recent single-unit additions."
+    },
+    {
       "name": "Touch Screen",
       "description": "Touch-enabled display panel for Raspberry Pi user interfaces, dashboards, and kiosks. Confirm the display connector, touch interface, resolution, and required power for the attached model.",
       "imageUrl": "/images/checkout-image-pending.svg",
