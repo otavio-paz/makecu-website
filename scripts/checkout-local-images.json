@@ -478,5 +478,10 @@
     "name": "Sunfounder SF3218MG Servo",
     "file": "sunfounder-sf3218mg-servo.webp",
     "alt": "Sunfounder SF3218MG digital servo with a blue metal horn and three-wire lead, from the organizer-provided photo"
+  },
+  {
+    "name": "ELEGOO HC-SR04 Ultrasonic Distance Sensor",
+    "file": "elegoo-hc-sr04-ultrasonic-distance-sensor.webp",
+    "alt": "HC-SR04 ultrasonic distance sensor with two round transducers and four pins, from the organizer-provided photo"
   }
 ]
