@@ -473,5 +473,10 @@
     "name": "ELEGOO DC Motor (Red and Black Leads)",
     "file": "elegoo-dc-motor-red-black-leads.webp",
     "alt": "Small brushed DC motor with red and black leads, from the organizer-provided photo"
+  },
+  {
+    "name": "Sunfounder SF3218MG Servo",
+    "file": "sunfounder-sf3218mg-servo.webp",
+    "alt": "Sunfounder SF3218MG digital servo with a blue metal horn and three-wire lead, from the organizer-provided photo"
   }
 ]

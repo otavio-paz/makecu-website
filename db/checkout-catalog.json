@@ -2598,8 +2598,8 @@
     {
       "name": "Sunfounder SF3218MG Servo",
       "description": "Sunfounder SF3218MG servo for robotics mechanisms. Research the SF3218MG model for voltage, control pulse, and mechanical specifications.",
-      "imageUrl": "/images/checkout-image-pending.svg",
-      "imageAlt": "Photo pending review for SF3218MG Servo",
+      "imageUrl": "/images/checkout/components/sunfounder-sf3218mg-servo.webp",
+      "imageAlt": "Sunfounder SF3218MG digital servo with a blue metal horn and three-wire lead, from the organizer-provided photo",
       "category": "Motor",
       "compatibility": "Arduino + Raspberry Pi",
       "arduinoGuidance": "Standard servo PWM control is compatible. For multiple servos, use a servo driver and a separate supply matched to the servos; connect the grounds.",
