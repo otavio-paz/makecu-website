@@ -274,7 +274,7 @@
       return '<div class="checkout-inventory-thumbnail">' + content + "</div>";
     }
 
-    return '<button class="checkout-inventory-thumbnail" type="button" data-preview-component="' + component.id + '" aria-label="View a larger image of ' + escapeHtml(component.name) + '">' + content + "</button>";
+    return '<button class="checkout-inventory-thumbnail" type="button" data-preview-component="' + component.id + '" data-image-url="' + escapeHtml(component.imageUrl) + '" data-image-name="' + escapeHtml(component.name) + '" data-image-alt="' + escapeHtml(component.imageAlt || component.name) + '" aria-label="View a larger image of ' + escapeHtml(component.name) + '">' + content + "</button>";
   };
 
   var openImagePreview = function (component) {
@@ -872,7 +872,8 @@
       ? null
       : captureTeamDetailDraft(container, detail.team.id);
     var holding = detail.inventory.length ? detail.inventory.map(function (item) {
-      return '<div class="checkout-return-row" data-return-component="' + item.componentId + '"><strong>' + escapeHtml(item.name) + '<span>Currently holding ' + item.checkedOutQuantity + '</span></strong><label>Return now<input type="number" min="0" max="' + item.checkedOutQuantity + '" value="0" data-return-quantity></label><label>Condition<select data-return-condition><option value="good">Good</option><option value="damaged">Damaged</option><option value="missing">Missing</option></select></label><label>Note<input maxlength="1000" placeholder="Required if damaged/missing" data-return-note></label></div>';
+      var component = Object.assign({ id: item.componentId }, item);
+      return '<div class="checkout-return-row" data-return-component="' + item.componentId + '"><div class="checkout-return-component">' + inventoryImageMarkup(component) + '<div><strong>' + escapeHtml(item.name) + '</strong><div class="checkout-tags">' + tagMarkup(item.category) + '</div><span class="checkout-return-held">Currently holding ' + item.checkedOutQuantity + '</span></div></div><label>Return now<input type="number" min="0" max="' + item.checkedOutQuantity + '" value="0" data-return-quantity></label><label>Condition<select data-return-condition><option value="good">Good</option><option value="damaged">Damaged</option><option value="missing">Missing</option></select></label><label>Note<input maxlength="1000" placeholder="Required if damaged/missing" data-return-note></label></div>';
     }).join("") + '<div class="checkout-order-actions"><button class="checkout-button checkout-button-primary" type="button" data-process-return="' + detail.team.id + '">Process Return</button></div>' : '<p class="checkout-empty">This team has returned all checked-out hardware.</p>';
     var receipts = detail.returns.length ? detail.returns.map(function (receipt) {
       var correctableItems = receipt.items.filter(function (item) { return item.correctableQuantity > 0; });
@@ -1371,6 +1372,11 @@
     }
   });
   document.querySelector("[data-team-detail]").addEventListener("click", async function (event) {
+    var preview = event.target.closest('[data-preview-component]');
+    if (preview) {
+      openImagePreview({ name: preview.dataset.imageName, imageUrl: preview.dataset.imageUrl, imageAlt: preview.dataset.imageAlt });
+      return;
+    }
     var returnButton = event.target.closest("[data-process-return]");
     var resetButton = event.target.closest("[data-reset-password]");
     var orderButton = event.target.closest("[data-view-admin-order]");
