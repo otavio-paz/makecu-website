@@ -3899,6 +3899,25 @@
       "adminNotes": "Organizer confirmed two IR infrared sensor modules on November 7, 2026; limit one per team. Photo shows two different board variants, combined under one assorted inventory entry."
     },
     {
+      "name": "KY-028 Temperature Sensor",
+      "description": "KY-028 temperature sensor module for electronics sensing projects, with an adjustment trimmer. Issued individually.",
+      "imageUrl": "https://raw.githubusercontent.com/otavio-paz/makecu-website/gh-pages/images/checkout/components/ky-028-temperature-sensor.png",
+      "imageAlt": "Organizer photo of a red KY-028 temperature sensor board with a black sensing element, blue adjustment trimmer and four-pin header.",
+      "category": "Sensor",
+      "compatibility": "N/A",
+      "arduinoGuidance": "",
+      "raspberryPiGuidance": "",
+      "binLocation": "",
+      "technicalSpecs": "Model supplied by organizer: KY-028. Four-pin temperature sensor module; board labels include A0, G, + and D0. Verify supply requirements and output levels before connecting.",
+      "totalQuantity": 1,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 1,
+      "active": true,
+      "adminNotes": "Organizer confirmed one KY-028 Temperature Sensor on November 7, 2026 and supplied photo. One-per-team limit and zero protected stock follow the recent single-unit additions."
+    },
+    {
       "description": "24 GHz radar module that detects motion, still presence, and small movements for occupancy and interactive-environment projects.",
       "imageUrl": "/images/checkout/components/ld2410c-mmwave-presence-radar-d4314d9c8f.webp",
       "imageAlt": "Product photo of LD2410C mmWave Presence Radar from the linked supplier page",
