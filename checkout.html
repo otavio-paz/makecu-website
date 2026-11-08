@@ -218,6 +218,10 @@ custom_class: checkout-page
     <div class="checkout-dialog-header"><div><span class="checkout-kicker">INVENTORY ITEM</span><h2 data-component-form-title>Component</h2></div><button class="checkout-icon-button" type="button" data-dialog-close>×</button></div>
     <input type="hidden" name="id">
     <input type="hidden" name="expectedVersion">
+    <section class="checkout-component-holdings" data-component-holdings hidden aria-labelledby="component-holdings-heading">
+      <div class="checkout-component-holdings-header"><h3 id="component-holdings-heading">Teams currently holding this component</h3><button class="checkout-button checkout-button-secondary" type="button" data-refresh-component-holdings>Refresh</button></div>
+      <div data-component-holdings-body role="status" aria-live="polite"></div>
+    </section>
     <div class="checkout-form-grid"><label>Component name<input name="name" required maxlength="120"></label><label>Category<select name="category" required></select></label></div>
     <label>Description<textarea name="description" rows="3" maxlength="2000"></textarea></label>
     <div class="checkout-form-grid"><label>Photo URL<input name="imageUrl" maxlength="1000" placeholder="https://… or /images/…"></label><label>Image description<input name="imageAlt" maxlength="240" placeholder="Required when active"></label></div>
