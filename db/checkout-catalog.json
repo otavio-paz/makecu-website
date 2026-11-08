@@ -3269,6 +3269,25 @@
       "adminNotes": "Reconciled with November 6 physical inventory and received wishlist, reviewed November 7, 2026. Source: FINAL Inventory Check - 1106202, row P51:R51. Physical stock: 1 individual checkout units.\nReconciled with November 6 physical inventory and received wishlist, reviewed November 7, 2026. Source: FINAL Inventory Check - 1106202, row P51:R51. Physical stock: 1 individual components."
     },
     {
+      "name": "Energizer AA Battery",
+      "description": "Individual Energizer AA alkaline battery for compatible battery holders and low-voltage projects. Observe polarity and do not recharge alkaline batteries.",
+      "imageUrl": "/images/checkout/components/energizer-aa-battery.webp",
+      "imageAlt": "Energizer AA alkaline battery from the organizer-provided photo",
+      "category": "Power",
+      "compatibility": "N/A",
+      "arduinoGuidance": "Use a suitable battery holder and power regulation for the board.",
+      "raspberryPiGuidance": "Use a suitable regulated power supply rather than connecting cells directly to the board.",
+      "binLocation": "",
+      "technicalSpecs": "AA alkaline battery; 1.5 V nominal. Issued individually.",
+      "totalQuantity": 14,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 4,
+      "active": true,
+      "adminNotes": "From Otavio Paz. Organizer added November 8, 2026: 14 individual Energizer AA batteries, maximum 4 per team. Photo supplied by organizer."
+    },
+    {
       "name": "Facmogu Adjustable DC Power Supply",
       "description": "Facmogu adjustable DC power supply. Set and measure the output voltage and verify connector polarity before connecting hardware.",
       "imageUrl": "/images/checkout/components/wall-power-supply-cbdbf49bb3.webp",
