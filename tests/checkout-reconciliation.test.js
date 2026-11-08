@@ -42,14 +42,25 @@ test('zero stock requires an exact explicit shortage correction; inactive compon
   await recordUntrackedItem(db,{...body,stockMode:'shortfall',approvedStockIncrease:2,outcome:'return'},admin);
   assert.equal(await held(),0);assert.equal((await stored()).total_quantity,2);assert.equal((await stored()).checked_out_quantity,0);assert.equal((await stored()).active,false);
 });
-test('new return-only component and damaged return are atomic and duplicates are rejected',async()=>{
-  const body=await fresh();const input={...body,newComponentName:'Identified spare module',description:'Blue module marked ABC',stockMode:'new_stock',approvedStockIncrease:2,outcome:'return',condition:'damaged',note:'Broken connector'};
-  await recordUntrackedItem(db,input,admin);
-  const created=(await db.query("SELECT * FROM checkout_components WHERE name='Identified spare module'")).rows[0];
-  assert.equal(created.total_quantity,2);assert.equal(created.unavailable_quantity,2);assert.equal(created.checked_out_quantity,0);assert.equal(created.active,false);
-  await assert.rejects(recordUntrackedItem(db,input,admin),e=>e.status===409);
-  await assert.rejects(recordUntrackedItem(db,{...input,newComponentName:'Rolled back module',description:''},admin),e=>e.status===400);
-  assert.equal((await db.query("SELECT id FROM checkout_components WHERE name='Rolled back module'")).rows.length,0);
+test('this action cannot create a new catalog component, even through direct API input',async()=>{
+  const body=await fresh();
+  const before=(await db.query('SELECT COUNT(*)::integer AS n FROM checkout_components')).rows[0].n;
+  for(const change of [{newComponentName:'Unknown module',description:'New description'}, {componentId:null}, {componentId:'new'}, {description:'Create this instead'}]) {
+    await assert.rejects(recordUntrackedItem(db,{...body,...change},admin), e=>e.status===400);
+  }
+  assert.equal((await db.query('SELECT COUNT(*)::integer AS n FROM checkout_components')).rows[0].n,before);
+  assert.equal(await held(),0);
+});
+test('simple existing-component requests get an automatic admin audit reason',async()=>{
+  const body=await fresh();delete body.reason;
+  await recordUntrackedItem(db,body,admin);
+  assert.equal(await held(),2);
+  assert.ok((await service.activity(db)).some(a=>a.message.includes('Untracked checkout recorded by a volunteer')));
+  const detail=await service.teamAdminDetail(db,body.teamId);
+  const option=detail.returnInventory.find(c=>c.componentId===body.componentId);
+  assert.equal(option.category,'Electronics');
+  assert.ok(Object.hasOwn(option,'imageUrl'));
+  assert.ok(Object.hasOwn(option,'imageAlt'));
 });
 test('invalid quantities, role, source, condition, notes and stale counts leave inventory unchanged',async()=>{
   const body=await fresh();

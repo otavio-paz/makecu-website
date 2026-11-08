@@ -814,6 +814,8 @@
       untracked.hidden = !draft.untrackedOpen;
       container.querySelector('[data-toggle-untracked]').setAttribute('aria-expanded', String(draft.untrackedOpen));
       untracked.querySelectorAll('input,select,textarea').forEach(function (field, index) { restoreFieldDraft(field, draft.untracked[index]); });
+      updateReturnPicker(untracked);
+      filterReturnPicker(untracked);
     }
 
     var profile = container.querySelector("[data-team-profile-form]");
@@ -879,6 +881,21 @@
     });
   };
 
+  var updateReturnPicker = function (form) {
+    var selected = form.querySelector('[data-select-return-component="' + Number(form.elements.componentId.value) + '"]');
+    form.querySelector('[data-return-picker-value]').innerHTML = selected ? selected.innerHTML : 'Choose a component';
+  };
+
+  var filterReturnPicker = function (form) {
+    var search = form.querySelector('[data-return-picker-search]').value.trim().toLowerCase();
+    var visible = 0;
+    form.querySelectorAll('[data-select-return-component]').forEach(function (option) {
+      option.hidden = option.dataset.search.indexOf(search) < 0;
+      if (!option.hidden) visible += 1;
+    });
+    form.querySelector('[data-return-picker-empty]').hidden = visible > 0;
+  };
+
   var renderTeamDetail = function (detail, options) {
     var container = document.querySelector("[data-team-detail]");
     var draft = options && options.preserveDraft === false
@@ -888,18 +905,17 @@
       var component = Object.assign({ id: item.componentId }, item);
       return '<div class="checkout-return-row" data-return-component="' + item.componentId + '"><div class="checkout-return-component">' + inventoryImageMarkup(component) + '<div><strong>' + escapeHtml(item.name) + '</strong><div class="checkout-tags">' + tagMarkup(item.category) + '</div><span class="checkout-return-held">Currently holding ' + item.checkedOutQuantity + '</span></div></div><label>Return now<input type="number" min="0" max="' + item.checkedOutQuantity + '" value="0" data-return-quantity></label><label>Condition<select data-return-condition><option value="good">Good</option><option value="damaged">Damaged</option><option value="missing">Missing</option></select></label><label>Note<input maxlength="1000" placeholder="Required if damaged/missing" data-return-note></label></div>';
     }).join("") + '<div class="checkout-order-actions"><button class="checkout-button checkout-button-primary" type="button" data-process-return="' + detail.team.id + '">Process Return</button></div>' : '<p class="checkout-empty">This team has returned all checked-out hardware.</p>';
-    var untrackedForm = '<section class="checkout-untracked"><button class="checkout-button checkout-button-secondary" type="button" data-toggle-untracked aria-expanded="false" aria-controls="checkout-untracked-' + detail.team.id + '">Add untracked component to this team</button><form id="checkout-untracked-' + detail.team.id + '" class="checkout-form" data-untracked-form data-team-id="' + detail.team.id + '" hidden><p>Add hardware missing from Currently Holding, then return it normally or record its return now. Every change is recorded for admins.</p>' +
-      '<label>Component<select name="componentId"><option value="">Choose a component</option>' + (detail.returnInventory || []).filter(function (item) { return !item.mlhQuantity; }).map(function (item) {
+    var untrackedForm = '<section class="checkout-untracked"><button class="checkout-button checkout-button-secondary" type="button" data-toggle-untracked aria-expanded="false" aria-controls="checkout-untracked-' + detail.team.id + '">Add untracked component to this team</button><form id="checkout-untracked-' + detail.team.id + '" class="checkout-form" data-untracked-form data-team-id="' + detail.team.id + '" hidden><p>Choose an existing component missing from this team&rsquo;s holdings. Add it to Currently Holding, or return it now.</p>' +
+      '<input type="hidden" name="componentId"><div class="checkout-return-picker"><button type="button" class="checkout-return-picker-toggle" data-toggle-return-picker aria-expanded="false" aria-controls="checkout-return-options-' + detail.team.id + '"><span data-return-picker-value>Choose a component</span><span aria-hidden="true">&#9662;</span></button>' +
+      '<div class="checkout-return-picker-panel" id="checkout-return-options-' + detail.team.id + '" data-return-picker-panel hidden><label>Find a component<input type="search" data-return-picker-search placeholder="Search by name or category"></label><div class="checkout-return-picker-options" role="group" aria-label="Catalog components">' +
+      (detail.returnInventory || []).filter(function (item) { return !item.mlhQuantity; }).map(function (item) {
         var holding = detail.inventory.find(function (held) { return held.componentId === item.componentId; });
-        return '<option value="' + item.componentId + '" data-version="' + item.version + '" data-available="' + item.physicalAvailable + '" data-held="' + (holding ? holding.checkedOutQuantity : 0) + '">' + escapeHtml(item.name) + '</option>';
-      }).join('') + '<option value="new">Not in catalog — create return-only entry</option></select></label>' +
-      '<label>New component name (only if not in catalog)<input name="newComponentName" maxlength="120"></label><label>Identifying description for new component<textarea name="description" maxlength="2000"></textarea></label>' +
+        return '<button type="button" class="checkout-return-picker-option" data-select-return-component="' + item.componentId + '" data-version="' + item.version + '" data-available="' + item.physicalAvailable + '" data-held="' + (holding ? holding.checkedOutQuantity : 0) + '" data-name="' + escapeHtml(item.name) + '" data-search="' + escapeHtml((item.name + ' ' + (item.category || '')).toLowerCase()) + '">' + itemImageMarkup(item) + '<span><strong>' + escapeHtml(item.name) + '</strong>' + tagMarkup(item.category || 'Electronics') + '</span></button>';
+      }).join('') + '</div><p data-return-picker-empty hidden>No components match your search.</p></div></div>' +
       '<label>Quantity<input name="quantity" type="number" min="1" max="10000" value="1" required></label>' +
-      '<label>Stock count<select name="stockMode"><option value="counted">Already included in our stock count</option><option value="shortfall">Correct only the shortage in our count</option><option value="new_stock">These units were not included in our count</option></select></label>' +
-      '<label>Action<select name="outcome"><option value="hold">Add to team holdings</option><option value="return">Record and return now</option></select></label>' +
-      '<label>Condition when returning now<select name="condition"><option value="good">Good</option><option value="damaged">Damaged</option></select></label>' +
-      '<label>Return note (required if damaged)<input name="note" maxlength="1000"></label><label>Required reconciliation reason<textarea name="reason" maxlength="500" required></textarea></label>' +
-      '<button class="checkout-button checkout-button-primary" type="submit">Review and record item</button></form></section>';
+      '<label>Condition<select name="condition"><option value="good">Good</option><option value="damaged">Damaged</option></select></label>' +
+      '<label>Note<input name="note" maxlength="1000" placeholder="Required if damaged"></label>' +
+      '<div class="checkout-order-actions"><button class="checkout-button checkout-button-secondary" type="submit" data-untracked-outcome="hold">Add to Currently Holding</button><button class="checkout-button checkout-button-primary" type="submit" data-untracked-outcome="return">Return now</button></div></form></section>';
     var receipts = detail.returns.length ? detail.returns.map(function (receipt) {
       var correctableItems = receipt.items.filter(function (item) { return item.correctableQuantity > 0; });
       var correctionForm = correctableItems.length ? '<details class="checkout-return-correction" data-correction-receipt="' + receipt.id + '"><summary>Correct this receipt</summary><p class="checkout-form-note">This adds a correction receipt; the original remains unchanged.</p>' + correctableItems.map(function (item) {
@@ -1403,7 +1419,26 @@
       if (untrackedForm.dataset.saving === 'true') return;
       untrackedForm.hidden = !untrackedForm.hidden;
       untrackedToggle.setAttribute('aria-expanded', String(!untrackedForm.hidden));
-      if (!untrackedForm.hidden) untrackedForm.elements.componentId.focus();
+      if (!untrackedForm.hidden) untrackedForm.querySelector('[data-toggle-return-picker]').focus();
+      return;
+    }
+    var pickerToggle = event.target.closest('[data-toggle-return-picker]');
+    var pickerOption = event.target.closest('[data-select-return-component]');
+    if (pickerToggle || pickerOption) {
+      var pickerForm = (pickerToggle || pickerOption).closest('[data-untracked-form]');
+      var pickerPanel = pickerForm.querySelector('[data-return-picker-panel]');
+      var pickerButton = pickerForm.querySelector('[data-toggle-return-picker]');
+      if (pickerForm.dataset.saving === 'true') return;
+      if (pickerOption) {
+        pickerForm.elements.componentId.value = pickerOption.dataset.selectReturnComponent;
+        updateReturnPicker(pickerForm);
+        pickerPanel.hidden = true;
+        pickerButton.focus();
+      } else {
+        pickerPanel.hidden = !pickerPanel.hidden;
+        if (!pickerPanel.hidden) pickerForm.querySelector('[data-return-picker-search]').focus();
+      }
+      pickerButton.setAttribute('aria-expanded', String(!pickerPanel.hidden));
       return;
     }
     var preview = event.target.closest('[data-preview-component]');
@@ -1544,7 +1579,24 @@
     }
   });
 
+  document.querySelector("[data-team-detail]").addEventListener("keydown", function (event) {
+    var form = event.target.closest('[data-untracked-form]');
+    if (!form) return;
+    var panel = form.querySelector('[data-return-picker-panel]');
+    if (event.key === 'Escape' && !panel.hidden) {
+      event.preventDefault();
+      panel.hidden = true;
+      var toggle = form.querySelector('[data-toggle-return-picker]');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.focus();
+    } else if (event.target.matches('[data-return-picker-search]') && (event.key === 'Enter' || event.key === 'ArrowDown')) {
+      event.preventDefault();
+      var first = Array.from(form.querySelectorAll('[data-select-return-component]')).find(function (option) { return !option.hidden; });
+      if (first) first.focus();
+    }
+  });
   document.querySelector("[data-team-detail]").addEventListener("input", function (event) {
+    if (event.target.matches('[data-return-picker-search]')) filterReturnPicker(event.target.closest('[data-untracked-form]'));
     var profile = event.target.closest("[data-team-profile-form]");
     if (profile) profile.dataset.dirty = "true";
   });
@@ -1561,25 +1613,21 @@
       event.preventDefault();
       if (untracked.dataset.saving === 'true') return;
       var fields = untracked.elements;
-      var selected = fields.componentId.options[fields.componentId.selectedIndex];
-      var isNew = fields.componentId.value === 'new';
+      var selected = untracked.querySelector('[data-select-return-component="' + Number(fields.componentId.value) + '"]');
       var quantity = Number(fields.quantity.value);
-      var stockMode = fields.stockMode.value;
-      if (!fields.componentId.value || !Number.isInteger(quantity) || quantity < 1 || quantity > 10000 || !fields.reason.value.trim()) { notify('Choose a component, valid quantity and reconciliation reason.'); return; }
-      if (isNew && (stockMode !== 'new_stock' || !fields.newComponentName.value.trim() || !fields.description.value.trim())) { notify('Enter a name and identifying description, and choose that these new units were not included in the count.'); return; }
-      var increase = stockMode === 'counted' ? 0 : stockMode === 'new_stock' ? quantity : Math.max(0,quantity-Number(selected.dataset.available));
-      var button = untracked.querySelector('button[type="submit"]');
+      if (!selected || !Number.isInteger(quantity) || quantity < 1 || quantity > 10000) { notify('Choose a component and a valid quantity.'); return; }
+      var increase = Math.max(0, quantity - Number(selected.dataset.available));
+      var button = event.submitter || untracked.querySelector('button[type="submit"]');
       var teamId = Number(untracked.dataset.teamId);
       var actor = state.user;
-      var payload = {teamId:teamId,componentId:isNew?null:Number(fields.componentId.value),
-        newComponentName:isNew?fields.newComponentName.value:'',description:fields.description.value,
-        quantity:quantity,stockMode:stockMode,approvedStockIncrease:increase,expectedVersion:isNew?null:Number(selected.dataset.version),
-        expectedHeldQuantity:isNew?0:Number(selected.dataset.held),outcome:fields.outcome.value,condition:fields.condition.value,note:fields.note.value,reason:fields.reason.value};
+      var payload = {teamId:teamId,componentId:Number(fields.componentId.value),
+        quantity:quantity,stockMode:'shortfall',approvedStockIncrease:increase,expectedVersion:Number(selected.dataset.version),
+        expectedHeldQuantity:Number(selected.dataset.held),outcome:button.dataset.untrackedOutcome || 'hold',condition:fields.condition.value,note:fields.note.value};
       if (payload.outcome === 'return' && payload.condition === 'damaged' && !payload.note.trim()) { notify('Enter a note describing the damage.'); return; }
       untracked.dataset.saving = 'true';
       setBusy(button, true, 'Reviewing…');
       try {
-        if (!(await confirmAction('Record untracked hardware?', 'Record ' + quantity + ' unit(s) of ' + (isNew ? payload.newComponentName : selected.textContent) + '. Increase total stock by ' + increase + '. ' + (payload.outcome === 'return' ? 'A physical return receipt will also be created.' : 'These units will appear in Currently Holding.'), 'Record Item'))) return;
+        if (!(await confirmAction('Record untracked hardware?', 'Record ' + quantity + ' unit(s) of ' + selected.dataset.name + '. Increase total stock by ' + increase + '. ' + (payload.outcome === 'return' ? 'A physical return receipt will also be created.' : 'These units will appear in Currently Holding.'), 'Record Item'))) return;
         if (state.user !== actor || !actor || actor.role !== 'admin' || state.selectedTeamId !== teamId) return;
         button.textContent = 'Recording…';
         var result = await mutate('record-untracked-item', payload);
