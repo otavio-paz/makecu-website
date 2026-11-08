@@ -38,7 +38,7 @@
       "protectedStock": 0,
       "maxActivePerTeam": 1,
       "active": true,
-      "adminNotes": "Organizer added November 8, 2026: 1 Adafruit Mini USB Microphone, maximum 1 per team. Photo supplied by organizer."
+      "adminNotes": "Organizer added November 8, 2026: 1 Adafruit Mini USB Microphone, maximum 1 per team. Photo supplied by organizer.\nFrom Otavio Paz."
     },
     {
       "name": "Audio Amplifier",
@@ -2854,6 +2854,25 @@
       "maxActivePerTeam": 1,
       "active": true,
       "adminNotes": "Spreadsheet rows: 109. Inventory check: 0 of 1 source rows confirmed on 10/4/26. Source: CURC. Product/vendor: amazon\nReconciled with November 6 physical inventory and received wishlist, reviewed November 7, 2026. Source: FINAL Inventory Check - 1106202, row 109. Physical stock: 1 individual checkout units. Inventory note: ADD TO WEB"
+    },
+    {
+      "name": "Serial Bus Servo Driver Board (ST/SC)",
+      "description": "Serial bus servo driver board supporting up to 253 ST/SC serial bus servos. Use with compatible serial bus servos and an appropriate external servo power supply.",
+      "imageUrl": "/images/checkout/components/serial-bus-servo-driver-st-sc.webp",
+      "imageAlt": "Serial bus servo driver board with USB-C, UART, servo connectors, and external power inputs, from the organizer-provided photo",
+      "category": "Motor Related",
+      "compatibility": "Arduino + Raspberry Pi",
+      "arduinoGuidance": "Use the UART connection with compatible serial bus servos; check voltage levels and wiring.",
+      "raspberryPiGuidance": "Use a compatible USB or UART connection and a separate servo power supply.",
+      "binLocation": "",
+      "technicalSpecs": "Supports up to 253 ST/SC serial bus servos. USB-C and UART connections.",
+      "totalQuantity": 1,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 1,
+      "active": true,
+      "adminNotes": "From Otavio Paz. Organizer added November 8, 2026: 1 board, maximum 1 per team. Photo supplied by organizer."
     },
     {
       "description": "Compact dual H-bridge driver for controlling two brushed DC motors or one bipolar stepper with higher efficiency than an L298N module.",

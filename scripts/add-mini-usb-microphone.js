@@ -8,6 +8,6 @@ const component={
   raspberryPiGuidance:'Connect to a USB-A host port and select the microphone as the audio input.',
   binLocation:'',technicalSpecs:'Compact USB microphone with a USB-A male connector.',
   totalQuantity:1,mlhQuantity:0,unavailableQuantity:0,protectedStock:0,maxActivePerTeam:1,active:true,
-  adminNotes:'Organizer added November 8, 2026: 1 Adafruit Mini USB Microphone, maximum 1 per team. Photo supplied by organizer.'
+  adminNotes:'Organizer added November 8, 2026: 1 Adafruit Mini USB Microphone, maximum 1 per team. Photo supplied by organizer. From Otavio Paz.'
 };
 addComponent(component,'Organizer added 1 Adafruit Mini USB Microphone; maximum 1 per team.').catch(e=>{console.error(e.message);process.exitCode=1;});
