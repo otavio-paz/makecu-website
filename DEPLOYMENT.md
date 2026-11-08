@@ -34,7 +34,7 @@ Add these environment variables to the Vercel project for Production and Preview
 - `CHECKOUT_ADMIN_PASSWORD`: initial volunteer password with at least 10 characters.
 - `CHECKOUT_ADMIN_NAME`: volunteer display name.
 - `CHECKOUT_LIVE_START`: opening time as an ISO 8601 timestamp with timezone.
-- `CHECKOUT_ORDERING_END`: time when new team orders stop, as an ISO 8601 timestamp with timezone.
+- `CHECKOUT_ORDERING_END`: requested team ordering deadline, as an ISO 8601 timestamp with timezone. Ordering remains open at least through `CHECKOUT_RETURN_END`; an earlier ordering deadline does not close the pickup window.
 - `CHECKOUT_RETURN_END`: time when the admin return period stops, as an ISO 8601 timestamp with timezone.
 
 Use `.env.checkout.example` as a key-only reference. Never commit real credentials. Do not set `CHECKOUT_FORCE_LIVE` in Vercel; the override is ignored when `NODE_ENV=production`.
