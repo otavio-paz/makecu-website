@@ -423,6 +423,22 @@
 
 .checkout-return-correction summary { cursor: pointer; font-weight: 700; }
 
+.checkout-untracked {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid var(--checkout-border);
+  border-radius: 0.55rem;
+}
+
+.checkout-untracked > button {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.checkout-untracked > form {
+  margin-top: 1rem;
+}
+
 .checkout-correction-row {
   display: grid;
   grid-template-columns: minmax(10rem, 1.5fr) 6rem minmax(10rem, 1fr) minmax(12rem, 1.5fr);
