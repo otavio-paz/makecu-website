@@ -458,5 +458,45 @@
     "name": "Solderless Breadboard (Half Size)",
     "file": "half-size-solderless-breadboard.webp",
     "alt": "White half-size solderless breadboard with red and blue power rails, from the organizer-provided photo"
+  },
+  {
+    "name": "FT5330M servo",
+    "file": "ft5330m-servo-organizer.webp",
+    "alt": "Feetech FT5330M servo in its bag with the servo lead, photographed by the organizer"
+  },
+  {
+    "name": "ELEGOO SG90 Micro Servo",
+    "file": "elegoo-sg90-micro-servo.webp",
+    "alt": "Blue SG90 9 g micro servo with a three-wire lead, from the organizer-provided photo"
+  },
+  {
+    "name": "ELEGOO DC Motor (Red and Black Leads)",
+    "file": "elegoo-dc-motor-red-black-leads.webp",
+    "alt": "Small brushed DC motor with red and black leads, from the organizer-provided photo"
+  },
+  {
+    "name": "Sunfounder SF3218MG Servo",
+    "file": "sunfounder-sf3218mg-servo.webp",
+    "alt": "Sunfounder SF3218MG digital servo with a blue metal horn and three-wire lead, from the organizer-provided photo"
+  },
+  {
+    "name": "ELEGOO HC-SR04 Ultrasonic Distance Sensor",
+    "file": "elegoo-hc-sr04-ultrasonic-distance-sensor.webp",
+    "alt": "HC-SR04 ultrasonic distance sensor with two round transducers and four pins, from the organizer-provided photo"
+  },
+  {
+    "name": "Alligator Clip Test Lead",
+    "file": "alligator-clip-test-lead.webp",
+    "alt": "Assorted colored alligator clip test leads, from the organizer-provided photo"
+  },
+  {
+    "name": "Arduino USB Cable",
+    "file": "arduino-usb-a-to-b-cable.webp",
+    "alt": "Blue USB-A to USB-B cable for compatible Arduino boards, from the organizer-provided photo"
+  },
+  {
+    "name": "ELEGOO LCD1602 16×2 Character Display Module",
+    "file": "elegoo-lcd1602-character-display.webp",
+    "alt": "LCD1602 character display with a blue screen and sixteen header pins, from the organizer-provided photo"
   }
 ]
