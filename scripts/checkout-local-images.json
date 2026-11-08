@@ -468,5 +468,10 @@
     "name": "ELEGOO SG90 Micro Servo",
     "file": "elegoo-sg90-micro-servo.webp",
     "alt": "Blue SG90 9 g micro servo with a three-wire lead, from the organizer-provided photo"
+  },
+  {
+    "name": "ELEGOO DC Motor (Red and Black Leads)",
+    "file": "elegoo-dc-motor-red-black-leads.webp",
+    "alt": "Small brushed DC motor with red and black leads, from the organizer-provided photo"
   }
 ]
