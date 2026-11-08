@@ -2414,8 +2414,8 @@
     {
       "name": "FT5330M servo",
       "description": "FT5330M servo actuator for controlled angular motion. Verify its operating voltage, pulse range, torque, and connector orientation before powering it.",
-      "imageUrl": "/images/checkout-image-pending.svg",
-      "imageAlt": "Photo pending review for FT5330M servo",
+      "imageUrl": "/images/checkout/components/ft5330m-servo-organizer.webp",
+      "imageAlt": "Feetech FT5330M servo in its bag with the servo lead, photographed by the organizer",
       "category": "Motor",
       "compatibility": "Arduino + Raspberry Pi",
       "arduinoGuidance": "Standard servo PWM control is compatible. For multiple servos, use a servo driver and a separate supply matched to the servos; connect the grounds.",

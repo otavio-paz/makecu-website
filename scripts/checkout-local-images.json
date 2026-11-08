@@ -458,5 +458,10 @@
     "name": "Solderless Breadboard (Half Size)",
     "file": "half-size-solderless-breadboard.webp",
     "alt": "White half-size solderless breadboard with red and blue power rails, from the organizer-provided photo"
+  },
+  {
+    "name": "FT5330M servo",
+    "file": "ft5330m-servo-organizer.webp",
+    "alt": "Feetech FT5330M servo in its bag with the servo lead, photographed by the organizer"
   }
 ]
