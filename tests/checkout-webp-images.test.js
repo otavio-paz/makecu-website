@@ -19,7 +19,7 @@ test("component photos are WebP, valid at the container level, and size-budgeted
   }, 0);
 
   assert.deepEqual(legacy, []);
-  assert.equal(files.length, 194);
+  assert.equal(files.length, 195);
   assert.ok(totalBytes < 12 * 1024 * 1024, `Component images use ${totalBytes} bytes`);
 });
 

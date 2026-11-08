@@ -493,5 +493,10 @@
     "name": "Arduino USB Cable",
     "file": "arduino-usb-a-to-b-cable.webp",
     "alt": "Blue USB-A to USB-B cable for compatible Arduino boards, from the organizer-provided photo"
+  },
+  {
+    "name": "ELEGOO LCD1602 16×2 Character Display Module",
+    "file": "elegoo-lcd1602-character-display.webp",
+    "alt": "LCD1602 character display with a blue screen and sixteen header pins, from the organizer-provided photo"
   }
 ]
