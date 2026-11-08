@@ -5,6 +5,7 @@ const { liveStatus } = require("./_lib/checkout-live");
 const { verifyPassword } = require("./_lib/checkout-security");
 const { cleanString, httpError } = require("./_lib/checkout-validation");
 const service = require("./_lib/checkout-service");
+const { recordUntrackedItem } = require("./_lib/checkout-reconciliation");
 const MAX_REQUEST_BYTES = 64 * 1024;
 const MAX_FAILED_LOGINS = 10;
 const DUMMY_PASSWORD_HASH = `scrypt:${"0".repeat(32)}:${"0".repeat(128)}`;
@@ -374,6 +375,10 @@ async function handler(request, response) {
     } else if (action === "grant-order-timeout-exception") {
       send(response, 201, await mutate(function (transaction) {
         return service.grantOrderCooldownOverride(transaction, body, admin);
+      }));
+    } else if (action === "record-untracked-item") {
+      send(response, 201, await mutate(function (transaction) {
+        return recordUntrackedItem(transaction, body, admin);
       }));
     } else if (action === "process-return") {
       send(response, 201, await mutate(function (transaction) {

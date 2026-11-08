@@ -758,6 +758,11 @@
     }
 
     var draft = { returns: {}, overrides: {}, corrections: {} };
+    var untracked = container.querySelector('[data-untracked-form]');
+    if (untracked) {
+      draft.untracked = Array.from(untracked.querySelectorAll('input,select,textarea')).map(captureFieldDraft);
+      draft.untrackedOpen = untracked.parentElement.open;
+    }
     var profile = container.querySelector("[data-team-profile-form]");
     if (profile && profile.dataset.dirty === "true") {
       draft.profile = Array.from(profile.querySelectorAll("input")).map(captureFieldDraft);
@@ -803,6 +808,11 @@
   var restoreTeamDetailDraft = function (container, draft) {
     if (!draft) {
       return;
+    }
+    var untracked = container.querySelector('[data-untracked-form]');
+    if (untracked && draft.untracked) {
+      untracked.parentElement.open = draft.untrackedOpen;
+      untracked.querySelectorAll('input,select,textarea').forEach(function (field, index) { restoreFieldDraft(field, draft.untracked[index]); });
     }
 
     var profile = container.querySelector("[data-team-profile-form]");
@@ -851,7 +861,7 @@
     }
     if (container.querySelector('[data-team-profile-form][data-dirty="true"]')) return true;
 
-    if (container.querySelector(".checkout-protected-order[open], .checkout-return-correction[open]")) {
+    if (container.querySelector(".checkout-protected-order[open], .checkout-return-correction[open], .checkout-untracked[open]")) {
       return true;
     }
 
@@ -875,6 +885,18 @@
       var component = Object.assign({ id: item.componentId }, item);
       return '<div class="checkout-return-row" data-return-component="' + item.componentId + '"><div class="checkout-return-component">' + inventoryImageMarkup(component) + '<div><strong>' + escapeHtml(item.name) + '</strong><div class="checkout-tags">' + tagMarkup(item.category) + '</div><span class="checkout-return-held">Currently holding ' + item.checkedOutQuantity + '</span></div></div><label>Return now<input type="number" min="0" max="' + item.checkedOutQuantity + '" value="0" data-return-quantity></label><label>Condition<select data-return-condition><option value="good">Good</option><option value="damaged">Damaged</option><option value="missing">Missing</option></select></label><label>Note<input maxlength="1000" placeholder="Required if damaged/missing" data-return-note></label></div>';
     }).join("") + '<div class="checkout-order-actions"><button class="checkout-button checkout-button-primary" type="button" data-process-return="' + detail.team.id + '">Process Return</button></div>' : '<p class="checkout-empty">This team has returned all checked-out hardware.</p>';
+    var untrackedForm = '<details class="checkout-untracked"><summary>Add untracked component to this team</summary><form class="checkout-form" data-untracked-form data-team-id="' + detail.team.id + '"><p>Add hardware missing from Currently Holding, then return it normally or record its return now. Every change is recorded for admins.</p>' +
+      '<label>Component<select name="componentId"><option value="">Choose a component</option>' + (detail.returnInventory || []).filter(function (item) { return !item.mlhQuantity; }).map(function (item) {
+        var holding = detail.inventory.find(function (held) { return held.componentId === item.componentId; });
+        return '<option value="' + item.componentId + '" data-version="' + item.version + '" data-available="' + item.physicalAvailable + '" data-held="' + (holding ? holding.checkedOutQuantity : 0) + '">' + escapeHtml(item.name) + '</option>';
+      }).join('') + '<option value="new">Not in catalog — create return-only entry</option></select></label>' +
+      '<label>New component name (only if not in catalog)<input name="newComponentName" maxlength="120"></label><label>Identifying description for new component<textarea name="description" maxlength="2000"></textarea></label>' +
+      '<label>Quantity<input name="quantity" type="number" min="1" max="10000" value="1" required></label>' +
+      '<label>Stock count<select name="stockMode"><option value="counted">Already included in our stock count</option><option value="shortfall">Correct only the shortage in our count</option><option value="new_stock">These units were not included in our count</option></select></label>' +
+      '<label>Action<select name="outcome"><option value="hold">Add to team holdings</option><option value="return">Record and return now</option></select></label>' +
+      '<label>Condition when returning now<select name="condition"><option value="good">Good</option><option value="damaged">Damaged</option></select></label>' +
+      '<label>Return note (required if damaged)<input name="note" maxlength="1000"></label><label>Required reconciliation reason<textarea name="reason" maxlength="500" required></textarea></label>' +
+      '<button class="checkout-button checkout-button-primary" type="submit">Review and record item</button></form></details>';
     var receipts = detail.returns.length ? detail.returns.map(function (receipt) {
       var correctableItems = receipt.items.filter(function (item) { return item.correctableQuantity > 0; });
       var correctionForm = correctableItems.length ? '<details class="checkout-return-correction" data-correction-receipt="' + receipt.id + '"><summary>Correct this receipt</summary><p class="checkout-form-note">This adds a correction receipt; the original remains unchanged.</p>' + correctableItems.map(function (item) {
@@ -909,7 +931,7 @@
       [0, 1, 2, 3].map(function (index) {
         return '<label>Member ' + (index + 1) + '<input name="member' + index + '" maxlength="120" autocomplete="off" value="' + escapeHtml((detail.team.memberNames || [])[index] || '') + '"></label>';
       }).join('') + '<label>Contact email<input name="contactEmail" type="email" maxlength="254" autocomplete="off" value="' + escapeHtml(detail.team.contactEmail || '') + '"></label><p class="checkout-form-error" data-profile-error role="alert" hidden></p><button class="checkout-button checkout-button-primary" type="submit">Save team details</button><button class="checkout-button checkout-button-secondary" type="button" data-reload-team-profile>Reload saved details</button></form></aside>';
-    container.innerHTML = '<div class="checkout-team-detail-grid"><div class="checkout-team-history"><div class="checkout-order-card-header"><div><span class="checkout-kicker">TEAM</span><h2>' + escapeHtml(detail.team.name) + '</h2><p class="checkout-order-card-meta">' + escapeHtml(detail.team.identifier) + '</p></div><button class="checkout-button checkout-button-secondary" type="button" data-reset-password="' + detail.team.id + '">Reset password</button></div>' + timeoutControl + '<h3 class="checkout-section-title">Currently Holding</h3>' + holding + protectedOrder + '<h3 class="checkout-section-title">Orders & Pickup History</h3>' + orders + '<h3 class="checkout-section-title">Return History</h3>' + receipts + corrections + '</div>' + profile + '</div>';
+    container.innerHTML = '<div class="checkout-team-detail-grid"><div class="checkout-team-history"><div class="checkout-order-card-header"><div><span class="checkout-kicker">TEAM</span><h2>' + escapeHtml(detail.team.name) + '</h2><p class="checkout-order-card-meta">' + escapeHtml(detail.team.identifier) + '</p></div><button class="checkout-button checkout-button-secondary" type="button" data-reset-password="' + detail.team.id + '">Reset password</button></div>' + timeoutControl + '<h3 class="checkout-section-title">Currently Holding</h3>' + holding + untrackedForm + protectedOrder + '<h3 class="checkout-section-title">Orders & Pickup History</h3>' + orders + '<h3 class="checkout-section-title">Return History</h3>' + receipts + corrections + '</div>' + profile + '</div>';
     container.dataset.teamDetailTeam = detail.team.id;
     restoreTeamDetailDraft(container, draft);
   };
@@ -1522,6 +1544,44 @@
     catch (error) { notify(error.message); }
   });
   document.querySelector("[data-team-detail]").addEventListener("submit", async function (event) {
+    var untracked = event.target.closest('[data-untracked-form]');
+    if (untracked) {
+      event.preventDefault();
+      if (untracked.dataset.saving === 'true') return;
+      var fields = untracked.elements;
+      var selected = fields.componentId.options[fields.componentId.selectedIndex];
+      var isNew = fields.componentId.value === 'new';
+      var quantity = Number(fields.quantity.value);
+      var stockMode = fields.stockMode.value;
+      if (!fields.componentId.value || !Number.isInteger(quantity) || quantity < 1 || quantity > 10000 || !fields.reason.value.trim()) { notify('Choose a component, valid quantity and reconciliation reason.'); return; }
+      if (isNew && (stockMode !== 'new_stock' || !fields.newComponentName.value.trim() || !fields.description.value.trim())) { notify('Enter a name and identifying description, and choose that these new units were not included in the count.'); return; }
+      var increase = stockMode === 'counted' ? 0 : stockMode === 'new_stock' ? quantity : Math.max(0,quantity-Number(selected.dataset.available));
+      var button = untracked.querySelector('button[type="submit"]');
+      var teamId = Number(untracked.dataset.teamId);
+      var actor = state.user;
+      var payload = {teamId:teamId,componentId:isNew?null:Number(fields.componentId.value),
+        newComponentName:isNew?fields.newComponentName.value:'',description:fields.description.value,
+        quantity:quantity,stockMode:stockMode,approvedStockIncrease:increase,expectedVersion:isNew?null:Number(selected.dataset.version),
+        expectedHeldQuantity:isNew?0:Number(selected.dataset.held),outcome:fields.outcome.value,condition:fields.condition.value,note:fields.note.value,reason:fields.reason.value};
+      if (payload.outcome === 'return' && payload.condition === 'damaged' && !payload.note.trim()) { notify('Enter a note describing the damage.'); return; }
+      untracked.dataset.saving = 'true';
+      setBusy(button, true, 'Reviewing…');
+      try {
+        if (!(await confirmAction('Record untracked hardware?', 'Record ' + quantity + ' unit(s) of ' + (isNew ? payload.newComponentName : selected.textContent) + '. Increase total stock by ' + increase + '. ' + (payload.outcome === 'return' ? 'A physical return receipt will also be created.' : 'These units will appear in Currently Holding.'), 'Record Item'))) return;
+        if (state.user !== actor || !actor || actor.role !== 'admin' || state.selectedTeamId !== teamId) return;
+        button.textContent = 'Recording…';
+        var result = await mutate('record-untracked-item', payload);
+        if (state.user !== actor) return;
+        if (state.selectedTeamId === teamId) {
+          state.teamDetailRequestId += 1;
+          renderTeamDetail(result, {preserveDraft:false});
+        }
+        await Promise.all([loadTeams(),loadAdminOverview()]);
+        notify('Untracked hardware recorded in the audit trail.');
+      } catch (error) { if (state.user === actor) notify(error.message); }
+      finally { delete untracked.dataset.saving; setBusy(button,false); }
+      return;
+    }
     var form = event.target.closest("[data-team-profile-form]");
     if (!form) return;
     event.preventDefault();
