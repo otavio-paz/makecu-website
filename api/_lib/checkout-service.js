@@ -2,6 +2,7 @@ const { hashPassword } = require("./checkout-security");
 const { componentInput, cleanString, httpError, positiveInteger, relationshipInput, returnInput } = require("./checkout-validation");
 const {
   MAX_DISTINCT_ORDER_ITEMS,
+  CLAIM_LEASE_MINUTES,
   orderCooldownMinutes
 } = require("./checkout-constants");
 
@@ -975,7 +976,7 @@ async function createProtectedStockOverrideOrder(database, body, actor) {
       `INSERT INTO checkout_orders
         (team_id, status, reviewed_by, reviewing_at, claim_expires_at, reservation_expires_at,
          protected_stock_override_by, protected_stock_override_reason, protected_stock_override_at)
-        VALUES ($1, 'reviewing', $2, NOW(), NOW() + INTERVAL '7 minutes',
+        VALUES ($1, 'reviewing', $2, NOW(), NOW() + INTERVAL '${CLAIM_LEASE_MINUTES} minutes',
                 NULL,
                $2, $3, NOW())
        RETURNING *`,
@@ -1191,7 +1192,7 @@ async function claimOrder(database, body, actor) {
     if (order.status === "reviewing" && Number(order.reviewed_by) === Number(actor.id) && !order.claim_expired) {
       await transaction.query(
         `UPDATE checkout_orders
-            SET claim_expires_at = NOW() + INTERVAL '7 minutes',
+            SET claim_expires_at = GREATEST(claim_expires_at, NOW() + INTERVAL '${CLAIM_LEASE_MINUTES} minutes'),
                 reservation_expires_at = NULL
           WHERE id = $1`,
         [orderId]
@@ -1209,7 +1210,7 @@ async function claimOrder(database, body, actor) {
     await transaction.query(
       `UPDATE checkout_orders
           SET status = 'reviewing', reviewed_by = $2, reviewing_at = NOW(),
-              claim_expires_at = NOW() + INTERVAL '7 minutes',
+              claim_expires_at = NOW() + INTERVAL '${CLAIM_LEASE_MINUTES} minutes',
               reservation_expires_at = NULL
         WHERE id = $1`,
       [orderId, actor.id]
@@ -1340,7 +1341,7 @@ async function adjustOrder(database, body, actor) {
       [actor.id, order.team_id, orderId, `${actor.display_name} updated approved quantities for Order #${orderId}.`]
     );
     await transaction.query(
-      "UPDATE checkout_orders SET claim_expires_at = NOW() + INTERVAL '7 minutes' WHERE id = $1",
+      `UPDATE checkout_orders SET claim_expires_at = GREATEST(claim_expires_at, NOW() + INTERVAL '${CLAIM_LEASE_MINUTES} minutes') WHERE id = $1`,
       [orderId]
     );
     await recordOrderEvent(transaction, orderId, actor.id, "ORDER_ADJUSTED", {});
