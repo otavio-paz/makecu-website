@@ -3,8 +3,11 @@ const DEFAULT_END = "2026-11-08T17:00:00-05:00";
 
 function liveStatus(now) {
   const start = new Date(process.env.CHECKOUT_LIVE_START || DEFAULT_START);
-  const orderingEnd = new Date(process.env.CHECKOUT_ORDERING_END || process.env.CHECKOUT_LIVE_END || DEFAULT_END);
+  const configuredOrderingEnd = new Date(process.env.CHECKOUT_ORDERING_END || process.env.CHECKOUT_LIVE_END || DEFAULT_END);
   const returnEnd = new Date(process.env.CHECKOUT_RETURN_END || process.env.CHECKOUT_LIVE_END || DEFAULT_END);
+  // Keep team ordering/pickup open for the full return window. An earlier
+  // legacy ordering cutoff must not close participant access during the event.
+  const orderingEnd = new Date(Math.max(configuredOrderingEnd.getTime(), returnEnd.getTime()));
   const current = now || new Date();
   const forced = process.env.NODE_ENV !== "production" && process.env.CHECKOUT_FORCE_LIVE === "true";
   const orderingOpen = forced || (current >= start && current <= orderingEnd);

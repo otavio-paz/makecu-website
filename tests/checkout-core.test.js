@@ -79,8 +79,8 @@ test("live window is enforced by server configuration", function () {
   process.env.CHECKOUT_ORDERING_END = "2026-11-08T10:00:00-05:00";
   process.env.CHECKOUT_RETURN_END = "2026-11-08T12:00:00-05:00";
   const returnPeriod = liveStatus(new Date("2026-11-08T11:00:00-05:00"));
-  assert.equal(returnPeriod.phase, "return_period");
-  assert.equal(returnPeriod.orderingOpen, false);
+  assert.equal(returnPeriod.phase, "event_active");
+  assert.equal(returnPeriod.orderingOpen, true);
   assert.equal(returnPeriod.returnsOpen, true);
   process.env.CHECKOUT_FORCE_LIVE = "true";
 });
