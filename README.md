@@ -34,13 +34,9 @@ Run `npm run checkout:provision-accounts` to provision all 15 admins and 40 numb
 
 Each account can change its display name once using **Change name (once)**. Login usernames stay fixed, and Activity records the old and new names. In **Teams / Returns**, only admins can edit each team's four optional member names and contact email. Profile edits are audited and reject stale versions so two admins cannot silently overwrite one another.
 
-Outside the configured event window, team accounts cannot sign in or use checkout data. Admin accounts may still sign in from the closed screen to rehearse the workflow and maintain inventory; every bypass is enforced from the user's server-side database role. Set `CHECKOUT_LIVE_START`, `CHECKOUT_ORDERING_END`, and `CHECKOUT_RETURN_END` in production; `CHECKOUT_FORCE_LIVE` is intended only for local testing.
+Before the configured opening time, team accounts cannot sign in or use checkout data. Admin accounts may still sign in from the closed screen to rehearse the workflow and maintain inventory; the API enforces this exception from the authenticated database role. Set `CHECKOUT_LIVE_START` in production; `CHECKOUT_FORCE_LIVE` is intended only for local testing.
 
-Team ordering stays open through the return window. An earlier
-`CHECKOUT_ORDERING_END` no longer closes ordering while returns remain open;
-the effective ordering deadline is the later of the ordering and return deadlines.
-The event start and return deadline still apply, and inventory limits, team
-cooldowns, and authorization checks remain enforced.
+After opening, ordering, pickup, and returns have no automatic closing cutoff. Legacy `CHECKOUT_ORDERING_END`, `CHECKOUT_RETURN_END`, and `CHECKOUT_LIVE_END` values are ignored. Inventory limits, team cooldowns, and authorization checks remain enforced.
 
 Team orders are limited to 10 distinct components. The interval before the next order scales linearly with the latest order's distinct component count: 10 minutes for 1 component through 60 minutes for 10, rounded up to whole minutes (10, 16, 22, 27, 33, 38, 44, 49, 55, 60). Multiple units of the same component count once. The interval starts at successful submission, including for existing orders. An admin can grant an audited exception that expires with that order's timeout and is consumed by the team's next successful order. Orders remain reserved until pickup or cancellation, without automatic expiration. Volunteer claim leases remain separate from the order reservation. Motor-driver relationships are displayed as warnings and do not block checkout.
 

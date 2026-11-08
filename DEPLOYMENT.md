@@ -34,12 +34,11 @@ Add these environment variables to the Vercel project for Production and Preview
 - `CHECKOUT_ADMIN_PASSWORD`: initial volunteer password with at least 10 characters.
 - `CHECKOUT_ADMIN_NAME`: volunteer display name.
 - `CHECKOUT_LIVE_START`: opening time as an ISO 8601 timestamp with timezone.
-- `CHECKOUT_ORDERING_END`: requested team ordering deadline, as an ISO 8601 timestamp with timezone. Ordering remains open at least through `CHECKOUT_RETURN_END`; an earlier ordering deadline does not close the pickup window.
-- `CHECKOUT_RETURN_END`: time when the admin return period stops, as an ISO 8601 timestamp with timezone.
+- There is no automatic closing cutoff. Legacy `CHECKOUT_ORDERING_END`, `CHECKOUT_RETURN_END`, and `CHECKOUT_LIVE_END` values are ignored.
 
 Use `.env.checkout.example` as a key-only reference. Never commit real credentials. Do not set `CHECKOUT_FORCE_LIVE` in Vercel; the override is ignored when `NODE_ENV=production`.
 
-The event window blocks team login and team checkout access before opening and after closing. Admin accounts remain available from the closed checkout screen so organizers can test and update inventory. This exception is based on the authenticated database role in the API, not on a browser-only flag; a team account or existing team session still receives HTTP 423 outside the window.
+The opening time blocks team login and team checkout access before opening. Access stays open afterward. Admin accounts remain available from the closed checkout screen so organizers can test and update inventory. This exception is based on the authenticated database role in the API, not on a browser-only flag; a team account or existing team session still receives HTTP 423 outside the window.
 
 Before the event, run the row-locking integration suite against a disposable PostgreSQL database (never the production database):
 
