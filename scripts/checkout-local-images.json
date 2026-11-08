@@ -488,5 +488,10 @@
     "name": "Alligator Clip Test Lead",
     "file": "alligator-clip-test-lead.webp",
     "alt": "Assorted colored alligator clip test leads, from the organizer-provided photo"
+  },
+  {
+    "name": "Arduino USB Cable",
+    "file": "arduino-usb-a-to-b-cable.webp",
+    "alt": "Blue USB-A to USB-B cable for compatible Arduino boards, from the organizer-provided photo"
   }
 ]
