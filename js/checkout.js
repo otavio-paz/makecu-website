@@ -1138,7 +1138,6 @@
 
       if (!statusResult.status.live) {
         document.querySelector("[data-live-start]").textContent = formatDate(statusResult.status.startsAt);
-        document.querySelector("[data-live-end]").textContent = formatDate(statusResult.status.endsAt);
         try {
           var closedMe = await api("me");
           if (closedMe.user.role === "admin") {

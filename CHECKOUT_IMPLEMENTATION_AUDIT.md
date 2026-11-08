@@ -44,11 +44,11 @@ Teams can browse active inventory, submit orders, view their receipts, and see c
 
 The server is authoritative for event timing:
 
-- `CHECKOUT_LIVE_START`: login and event access begin;
-- `CHECKOUT_ORDERING_END`: new team orders stop;
-- `CHECKOUT_RETURN_END`: the admin return period ends.
+- `CHECKOUT_LIVE_START`: login and event access begin.
+- Ordering, pickup, and returns remain open after that start; there is no automatic closing cutoff.
+- Legacy `CHECKOUT_ORDERING_END`, `CHECKOUT_RETURN_END`, and `CHECKOUT_LIVE_END` settings are ignored.
 
-During the return-only period, new orders are rejected while returns remain available. Outside the overall window, the API fails closed. `CHECKOUT_FORCE_LIVE=true` works only outside production and is intended for local development.
+Before opening, team access is blocked while admin access remains available. `CHECKOUT_FORCE_LIVE=true` works only outside production and is intended for local development.
 
 ### Inventory model
 
