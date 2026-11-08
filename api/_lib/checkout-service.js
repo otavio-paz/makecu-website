@@ -1577,7 +1577,7 @@ async function teamsList(database, search) {
 async function teamAdminDetail(database, teamIdInput) {
   const teamId = positiveInteger(teamIdInput, "Team ID");
   const returnInventory = await database.query(
-    `SELECT id,name,version,mlh_quantity,
+    `SELECT id,name,category,image_url,image_alt,version,mlh_quantity,
             GREATEST(0,total_quantity-mlh_quantity-reserved_quantity-checked_out_quantity-unavailable_quantity) AS physical_available
        FROM checkout_components ORDER BY name,id`
   );
@@ -1727,7 +1727,8 @@ async function teamAdminDetail(database, teamIdInput) {
       };
     }),
     returnInventory: returnInventory.rows.map(function (row) {
-      return { componentId: Number(row.id), name: row.name, version: Number(row.version),
+      return { componentId: Number(row.id), name: row.name, category: row.category,
+        imageUrl: row.image_url, imageAlt: row.image_alt, version: Number(row.version),
         mlhQuantity: Number(row.mlh_quantity), physicalAvailable: Number(row.physical_available) };
     }),
     protectedInventory: protectedInventory.rows.map(function (row) {

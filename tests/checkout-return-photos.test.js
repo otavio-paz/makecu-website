@@ -87,5 +87,9 @@ test('team return details include the catalog photo, alt text and category for d
     assert.equal(result.inventory[0].imageAlt,'Detailed servo photo');
     assert.equal(result.inventory[0].category,'Motor');
     assert.equal(result.inventory[0].checkedOutQuantity,2);
+    const option = result.returnInventory.find(item => item.componentId === Number(part.id));
+    assert.equal(option.imageUrl,'/photo.webp');
+    assert.equal(option.imageAlt,'Detailed servo photo');
+    assert.equal(option.category,'Motor');
   } finally {await resetDatabaseForTests();}
 });
