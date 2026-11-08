@@ -1410,6 +1410,25 @@
       "mlhQuantity": 0
     },
     {
+      "name": "Micro-USB to USB-A Cable",
+      "description": "Cable with a USB-A plug and a Micro-USB (Micro-B) plug for compatible development boards and devices. Match the device connector before use.",
+      "imageUrl": "/images/checkout/components/micro-usb-to-usb-a-cable.webp",
+      "imageAlt": "Black USB-A to Micro-USB cable from the organizer-provided photo",
+      "category": "Electronics",
+      "compatibility": "Arduino + Raspberry Pi",
+      "arduinoGuidance": "For boards with a Micro-USB connector; not Mini-USB or USB-C.",
+      "raspberryPiGuidance": "Use with devices that accept a Micro-USB connection.",
+      "binLocation": "",
+      "technicalSpecs": "USB-A male to Micro-USB Micro-B male connectors.",
+      "totalQuantity": 6,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 1,
+      "active": true,
+      "adminNotes": "Organizer confirmed November 8, 2026: 6 cables, maximum 1 per team, 0 protected stock. Photo provided by organizer."
+    },
+    {
       "name": "Mini Grabber Test Clip",
       "totalQuantity": 25,
       "description": "Mini grabber test clip for making temporary connections to small component leads during circuit measurements.",
