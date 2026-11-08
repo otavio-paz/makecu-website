@@ -761,7 +761,7 @@
     var untracked = container.querySelector('[data-untracked-form]');
     if (untracked) {
       draft.untracked = Array.from(untracked.querySelectorAll('input,select,textarea')).map(captureFieldDraft);
-      draft.untrackedOpen = untracked.parentElement.open;
+      draft.untrackedOpen = !untracked.hidden;
     }
     var profile = container.querySelector("[data-team-profile-form]");
     if (profile && profile.dataset.dirty === "true") {
@@ -811,7 +811,8 @@
     }
     var untracked = container.querySelector('[data-untracked-form]');
     if (untracked && draft.untracked) {
-      untracked.parentElement.open = draft.untrackedOpen;
+      untracked.hidden = !draft.untrackedOpen;
+      container.querySelector('[data-toggle-untracked]').setAttribute('aria-expanded', String(draft.untrackedOpen));
       untracked.querySelectorAll('input,select,textarea').forEach(function (field, index) { restoreFieldDraft(field, draft.untracked[index]); });
     }
 
@@ -861,7 +862,9 @@
     }
     if (container.querySelector('[data-team-profile-form][data-dirty="true"]')) return true;
 
-    if (container.querySelector(".checkout-protected-order[open], .checkout-return-correction[open], .checkout-untracked[open]")) {
+    var untracked = container.querySelector('[data-untracked-form]');
+    if (untracked && (!untracked.hidden || untracked.dataset.saving === 'true')) return true;
+    if (container.querySelector(".checkout-protected-order[open], .checkout-return-correction[open]")) {
       return true;
     }
 
@@ -885,7 +888,7 @@
       var component = Object.assign({ id: item.componentId }, item);
       return '<div class="checkout-return-row" data-return-component="' + item.componentId + '"><div class="checkout-return-component">' + inventoryImageMarkup(component) + '<div><strong>' + escapeHtml(item.name) + '</strong><div class="checkout-tags">' + tagMarkup(item.category) + '</div><span class="checkout-return-held">Currently holding ' + item.checkedOutQuantity + '</span></div></div><label>Return now<input type="number" min="0" max="' + item.checkedOutQuantity + '" value="0" data-return-quantity></label><label>Condition<select data-return-condition><option value="good">Good</option><option value="damaged">Damaged</option><option value="missing">Missing</option></select></label><label>Note<input maxlength="1000" placeholder="Required if damaged/missing" data-return-note></label></div>';
     }).join("") + '<div class="checkout-order-actions"><button class="checkout-button checkout-button-primary" type="button" data-process-return="' + detail.team.id + '">Process Return</button></div>' : '<p class="checkout-empty">This team has returned all checked-out hardware.</p>';
-    var untrackedForm = '<details class="checkout-untracked"><summary>Add untracked component to this team</summary><form class="checkout-form" data-untracked-form data-team-id="' + detail.team.id + '"><p>Add hardware missing from Currently Holding, then return it normally or record its return now. Every change is recorded for admins.</p>' +
+    var untrackedForm = '<section class="checkout-untracked"><button class="checkout-button checkout-button-secondary" type="button" data-toggle-untracked aria-expanded="false" aria-controls="checkout-untracked-' + detail.team.id + '">Add untracked component to this team</button><form id="checkout-untracked-' + detail.team.id + '" class="checkout-form" data-untracked-form data-team-id="' + detail.team.id + '" hidden><p>Add hardware missing from Currently Holding, then return it normally or record its return now. Every change is recorded for admins.</p>' +
       '<label>Component<select name="componentId"><option value="">Choose a component</option>' + (detail.returnInventory || []).filter(function (item) { return !item.mlhQuantity; }).map(function (item) {
         var holding = detail.inventory.find(function (held) { return held.componentId === item.componentId; });
         return '<option value="' + item.componentId + '" data-version="' + item.version + '" data-available="' + item.physicalAvailable + '" data-held="' + (holding ? holding.checkedOutQuantity : 0) + '">' + escapeHtml(item.name) + '</option>';
@@ -896,7 +899,7 @@
       '<label>Action<select name="outcome"><option value="hold">Add to team holdings</option><option value="return">Record and return now</option></select></label>' +
       '<label>Condition when returning now<select name="condition"><option value="good">Good</option><option value="damaged">Damaged</option></select></label>' +
       '<label>Return note (required if damaged)<input name="note" maxlength="1000"></label><label>Required reconciliation reason<textarea name="reason" maxlength="500" required></textarea></label>' +
-      '<button class="checkout-button checkout-button-primary" type="submit">Review and record item</button></form></details>';
+      '<button class="checkout-button checkout-button-primary" type="submit">Review and record item</button></form></section>';
     var receipts = detail.returns.length ? detail.returns.map(function (receipt) {
       var correctableItems = receipt.items.filter(function (item) { return item.correctableQuantity > 0; });
       var correctionForm = correctableItems.length ? '<details class="checkout-return-correction" data-correction-receipt="' + receipt.id + '"><summary>Correct this receipt</summary><p class="checkout-form-note">This adds a correction receipt; the original remains unchanged.</p>' + correctableItems.map(function (item) {
@@ -1394,6 +1397,15 @@
     }
   });
   document.querySelector("[data-team-detail]").addEventListener("click", async function (event) {
+    var untrackedToggle = event.target.closest('[data-toggle-untracked]');
+    if (untrackedToggle) {
+      var untrackedForm = untrackedToggle.parentElement.querySelector('[data-untracked-form]');
+      if (untrackedForm.dataset.saving === 'true') return;
+      untrackedForm.hidden = !untrackedForm.hidden;
+      untrackedToggle.setAttribute('aria-expanded', String(!untrackedForm.hidden));
+      if (!untrackedForm.hidden) untrackedForm.elements.componentId.focus();
+      return;
+    }
     var preview = event.target.closest('[data-preview-component]');
     if (preview) {
       openImagePreview({ name: preview.dataset.imageName, imageUrl: preview.dataset.imageUrl, imageAlt: preview.dataset.imageAlt });
