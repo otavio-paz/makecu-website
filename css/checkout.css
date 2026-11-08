@@ -1072,7 +1072,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(210px, 260px);
 }
 
-.checkout-team-history { min-width: 0; }
+.checkout-team-history { container-type: inline-size; min-width: 0; }
 .checkout-team-profile { border-left: 1px solid #d1dce3; padding-left: 20px; }
 .checkout-team-profile .checkout-form { display: grid; gap: 14px; padding: 0; }
 .checkout-team-profile h3 { margin-top: 0; }
@@ -1095,15 +1095,43 @@
   border-top: 1px solid #d7e0e5;
   display: grid;
   gap: 10px;
-  grid-template-columns: minmax(170px, 1fr) 90px 130px minmax(140px, 1fr);
+  grid-template-columns: minmax(230px, 1fr) 90px 130px minmax(140px, 1fr);
   padding: 12px 0;
 }
 
-.checkout-return-row strong span {
+.checkout-return-component {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+}
+
+.checkout-return-component > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.checkout-return-component .checkout-inventory-thumbnail img {
+  background: #fff;
+  object-fit: contain;
+}
+
+.checkout-return-held {
   color: #607688;
   display: block;
   font-size: 12px;
   font-weight: 500;
+}
+
+@container (max-width: 650px) {
+  .checkout-return-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .checkout-return-component,
+  .checkout-return-row label:last-child {
+    grid-column: 1 / -1;
+  }
 }
 
 .checkout-receipt {
@@ -1528,7 +1556,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .checkout-return-row strong,
+  .checkout-return-component,
   .checkout-return-row label:last-child {
     grid-column: 1 / -1;
   }

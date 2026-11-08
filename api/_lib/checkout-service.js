@@ -1596,7 +1596,7 @@ async function teamAdminDetail(database, teamIdInput) {
 
   const inventory = await database.query(
     `SELECT inventory.checked_out_quantity, components.id, components.name,
-            components.image_url, components.category
+            components.image_url, components.image_alt, components.category
        FROM checkout_team_inventory inventory
        JOIN checkout_components components ON components.id = inventory.component_id
       WHERE inventory.team_id = $1 AND inventory.checked_out_quantity > 0
@@ -1716,6 +1716,7 @@ async function teamAdminDetail(database, teamIdInput) {
         componentId: Number(row.id),
         name: row.name,
         imageUrl: row.image_url,
+        imageAlt: row.image_alt,
         category: row.category,
         checkedOutQuantity: Number(row.checked_out_quantity)
       };
