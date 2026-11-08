@@ -110,7 +110,7 @@ test("a missing motor driver warns but does not block and submitted orders have 
 
 test("an admin can grant one audited timeout exception and it is consumed by the next order", async function () {
   const blocked = await service.teamDashboard(database, policyActor);
-  assert.ok(blocked.cooldownSeconds > 2600);
+  assert.ok(blocked.cooldownSeconds > 590 && blocked.cooldownSeconds <= 600);
 
   const exception = await service.grantOrderCooldownOverride(database, {
     teamId: Number(policyTeam.id),
@@ -137,6 +137,68 @@ test("an admin can grant one audited timeout exception and it is consumed by the
     }, policyActor),
     function (error) { return error.status === 429; }
   );
+});
+
+test("timeouts scale from 10 to 60 minutes by distinct components, with matching exception expiry", async function () {
+  const minutesByCount = [10, 16, 22, 27, 33, 38, 44, 49, 55, 60];
+  for (let count = 1; count <= 10; count += 1) {
+    const { team, actor } = await createTeam(`Scaled Team ${count}`, `scaled-team-${count}`);
+    assert.equal((await service.teamDashboard(database, actor)).cooldownSeconds, 0);
+    const items = components.slice(0, count).map(function (component) {
+      return { componentId: Number(component.id), quantity: 1 };
+    });
+    // Duplicate rows and multiple units still represent just one component type.
+    items.push({ componentId: Number(components[0].id), quantity: 2 });
+    const order = await service.submitOrder(database, { items }, actor);
+    const expectedSeconds = minutesByCount[count - 1] * 60;
+    const dashboard = await service.teamDashboard(database, actor);
+    assert.ok(dashboard.cooldownSeconds > expectedSeconds - 10 && dashboard.cooldownSeconds <= expectedSeconds);
+    const detail = await service.teamAdminDetail(database, Number(team.id));
+    assert.equal(detail.cooldown.durationMinutes, minutesByCount[count - 1]);
+    await assert.rejects(
+      service.submitOrder(database, { items: [items[0]] }, actor),
+      function (error) {
+        return error.status === 429 && error.details.cooldownSeconds > expectedSeconds - 10;
+      }
+    );
+
+    if (count === 1 || count === 10) {
+      const exception = await service.grantOrderCooldownOverride(database, {
+        teamId: Number(team.id), reason: "Check scaled timeout exception expiry."
+      }, admin);
+      const stored = await database.query("SELECT created_at FROM checkout_orders WHERE id = $1", [order.id]);
+      assert.equal(new Date(exception.expiresAt) - new Date(stored.rows[0].created_at), expectedSeconds * 1000);
+      await assert.rejects(service.grantOrderCooldownOverride(database, {
+        teamId: Number(team.id), reason: "Duplicate exception."
+      }, admin), function (error) { return error.status === 409; });
+      await service.submitOrder(database, { items: [items[0]] }, actor);
+      const nextDashboard = await service.teamDashboard(database, actor);
+      assert.ok(nextDashboard.cooldownSeconds > 590 && nextDashboard.cooldownSeconds <= 600);
+    }
+  }
+});
+
+test("existing orders unblock only when their scaled interval has elapsed", async function () {
+  for (const count of [1, 5, 10]) {
+    const { actor } = await createTeam(`Expiry Team ${count}`, `expiry-team-${count}`);
+    const items = components.slice(0, count).map(function (component) {
+      return { componentId: Number(component.id), quantity: 1 };
+    });
+    const order = await service.submitOrder(database, { items }, actor);
+    const minutes = { 1: 10, 5: 33, 10: 60 }[count];
+    await database.query(
+      "UPDATE checkout_orders SET created_at = NOW() - $2 * INTERVAL '1 minute' + INTERVAL '30 seconds' WHERE id = $1",
+      [order.id, minutes]
+    );
+    await assert.rejects(service.submitOrder(database, { items: [items[0]] }, actor),
+      function (error) { return error.status === 429; });
+    await database.query("UPDATE checkout_orders SET created_at = created_at - INTERVAL '31 seconds' WHERE id = $1", [order.id]);
+    assert.equal((await service.teamDashboard(database, actor)).cooldownSeconds, 0);
+    await assert.rejects(service.grantOrderCooldownOverride(database, {
+      teamId: Number(actor.team_id), reason: "Expired timeout."
+    }, admin), function (error) { return error.status === 409; });
+    assert.equal((await service.submitOrder(database, { items: [items[0]] }, actor)).status, "submitted");
+  }
 });
 
 test("two simultaneous submissions from the same team serialize so only one succeeds", async function () {

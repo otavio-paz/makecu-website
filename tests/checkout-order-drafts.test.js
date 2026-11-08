@@ -86,7 +86,7 @@ function page(orders) {
   };
   const context = vm.createContext({ document, window, Intl });
   vm.runInContext(source.replace(/  initialize\(\);\s*\}\)\(\);\s*$/, `
-    window.testPage = { state, renderAdminOrders, loadAdminOrders, beginPolling };
+    window.testPage = { state, setSession, renderAdminOrders, loadAdminOrders, beginPolling };
   })();`), context);
   const hooks = window.testPage;
   hooks.state.user = { id: 7, role: "admin" };
@@ -112,6 +112,7 @@ function order(id, overrides = {}) {
   return {
     id, status: "reviewing", reviewedBy: 7, teamName: `Team ${id}`,
     createdAt: "2026-11-07T15:00:00Z",
+    claimExpiresAt: "2099-01-01T00:00:00Z",
     items: [{ id: id * 10, name: "Test part", requestedQuantity: 3, approvedQuantity: 3, adjustmentReason: "", note: "" }],
     ...overrides
   };
@@ -227,4 +228,50 @@ test("status and reviewer changes remove editing controls without leaking drafts
     assert.equal(ui.field(1, "note"), null);
     assert.equal(ui.board.html.includes("Private draft"), false);
   }
+});
+
+test("polling removes orders claimed by another admin and does not restore their old drafts", async () => {
+  const ui = page([order(1), order(2)]);
+  ui.field(1, "note").value = "Previous owner's draft";
+  ui.field(2, "note").value = "Keep my current draft";
+  ui.respond(async () => ({ orders: [order(2)] }));
+  await ui.loadAdminOrders();
+  assert.equal(ui.board.querySelector('[data-admin-order="1"]'), null);
+  assert.equal(ui.field(2, "note").value, "Keep my current draft");
+  ui.respond(async () => ({ orders: [order(1), order(2)] }));
+  await ui.loadAdminOrders();
+  assert.equal(ui.field(1, "note").value, "");
+});
+
+test("expired and missing claim leases offer takeover without editable controls", () => {
+  for (const claimExpiresAt of [null, "2020-01-01T00:00:00Z"]) {
+    const ui = page([order(1, { claimExpiresAt })]);
+    assert.equal(ui.field(1, "quantity"), null);
+    assert.match(ui.board.html, /Take Over Expired Claim/);
+    assert.doesNotMatch(ui.board.html, /data-accept-order/);
+  }
+});
+
+test("logout clears the board and ignores a pending admin response", async () => {
+  const ui = page([order(1)]);
+  let finish;
+  ui.respond(() => new Promise(resolve => { finish = resolve; }));
+  const polling = ui.loadAdminOrders();
+  ui.setSession(null);
+  finish({ orders: [order(1)] });
+  await polling;
+  assert.equal(ui.state.adminOrders.length, 0);
+  assert.equal(ui.board.html, "");
+});
+
+test("a pending response from admin-1 cannot populate another admin's board", async () => {
+  const ui = page([]);
+  let finish;
+  ui.respond(() => new Promise(resolve => { finish = resolve; }));
+  const polling = ui.loadAdminOrders();
+  ui.state.user = { id: 8, role: "admin" };
+  finish({ orders: [order(1)] });
+  await polling;
+  assert.equal(ui.state.adminOrders.length, 0);
+  assert.equal(ui.board.querySelector('[data-admin-order="1"]'), null);
 });

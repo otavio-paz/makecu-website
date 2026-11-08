@@ -2,7 +2,7 @@ const { hashPassword } = require("./checkout-security");
 const { componentInput, cleanString, httpError, positiveInteger, relationshipInput, returnInput } = require("./checkout-validation");
 const {
   MAX_DISTINCT_ORDER_ITEMS,
-  ORDER_COOLDOWN_MINUTES
+  orderCooldownMinutes
 } = require("./checkout-constants");
 
 function relationshipView(row) {
@@ -785,12 +785,12 @@ async function orderCooldownStatus(database, teamId) {
   if(timingPause.rows.length) return {secondsLeft:0,policySecondsLeft:0,overrideAvailable:false,overrideId:null,overrideReason:'Temporary organizer timing pause',overrideExpiresAt:timingPause.rows[0].paused_until,latestOrderId:null};
   const latestOrder = await database.query(
     `SELECT id, created_at,
-            GREATEST(0, CEIL(EXTRACT(EPOCH FROM
-              (created_at + INTERVAL '${ORDER_COOLDOWN_MINUTES} minutes' - NOW())
-            ))) AS seconds_left
+            (SELECT COUNT(DISTINCT component_id) FROM checkout_order_items
+              WHERE order_id = checkout_orders.id) AS distinct_item_count,
+            EXTRACT(EPOCH FROM (NOW() - created_at)) AS elapsed_seconds
        FROM checkout_orders
       WHERE team_id = $1
-      ORDER BY created_at DESC
+      ORDER BY created_at DESC, id DESC
       LIMIT 1`,
     [teamId]
   );
@@ -802,10 +802,15 @@ async function orderCooldownStatus(database, teamId) {
       LIMIT 1`,
     [teamId]
   );
-  const policySecondsLeft = latestOrder.rows[0] ? Number(latestOrder.rows[0].seconds_left) : 0;
+  const latest = latestOrder.rows[0];
+  const durationMinutes = latest ? orderCooldownMinutes(Number(latest.distinct_item_count)) : 0;
+  const policySecondsLeft = latest
+    ? Math.max(0, Math.ceil(durationMinutes * 60 - Number(latest.elapsed_seconds)))
+    : 0;
   const activeOverride = override.rows[0] || null;
 
   return {
+    durationMinutes,
     secondsLeft: activeOverride ? 0 : policySecondsLeft,
     policySecondsLeft,
     overrideAvailable: Boolean(activeOverride),
@@ -843,10 +848,10 @@ async function grantOrderCooldownOverride(database, body, actor) {
     const inserted = await transaction.query(
       `INSERT INTO checkout_order_cooldown_overrides
         (team_id, granted_by, reason, expires_at)
-       SELECT $1, $2, $3, created_at + INTERVAL '${ORDER_COOLDOWN_MINUTES} minutes'
+       SELECT $1, $2, $3, created_at + $5 * INTERVAL '1 minute'
          FROM checkout_orders WHERE id = $4
        RETURNING id, expires_at`,
-      [teamId, actor.id, reason, cooldown.latestOrderId]
+      [teamId, actor.id, reason, cooldown.latestOrderId, cooldown.durationMinutes]
     );
     await transaction.query(
       `INSERT INTO checkout_activity (actor_user_id, team_id, message)
@@ -1108,7 +1113,10 @@ async function teamDashboard(database, actor) {
   };
 }
 
-async function adminOrders(database) {
+async function adminOrders(database, actor) {
+  if (!actor || actor.role !== "admin") {
+    throw httpError(403, "Only admins can view the order board.");
+  }
   const result = await database.query(
     `SELECT orders.*, teams.name AS team_name, reviewer.display_name AS reviewer_name,
             accepted.display_name AS accepted_by_name, ready.display_name AS ready_by_name,
@@ -1120,7 +1128,13 @@ async function adminOrders(database) {
        LEFT JOIN checkout_users ready ON ready.id = orders.ready_by
        LEFT JOIN checkout_users picked_up ON picked_up.id = orders.picked_up_by
        LEFT JOIN checkout_users cancelled ON cancelled.id = orders.cancelled_by
-      ORDER BY orders.created_at DESC`
+      WHERE $2::boolean
+         OR orders.status IN ('submitted', 'picked_up', 'cancelled', 'expired')
+         OR COALESCE(orders.reviewed_by, orders.accepted_by, orders.ready_by) = $1
+         OR (orders.status = 'reviewing' AND
+             (orders.claim_expires_at IS NULL OR orders.claim_expires_at <= NOW()))
+      ORDER BY orders.created_at ASC, orders.id ASC`,
+    [actor.id, actor.username === "admin-1"]
   );
   const ids = result.rows.map(function (order) { return Number(order.id); });
   const items = await orderItems(database, ids);
@@ -1162,7 +1176,7 @@ async function claimOrder(database, body, actor) {
   return database.transaction(async function (transaction) {
     const result = await transaction.query(
       `SELECT orders.*, users.display_name AS reviewer_name,
-              (orders.claim_expires_at IS NOT NULL AND orders.claim_expires_at <= NOW()) AS claim_expired
+              (orders.claim_expires_at IS NULL OR orders.claim_expires_at <= NOW()) AS claim_expired
          FROM checkout_orders orders
          LEFT JOIN checkout_users users ON users.id = orders.reviewed_by
         WHERE orders.id = $1 FOR UPDATE OF orders`,
