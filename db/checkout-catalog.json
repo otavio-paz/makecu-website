@@ -3438,6 +3438,25 @@
       "adminNotes": "Reconciled with November 6 physical inventory and received wishlist, reviewed November 7, 2026. Source: FINAL Inventory Check - 1106202, row 222. Physical stock: 2 individual checkout units. Inventory note: ADD TO WEB"
     },
     {
+      "name": "AETHDX Shock Sensor",
+      "description": "AETHDX shock sensor module for electronics projects. Issued individually.",
+      "imageUrl": "https://raw.githubusercontent.com/otavio-paz/makecu-website/gh-pages/images/checkout/components/aethdx-shock-sensor.png",
+      "imageAlt": "Organizer photo of a shock sensor module with a black cylindrical sensing element on a black three-pin board.",
+      "category": "Sensor",
+      "compatibility": "N/A",
+      "arduinoGuidance": "",
+      "raspberryPiGuidance": "",
+      "binLocation": "",
+      "technicalSpecs": "Brand supplied by organizer: AETHDX. Three-pin shock sensor module; exact model and electrical specifications unconfirmed. Verify pinout and supply requirements before use.",
+      "totalQuantity": 1,
+      "mlhQuantity": 0,
+      "unavailableQuantity": 0,
+      "protectedStock": 0,
+      "maxActivePerTeam": 1,
+      "active": true,
+      "adminNotes": "Organizer confirmed one AETHDX shock sensor on November 7, 2026 and supplied photo. One-per-team limit and zero protected stock follow the recent single-unit additions."
+    },
+    {
       "name": "Air Quality Sensor",
       "description": "SparkFun air-quality sensor board for detecting changes in indoor volatile compounds and pollution-related gases. Allow warm-up and treat readings as relative unless calibrated.",
       "imageUrl": "/images/checkout/components/Air quality sensor.webp",
