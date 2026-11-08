@@ -59,6 +59,13 @@ review claim leases are visible to everyone for takeover. Completed orders remai
 shared history. Team history, returns, reports, and existing action permissions
 remain available as before. Board visibility refreshes with the five-second poll.
 
+Volunteer review claims last at least 60 minutes. Claiming, renewing, or saving
+adjustments grants at least another hour and preserves any longer existing lease
+or organizer pause. A database trigger also protects claims written by older API
+workers. The policy migration extends existing assigned reviews once; normal
+database initialization does not repeatedly renew claims. Order reservations
+remain non-expiring, independent of the review lease.
+
 Run `npm test` for the 40-team load case, same-team multi-session serialization, inventory concurrency, idempotency, authorization, login throttling, request-size/origin hardening, admin provisioning, claim lease, stale-edit, pickup/cancel, return, and audit regression tests. Active inventory requires a photo and accessible image description; seeded sample components remain inactive until organizers add and verify those images. See [DEPLOYMENT.md](DEPLOYMENT.md) for production database and event-window configuration.
 
 ### Full catalog descriptions and provisional images

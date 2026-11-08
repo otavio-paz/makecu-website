@@ -387,3 +387,56 @@ $$ LANGUAGE plpgsql;
 DROP TRIGGER IF EXISTS checkout_temporary_cooldown_pause ON checkout_order_cooldown_overrides;
 CREATE TRIGGER checkout_temporary_cooldown_pause BEFORE UPDATE ON checkout_order_cooldown_overrides
 FOR EACH ROW EXECUTE FUNCTION checkout_keep_temporary_cooldown_override();
+
+-- BEGIN MINIMUM CLAIM LEASE MIGRATION
+-- Separate from reservation timing so older deployed workers cannot replace it.
+CREATE OR REPLACE FUNCTION checkout_enforce_minimum_claim_lease() RETURNS trigger AS $$
+DECLARE enforce_minimum BOOLEAN;
+BEGIN
+  IF NEW.status <> 'reviewing' OR NEW.reviewed_by IS NULL THEN
+    RETURN NEW;
+  END IF;
+  IF TG_OP = 'INSERT' THEN
+    enforce_minimum := TRUE;
+  ELSE
+    enforce_minimum := OLD.status IS DISTINCT FROM NEW.status
+      OR OLD.reviewed_by IS DISTINCT FROM NEW.reviewed_by
+      OR (NEW.claim_expires_at > NOW()
+          AND NEW.claim_expires_at IS DISTINCT FROM OLD.claim_expires_at);
+  END IF;
+  IF enforce_minimum THEN
+    NEW.claim_expires_at := GREATEST(NEW.claim_expires_at, NOW() + INTERVAL '60 minutes');
+    IF TG_OP = 'UPDATE' AND OLD.status = 'reviewing' AND OLD.reviewed_by = NEW.reviewed_by THEN
+      NEW.claim_expires_at := GREATEST(NEW.claim_expires_at, OLD.claim_expires_at);
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+DROP TRIGGER IF EXISTS checkout_minimum_claim_lease ON checkout_orders;
+CREATE TRIGGER checkout_minimum_claim_lease BEFORE INSERT OR UPDATE ON checkout_orders
+FOR EACH ROW EXECUTE FUNCTION checkout_enforce_minimum_claim_lease();
+
+CREATE TABLE IF NOT EXISTS checkout_policy_migrations (
+  name TEXT PRIMARY KEY,
+  applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+DO $$
+BEGIN
+  INSERT INTO checkout_policy_migrations(name) VALUES ('minimum-claim-lease-60-minutes-v1')
+  ON CONFLICT(name) DO NOTHING;
+  IF FOUND THEN
+    WITH extended AS (
+      UPDATE checkout_orders
+         SET claim_expires_at = GREATEST(claim_expires_at, NOW() + INTERVAL '60 minutes')
+       WHERE status = 'reviewing' AND reviewed_by IS NOT NULL
+         AND (claim_expires_at IS NULL OR claim_expires_at < NOW() + INTERVAL '60 minutes')
+       RETURNING id, team_id
+    )
+    INSERT INTO checkout_activity(team_id, order_id, message)
+    SELECT team_id, id, 'Extended existing volunteer claim to at least one hour under the updated claim policy.'
+      FROM extended;
+  END IF;
+END;
+$$;
+-- END MINIMUM CLAIM LEASE MIGRATION
