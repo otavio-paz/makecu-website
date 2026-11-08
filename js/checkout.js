@@ -227,6 +227,9 @@
   var setSession = function (user) {
     if (!user || !state.user || state.user.id !== user.id || state.user.role !== user.role) {
       teamDataRequestId += 1;
+      state.adminOrdersRequestId += 1;
+      state.adminOrders = [];
+      document.querySelector("[data-admin-orders]").innerHTML = "";
       orderUpdateOwner = null;
       observedOrderStatuses = null;
       unreadOrderUpdates = [];
@@ -620,7 +623,7 @@
       return '<button class="checkout-button checkout-button-primary" type="button" data-claim-order="' + order.id + '">Review Order</button>';
     }
 
-    var claimExpired = order.status === "reviewing" && order.claimExpiresAt && new Date(order.claimExpiresAt) <= new Date();
+    var claimExpired = order.status === "reviewing" && (!order.claimExpiresAt || new Date(order.claimExpiresAt) <= new Date());
 
     if (claimExpired) {
       return '<button class="checkout-button checkout-button-primary" type="button" data-claim-order="' + order.id + '">Take Over Expired Claim</button>';
@@ -668,7 +671,8 @@
     list.innerHTML = stages.map(function (stage) {
       var orders = state.adminOrders.filter(function (order) { return order.status === stage.status; });
       var cards = orders.length ? orders.map(function (order) {
-        var adjustable = order.status === "reviewing" && order.reviewedBy === state.user.id;
+        var adjustable = order.status === "reviewing" && order.reviewedBy === state.user.id &&
+          order.claimExpiresAt && new Date(order.claimExpiresAt) > new Date();
         var claimMeta = order.status === "reviewing" && order.claimExpiresAt ? " · claim until " + formatDate(order.claimExpiresAt) : "";
         var expiryMeta = "";
         return '<article class="checkout-order-card checkout-order-board-card" data-admin-order="' + order.id + '"><div class="checkout-order-card-header"><div><h2>' + escapeHtml(order.receiptCode || "#" + order.id) + " — " + escapeHtml(order.teamName) + '</h2><p class="checkout-order-card-meta">Submitted ' + formatDate(order.createdAt) + (order.reviewerName ? " · " + escapeHtml(order.reviewerName) : "") + claimMeta + expiryMeta + "</p></div></div>" +
@@ -696,9 +700,12 @@
   };
 
   var loadAdminOrders = async function () {
+    if (!state.user || state.user.role !== "admin") return;
+    var userId = state.user.id;
     var requestId = ++state.adminOrdersRequestId;
     var result = await api("admin-orders");
-    if (requestId !== state.adminOrdersRequestId) return;
+    if (requestId !== state.adminOrdersRequestId || !state.user ||
+        state.user.role !== "admin" || state.user.id !== userId) return;
     state.adminOrders = result.orders;
     renderAdminOrders();
   };
@@ -890,7 +897,7 @@
     var cooldown = detail.cooldown || { policySecondsLeft: 0, overrideAvailable: false };
     var cooldownMinutes = Math.ceil(cooldown.policySecondsLeft / 60);
     var timeoutControl = cooldown.policySecondsLeft > 0
-      ? '<section class="checkout-override-notice"><strong>45-minute order timeout</strong><p>' +
+      ? '<section class="checkout-override-notice"><strong>Order timeout</strong><p>' +
         (cooldown.overrideAvailable
           ? 'A one-order exception is ready for this team. It will be consumed by their next successful order.'
           : 'This team can normally order again in about ' + cooldownMinutes + ' minute(s).') +
@@ -1408,7 +1415,7 @@
         await mutate("reset-team-password", { teamId: Number(resetButton.dataset.resetPassword), password: password });
         notify("Team password reset. Existing team sessions were signed out.");
       } else if (timeoutButton) {
-        var timeoutReason = window.prompt("Why is this team allowed to bypass the 45-minute order timeout once?");
+        var timeoutReason = window.prompt("Why is this team allowed to bypass the order timeout once?");
         if (!timeoutReason || !timeoutReason.trim()) {
           return;
         }

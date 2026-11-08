@@ -355,11 +355,6 @@
     "alt": "Product photo of a 4x4 matrix keypad"
   },
   {
-    "name": "9-DOF IMU + TEMP sensor",
-    "file": "9-dof imu + temp sensor.webp",
-    "alt": "Product photo of a 9-DOF IMU and temperature sensor board"
-  },
-  {
     "name": "Air Quality Sensor",
     "file": "Air quality sensor.webp",
     "alt": "Product photo of an air-quality sensor breakout board"

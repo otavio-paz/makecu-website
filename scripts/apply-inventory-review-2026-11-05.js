@@ -199,8 +199,8 @@ const COMPONENT_UPDATES = {
     imageAlt: "Product photo of a 4x4 matrix keypad"
   },
   "9-DOF IMU + TEMP sensor": {
-    imageUrl: "/images/checkout/components/9-dof imu + temp sensor.webp",
-    imageAlt: "Product photo of a 9-DOF IMU and temperature sensor board"
+    imageUrl: "/images/checkout-image-pending.svg",
+    imageAlt: "Photo pending for 9-DOF IMU + TEMP sensor"
   },
   "Air Quality Sensor": {
     imageUrl: "/images/checkout/components/Air quality sensor.webp",

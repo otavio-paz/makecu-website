@@ -36,7 +36,7 @@ Each account can change its display name once using **Change name (once)**. Logi
 
 Outside the configured event window, team accounts cannot sign in or use checkout data. Admin accounts may still sign in from the closed screen to rehearse the workflow and maintain inventory; every bypass is enforced from the user's server-side database role. Set `CHECKOUT_LIVE_START`, `CHECKOUT_ORDERING_END`, and `CHECKOUT_RETURN_END` in production; `CHECKOUT_FORCE_LIVE` is intended only for local testing.
 
-Team orders are limited to 10 distinct components and a 45-minute interval between successful orders. An admin can grant an audited, expiring exception that is consumed by the team's next successful order. Orders remain reserved until pickup or cancellation, without automatic expiration. Volunteer claim leases remain separate from the order reservation. Motor-driver relationships are displayed as warnings and do not block checkout.
+Team orders are limited to 10 distinct components. The interval before the next order scales linearly with the latest order's distinct component count: 10 minutes for 1 component through 60 minutes for 10, rounded up to whole minutes (10, 16, 22, 27, 33, 38, 44, 49, 55, 60). Multiple units of the same component count once. The interval starts at successful submission, including for existing orders. An admin can grant an audited exception that expires with that order's timeout and is consumed by the team's next successful order. Orders remain reserved until pickup or cancellation, without automatic expiration. Volunteer claim leases remain separate from the order reservation. Motor-driver relationships are displayed as warnings and do not block checkout.
 
 Organizers can temporarily pause order cooldowns and volunteer claim timeouts with
 `node scripts/pause-order-timing.js` against the intended production database.
@@ -49,6 +49,15 @@ the five-second refresh. Updates remain in the team-only Order updates panel
 until dismissed and survive reloads in the same browser session. The first visit
 establishes a baseline without alerting on existing order history. Status alerts
 are isolated by team login and are not shown to volunteers.
+
+The admin order board lists the oldest submissions first within each stage, with
+order ID breaking timestamp ties. Submitted orders are shared; reviewing,
+accepted, and ready orders appear only for their assigned admin. The authenticated
+`admin-1` account (Otavio Paz) can see the entire board regardless of its current
+display name. Released claims return to the shared queue, and expired or missing
+review claim leases are visible to everyone for takeover. Completed orders remain
+shared history. Team history, returns, reports, and existing action permissions
+remain available as before. Board visibility refreshes with the five-second poll.
 
 Run `npm test` for the 40-team load case, same-team multi-session serialization, inventory concurrency, idempotency, authorization, login throttling, request-size/origin hardening, admin provisioning, claim lease, stale-edit, pickup/cancel, return, and audit regression tests. Active inventory requires a photo and accessible image description; seeded sample components remain inactive until organizers add and verify those images. See [DEPLOYMENT.md](DEPLOYMENT.md) for production database and event-window configuration.
 

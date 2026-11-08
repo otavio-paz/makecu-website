@@ -326,7 +326,7 @@ async function handler(request, response) {
     if (action === "admin-overview") {
       send(response, 200, await service.adminOverview(database));
     } else if (action === "admin-orders") {
-      send(response, 200, { orders: await service.adminOrders(database) });
+      send(response, 200, { orders: await service.adminOrders(database, admin) });
     } else if (action === "claim-order") {
       send(response, 200, await mutate(async function (transaction) {
         return { order: await service.claimOrder(transaction, body, admin) };

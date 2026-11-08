@@ -3402,8 +3402,8 @@
     {
       "name": "9-DOF IMU + TEMP sensor",
       "description": "Nine-degree-of-freedom inertial module combining accelerometer, gyroscope, magnetometer, and temperature data for orientation and motion tracking.",
-      "imageUrl": "/images/checkout/components/9-dof imu + temp sensor.webp",
-      "imageAlt": "Product photo of a 9-DOF IMU and temperature sensor board",
+      "imageUrl": "/images/checkout-image-pending.svg",
+      "imageAlt": "Photo pending for 9-DOF IMU + TEMP sensor",
       "category": "Sensor",
       "compatibility": "Arduino + Raspberry Pi",
       "arduinoGuidance": "",
